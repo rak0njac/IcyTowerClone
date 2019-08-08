@@ -36,6 +36,27 @@
     <ClCompile Include="PlatformLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyeCandy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EyeCandyEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h">
@@ -56,12 +77,30 @@
     <ClInclude Include="PlatformLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyeCandy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EyeCandyEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\Bkg.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Assets\Clock.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\Assets\ClockHandle.png">
@@ -79,5 +118,19 @@
     <Image Include="..\Assets\Wallz.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="..\Assets\Clock.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Assets\ComboMeter.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Assets\ComboMeterBar.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\Assets\RoteFlora.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>

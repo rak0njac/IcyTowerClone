@@ -1,13 +1,15 @@
-#ifndef BACKGROUND_H
-#define BACKGROUND_H
+#pragma once
 #include <SFML/Graphics.hpp>
 
-namespace Background
+class Background
 {
-	extern sf::Sprite SBkg;
-	extern sf::Sprite SWall;
-	void init();
-	void render(sf::RenderWindow& window, int layer);
-}
-
-#endif
+private:
+	static sf::Texture txBkg;
+	static sf::Texture txWall;
+	static sf::Sprite spBkg;
+	static sf::Sprite spWall;
+public:
+	static sf::Sprite& getSpBkg();
+	static sf::Sprite& getSpWall();
+	static void init();
+};

@@ -1,39 +1,38 @@
 #include <Layer.h>
 
-Layer::Layer(float step)
+Layer::Layer()
 {
 	view.reset(sf::FloatRect(0, 0, 640, 480));
-	CamY = 0;
-	speedFactor = 1;
-	this->step = step;
-	this->num = num;
+	camY = 0;
+	speedDelta = 1;
+	step = const_cam_start_step;
 }
 
-Layer::Layer(float step, float speedFactor)
+Layer::Layer(float speedDelta)
 {
 	view.reset(sf::FloatRect(0, 0, 640, 480));
-	CamY = 0;
-	this->step = step - step / speedFactor;
-	this->speedFactor = speedFactor;
-	this->num = num;
+	camY = 0;
+	step = const_cam_start_step - const_cam_start_step / speedDelta;
+	this->speedDelta = speedDelta;
 }
 
-void Layer::move(float camSpeedFactor, int camSpeed, int startStep)
+void Layer::move()
 {
-	view.reset(sf::FloatRect(0, CamY, 640, 480));
-	CamY -= camSpeedFactor * camSpeed * speedFactor;
+	float camSpeed = Camera::getCamSpeed();
+	view.reset(sf::FloatRect(0, camY, 640, 480));
+	camY -= const_cam_speed_delta * camSpeed * speedDelta;
 	step -= camSpeed;
 	if (step <= 0) 
 	{
-		CamY = 0;
-		if (speedFactor != 1) {
-			step = startStep - startStep / speedFactor;
+		camY = 0;
+		if (speedDelta != 1) {
+			step = const_cam_start_step - const_cam_start_step / speedDelta;
 		}
-		else step = startStep;
+		else step = const_cam_start_step;
 	}
 }
 
-void Layer::render(sf::RenderWindow& window, sf::Sprite& sprite)
+void Layer::render(sf::RenderWindow& window, sf::Drawable& sprite)
 {
 	window.setView(view);
 	window.draw(sprite);

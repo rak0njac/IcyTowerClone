@@ -1,34 +1,31 @@
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#pragma once
 #include <SFML\Graphics.hpp>
 #include <Layer.h>
 
+const int const_dist_between_platforms = 80;
+
+#pragma once
 class Platform
 {
 private:
-	int level;
+	int floor;
 	int length;
 	int position;
 	sf::Texture startTx;
 	sf::Texture middleTx;
 	sf::Texture endTx;
+	sf::Text floorText;
 
 	int generatePos();
 	int generateLen();
-	
-
 public:
-	int floor;
-	const int yDistance = 80;
 	sf::Sprite startSp;
 	sf::Sprite middleSp;
 	sf::Sprite endSp;
 
-	Platform(int x);
-	~Platform();
+	Platform(int lvl);
 
+	int& getFloor();
 	void render(sf::RenderWindow& window);
 	void regenerate();
 };
-
-#endif

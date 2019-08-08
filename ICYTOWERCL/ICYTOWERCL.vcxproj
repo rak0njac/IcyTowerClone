@@ -135,30 +135,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="EyeCandy.cpp" />
+    <ClCompile Include="EyeCandyEngine.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformLayer.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="EyeCandy.h" />
+    <ClInclude Include="EyeCandyEngine.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformLayer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Score.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\Bkg.png" />
     <Image Include="..\Assets\Clock.png" />
+    <Image Include="..\Assets\Bkg.png" />
     <Image Include="..\Assets\ClockHandle.png" />
+    <Image Include="..\Assets\ComboMeter.png" />
+    <Image Include="..\Assets\ComboMeterBar.png" />
     <Image Include="..\Assets\Ice.png" />
     <Image Include="..\Assets\IceA.png" />
     <Image Include="..\Assets\IceZ.png" />
     <Image Include="..\Assets\Wallz.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\Assets\RoteFlora.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,11 +1,21 @@
 #include <Camera.h>
-#include <iostream>
 
-float					Camera::camSpeedFactor = 0.125;
-int						Camera::camSpeed = 0;
-int						Camera::startStep = 496;
+float Camera::camSpeed;
+int	Camera::camLevel;
 
-
-void Camera::catchUp(float playerPos)
+int& Camera::getCamLevel()
 {
+	return camLevel;
+}
+float& Camera::getCamSpeed()
+{
+	return camSpeed;
+}
+void Camera::setCamLevel(int value)
+{
+	camLevel = value;
+}
+void Camera::setCamSpeed(float value)
+{
+	camSpeed = value;
 }
