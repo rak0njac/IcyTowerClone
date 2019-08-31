@@ -11,5 +11,5 @@ private:
 public:
 	static sf::Sprite& getSpBkg();
 	static sf::Sprite& getSpWall();
-	static void init();
+	static void init()
 };
