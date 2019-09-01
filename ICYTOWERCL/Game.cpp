@@ -20,6 +20,7 @@ void Game::init()
 	Background::init();
 	Timer::init();
 	Score::init();		 //rework if multiplayer
+	GameOver::init();
 
 	debug = false;
 }
@@ -28,7 +29,6 @@ void Game::logic()
 {
 	while (window.isOpen())
 	{
-		//std::cout << p->cjSp.getPosition().y << "\n";
 		if (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -83,6 +83,9 @@ void Game::logic()
 
 		layerHud.render(window, Timer::SpClock);
 		layerHud.render(window, Timer::SpClockHandle);
+
+		GameOver::doLogic();
+		GameOver::render(window);
 
 		window.display();
 	}

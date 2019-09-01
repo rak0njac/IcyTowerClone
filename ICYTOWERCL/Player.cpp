@@ -375,6 +375,7 @@ void Player::reset()
 	deltaSpeed = 0;
 	side = 0;
 
+	cjSp.setOrigin(14, 35);
 	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
 	cjSp.setRotation(0);
 

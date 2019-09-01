@@ -20,4 +20,5 @@ public:
 	RainbowEngine(sf::Text& text);
 	static sf::Color changeColor(const sf::Color& color, const int col);
 	void textMagic(sf::RenderWindow& window);
+	void resetText(sf::Text& text);
 };

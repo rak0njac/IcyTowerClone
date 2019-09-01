@@ -11,7 +11,7 @@ namespace Score
 	void changeScore(int i);
 	void init();
 	void doLogic();
-	void stop(); //
+	sf::Vector2i stop(); //
 	bool isComboMode();
 
 	void render(Layer& l, sf::RenderWindow& window);

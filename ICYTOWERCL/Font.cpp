@@ -5,11 +5,12 @@ sf::Font Font::font;
 void Font::init()
 {
 	font.loadFromFile("..\\Assets\\freshmarker.ttf");
-	//const_cast<sf::Texture&>(font.getTexture(20)).setSmooth(false);	//sfml doesn't provide a way to disable anti-aliasing on fonts so we have to use
-	//const_cast<sf::Texture&>(font.getTexture(30)).setSmooth(false);	//this well known hack. since getTexture() is used only internally by sf::Text,
-}																		//iterating through all font sizes will load all textures for each font size
-																		//hence we disable smoothing only on the sizes we use. even this way it doesn't
-const sf::Font& Font::getFont()											//work as expected but it's better than nothing.
+}														//SFML uses automatic text smoothing which applies a smoothing filter that is extremely strong
+														//and aesthetically unpleasant. This is why for most of the text we will be using double the font sizes
+														//and then scale the text halfway down. This eliminates the awkward smoothing. This is a known
+														//issue with SFML with no known proper solutions. This is the best workaround I could come up with,
+														//even though double font sizes use significantly more memory.
+const sf::Font& Font::getFont()											
 {
 	return font;
 }

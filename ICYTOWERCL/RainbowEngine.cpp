@@ -2,6 +2,11 @@
 #include <Font.h>
 #include <iostream>
 
+void RainbowEngine::resetText(sf::Text& text)
+{
+
+}
+
 RainbowEngine::RainbowEngine(sf::Text& text)
 {
 	colorsInitialized = false;
@@ -9,6 +14,8 @@ RainbowEngine::RainbowEngine(sf::Text& text)
 	//comp = text;
 	numOfColors = 18;
 	numOfChars = text.getString().getSize();
+	while (numOfColors < numOfChars)
+		numOfColors += 18;
 	this->text = &text;
 	skipper = 0;
 	x = 0;
@@ -106,14 +113,17 @@ void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 contin
 	{
 		for (int i = 0; i < numOfChars; i++)
 		{
-			if ((x + i) > numOfColors - 1)
+			if ((x + i) >= numOfColors - 1)
 			{
 				chars[i].setFillColor(colors[y]);
+				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << y << "]\n";
 				y++;
 			}
 			else
 			{
-				chars[i].setFillColor(colors[x + i]);
+				chars[i].setFillColor(colors[x + i]);//x+i
+				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << x + i << "]\n";
+				//std::cout << i << "\n";
 			}
 		}
 		y = 0;

@@ -20,6 +20,7 @@ float rewardSize;
 int score;	//total score
 int comboScore;		//current combo session score
 int comboScoreTotal;	//score accumulated from all combo sessions
+int bestCombo;
 
 sf::Text textScore("SCORE: 0", Font::getFont(), 140);
 
@@ -56,6 +57,7 @@ void Score::init()
 	score = 0;
 	comboScore = 0;
 	comboScoreTotal = 0;
+	bestCombo = 0;
 
 	comboBarHeight = 0;
 
@@ -256,6 +258,8 @@ void updateComboScore(int score)
 {
 	timesJumped++;
 	comboScore += (score) * 0.1f;
+	if (comboScore > bestCombo)
+		bestCombo = comboScore;
 	textComboFloors.setString(std::to_string(comboScore));
 	textComboFloors.setPosition(38 - textComboFloors.getLocalBounds().width * 0.5f, 215); //center the text
 }
@@ -338,13 +342,14 @@ void Score::changeScore(int i)
 	playerPos = i;
 }
 
-void Score::stop()
+sf::Vector2i Score::stop()
 {
 	static int phase = 0;
 	static int i = 0;
 	static sf::Text textScoreTemp;
 	static sf::Vector2f deltaScale;
 	static sf::Vector2f deltaPos;
+	static sf::Vector2i values;
 
 	std::cout << phase << "\n";
 
@@ -358,6 +363,7 @@ void Score::stop()
 	if (phase == 0)
 	{
 		comboMode = false;
+		//
 		rewardMode = false;
 		stopMode = true;
 		phase = 1;
@@ -385,6 +391,9 @@ void Score::stop()
 	{
 		textScore = textScoreTemp;
 	}
+	values.x = playerPos * 0.1;
+	values.y = bestCombo;
+	return values;
 }
 
 
@@ -441,6 +450,7 @@ void Score::reset()
 	score = 0;
 	comboScore = 0;
 	comboScoreTotal = 0;
+	bestCombo = 0;
 
 	comboBarHeight = 0;
 
