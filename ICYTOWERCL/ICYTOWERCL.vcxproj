@@ -141,12 +141,14 @@
     <ClCompile Include="EyeCandy.cpp" />
     <ClCompile Include="EyeCandyEngine.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformLayer.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RainbowEngine.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -157,11 +159,13 @@
     <ClInclude Include="EyeCandy.h" />
     <ClInclude Include="EyeCandyEngine.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformLayer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RainbowEngine.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

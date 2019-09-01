@@ -25,7 +25,8 @@ public:
 
 	Platform(int lvl);
 
-	int& getFloor();
+	int getFloor();
 	void render(sf::RenderWindow& window);
 	void regenerate();
+	void reset(int flr);
 };

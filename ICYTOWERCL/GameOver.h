@@ -6,4 +6,5 @@ namespace GameOver
 
 	bool isGameOver();
 	void restartGame();
+	void stopGame();
 }

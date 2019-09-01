@@ -6,6 +6,6 @@ private:
 	static sf::Font font;
 public:
 	static void init();
-	static sf::Font& getFont();
+	static const sf::Font& getFont();
 };
 

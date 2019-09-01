@@ -6,6 +6,7 @@ Layer::Layer()
 	camY = 0;
 	speedDelta = 1;
 	step = const_cam_start_step;
+	conststep = step;
 }
 
 Layer::Layer(float speedDelta)
@@ -14,6 +15,7 @@ Layer::Layer(float speedDelta)
 	camY = 0;
 	step = const_cam_start_step - const_cam_start_step / speedDelta;
 	this->speedDelta = speedDelta;
+	conststep = step;
 }
 
 void Layer::move()
@@ -32,8 +34,20 @@ void Layer::move()
 	}
 }
 
-void Layer::render(sf::RenderWindow& window, sf::Drawable& sprite)
+void Layer::render(sf::RenderWindow& window, const sf::Drawable& sprite)
 {
 	window.setView(view);
 	window.draw(sprite);
+}
+
+float Layer::getViewCenter()
+{
+	return view.getCenter().y;
+}
+
+void Layer::reset()
+{
+	view.reset(sf::FloatRect(0, 0, 640, 480));
+	camY = 0;
+	step = conststep;
 }

@@ -8,10 +8,13 @@ protected:
 	float camY;
 	float speedDelta;
 	float step;
+	float conststep;
 	sf::View view;
 public:
 	virtual void move();
-	void render(sf::RenderWindow& window, sf::Drawable& sprite);
+	float getViewCenter();
+	void render(sf::RenderWindow& window, const sf::Drawable& sprite);
+	virtual void reset();
 	Layer();
 	Layer(float speedDelta);
 };

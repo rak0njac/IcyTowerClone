@@ -22,6 +22,7 @@ Platform::Platform(int flr)
 	middleSp.setPosition(position + 25, floor * const_dist_between_platforms * -1);		// the middle texture just right to it ready to be repeated
 	endSp.setOrigin(0, -508);													// and finally add end texture
 	endSp.setPosition(position + 25 + length * 16, floor * const_dist_between_platforms * -1);
+	//std::cout << length << "\n";
 }
 
 int Platform::generatePos()
@@ -51,12 +52,13 @@ int Platform::generateLen()
 		else if (position > 315)					// basically, if the starting drawing position reaches a point where a platform
 		{											// might overlap a wall if too long, we need to precisely control its possible length.
 			int temp = position;					// each middle texture is 16px long so we increment i until we reach the overlapping point
-			for (int i = 5; i < 13; i++)	
+			for (int i = 5; i <= 13; i++)	
 			{
 				temp += 16;
 				if (temp > 445)
 				{
 					std::uniform_int_distribution<> len(5, i);
+					//std::cout << "i = " << i;
 					return len(rand);
 				}
 			}
@@ -88,9 +90,15 @@ void Platform::regenerate()
 	}
 }
 
-int& Platform::getFloor()
+int Platform::getFloor()
 {
 	return floor;
+}
+
+void Platform::reset(int flr)
+{
+	floor = flr - 7;
+	regenerate();
 }
 
 void Platform::render(sf::RenderWindow& window)

@@ -1,10 +1,13 @@
 #include <Timer.h>
 #include <Camera.h>
 #include <iostream>
+#include <GameOver.h>
 
 using namespace Timer;
 
 int levels[6] { 1,2,4,6,9,11 };
+int i = 0;
+
 bool started = false;
 bool berserk = false;
 bool shaking = false;
@@ -68,6 +71,8 @@ void shakeAnim()
 			Timer::SpClockHandle.setPosition(const_timer_start_pos_x + x, const_timer_start_pos_y + y);
 			if(count<350 || berserk)
 				Timer::SpClock.setPosition(const_timer_start_pos_x + x, const_timer_start_pos_y + y);
+			else if(Timer::SpClock.getPosition().x != const_timer_start_pos_x && Timer::SpClock.getPosition().y != const_timer_start_pos_y)
+				Timer::SpClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 		}
 		count++;
 	}
@@ -75,10 +80,8 @@ void shakeAnim()
 	{
 		count = 0;
 		shaking = 0;
-		if ((Timer::SpClock.getPosition().x != const_timer_start_pos_x && Timer::SpClock.getPosition().y != const_timer_start_pos_y) || 
-			(Timer::SpClockHandle.getPosition().x != const_timer_start_pos_x && Timer::SpClockHandle.getPosition().y != const_timer_start_pos_y))
+		if (Timer::SpClockHandle.getPosition().x != const_timer_start_pos_x && Timer::SpClockHandle.getPosition().y != const_timer_start_pos_y)
 		{
-			Timer::SpClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 			Timer::SpClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 		}
 	}
@@ -87,12 +90,11 @@ void shakeAnim()
 
 void Timer::doLogic()
 {
-	static int i = 0;
+	timez = clox.getElapsedTime();
 	if (started)
 	{
 		if (!berserk)
 		{
-			timez = clox.getElapsedTime();
 			SpClockHandle.setRotation(timez.asSeconds() * 12);
 			//std::cout << timez.asSeconds() << "\n";
 			if (timez.asSeconds() > 30.0f)
@@ -116,13 +118,6 @@ void Timer::doLogic()
 		}
 		shakeAnim();
 	}
-	else
-	{
-		Camera::setCamLevel(0);
-		static float rot = SpClockHandle.getRotation();
-		//started = false;
-		SpClockHandle.setRotation(rot);
-	}
 }
 
 bool Timer::getStarted() { return started; }
@@ -136,4 +131,14 @@ void Timer::setStarted(bool start)
 		clox.restart();
 	}
 	else started = false;
+}
+
+void Timer::reset()
+{
+	i = 0;
+	clox.restart();
+	started = false;
+	shaking = false;
+	berserk = false;
+	SpClockHandle.setRotation(0);
 }

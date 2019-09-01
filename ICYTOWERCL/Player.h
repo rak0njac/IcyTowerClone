@@ -7,6 +7,7 @@
 #include <Score.h>
 #include <EyeCandyEngine.h>
 #include <string>
+#include <iostream>
 
 const float const_player_gravity = 0.25f;
 const float const_player_start_pos_x = 180;
@@ -15,8 +16,8 @@ const int const_left_bound = 87;
 const int const_right_bound = 553;
 const int const_chock_anim_trigger_bound = 140;
 const float const_player_xspeed_max = 6;
-const float const_player_yspeed_max = 7;
-const float const_player_slowdown_delta = 0.5f;
+const float const_player_yspeed_max = 6;
+const float const_player_slowdown_delta = 0.75f;
 const float const_player_accelerate_delta = 0.085f;
 const float const_player_friction_delta = 0.14f;
 
@@ -51,7 +52,8 @@ private:
 	void checkGameOver(PlatformLayer& pl);
 public:
 	Player();
-	Player(std::string filename);
+	Player(std::string filename, int startPosX); //multiplayer eventually?
 	void doLogic(sf::RenderWindow& window, PlatformLayer& pl);
 	void render(sf::RenderWindow& window, PlatformLayer& pl);
+	void reset();
 };

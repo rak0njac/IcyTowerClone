@@ -1,9 +1,9 @@
 #include <Background.h>
 
-sf::Texture Background::txBkg;
-sf::Texture Background::txWall;
-sf::Sprite Background::spBkg;
-sf::Sprite Background::spWall;
+sf::Texture txBkg;
+sf::Texture txWall;
+sf::Sprite spBkg;
+sf::Sprite spWall;
 
 void Background::init()
 {
@@ -19,12 +19,18 @@ void Background::init()
 	spWall.setPosition(0, -124);
 }
 
-sf::Sprite& Background::getSpBkg()
+const sf::Sprite& Background::getSpBkg()
 {
 	return spBkg;
 }
 
-sf::Sprite& Background::getSpWall()
+const sf::Sprite& Background::getSpWall()
 {
 	return spWall;
+}
+
+void Background::reset()
+{
+	spBkg.setPosition(320, -62);
+	spWall.setPosition(0, -124);
 }

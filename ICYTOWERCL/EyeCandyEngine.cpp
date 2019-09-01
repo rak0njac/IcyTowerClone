@@ -6,12 +6,19 @@ EyeCandyEngine::EyeCandyEngine()
 	//a legend is born
 }
 
-void EyeCandyEngine::addCandy(float posX, float posY)
+void EyeCandyEngine::addCandy(const float& posX, const float& posY, int count)
 {
-	engine.push_back(EyeCandy(posX, posY));
+	for(int i=0; i<count;i++)
+		engine.push_back(EyeCandy(posX, posY));
 }
 
-void EyeCandyEngine::doLogic(sf::RenderWindow &window, PlatformLayer& pl)
+void EyeCandyEngine::addCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, int count)
+{
+	for (int i = 0; i < count;i++)
+		engine.push_back(EyeCandy(posX, posY, _randPos, _randDir));
+}
+
+void EyeCandyEngine::doLogic(sf::RenderWindow &window, Layer& pl)
 {
 	for (int i = 0; i < engine.size(); i++)
 	{
@@ -24,4 +31,9 @@ void EyeCandyEngine::doLogic(sf::RenderWindow &window, PlatformLayer& pl)
 		}
 	}
 	//std::cout << engine.size() << "\n";
+}
+
+void EyeCandyEngine::reset()
+{
+	engine.clear();
 }

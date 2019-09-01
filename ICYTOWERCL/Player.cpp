@@ -1,4 +1,5 @@
 #include <Player.h>
+#include <GameOver.h>
 
 Player::Player()
 {
@@ -10,6 +11,7 @@ Player::Player()
 	ySpeed = 0;
 	accelerating = false;
 	deltaSpeed = 0;
+	side = 0;
 
 	cjImg.loadFromFile("..\\Assets\\harold.bmp");
 	cjImg.createMaskFromColor(sf::Color(153, 20, 145, 255));
@@ -19,7 +21,7 @@ Player::Player()
 	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
 }
 
-Player::Player(std::string filename)
+Player::Player(std::string filename, int startPosX)
 {
 	onGround = true;
 	curPlatform = &PlatformLayer::arrPlatform[0];
@@ -29,13 +31,14 @@ Player::Player(std::string filename)
 	ySpeed = 0;
 	accelerating = false;
 	deltaSpeed = 0;
+	side = 0;
 
 	cjImg.loadFromFile(filename);
 	cjImg.createMaskFromColor(sf::Color(153, 20, 145, 255));
 	cjTx.loadFromImage(cjImg);
 	cjSp.setTexture(cjTx);
 	cjSp.setOrigin(14, 35);
-	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
+	cjSp.setPosition(startPosX, const_player_start_pos_y);
 }
 
 int Player::checkBoundaries()
@@ -225,7 +228,7 @@ void Player::checkJump()
 		onGround = false;
 		if (xSpeed > 5.9f)
 		{
-			ySpeed = xSpeed * -1.15 - 7.0f; //CONST_XSPEED_JUMP_HIGH_FACTOR
+			ySpeed = xSpeed * -1.25 - 7.0f; //CONST_XSPEED_JUMP_HIGH_FACTOR
 			jumpStrenght = 3;
 			cjSp.move(0, 8);
 		}
@@ -302,12 +305,14 @@ void Player::checkCam(PlatformLayer& pl)
 	if ((cjSp.getPosition().y  < pl.getViewCenter() - const_cam_catchup_top_bound))// || //CONST_CATCHUP_TOP_LIMIT = 500
 		//(cjSp.getPosition().y - 140 < pl.getViewCenter() - 240 && ySpeed < 0)) //CONST_CATCHUP_BOTTOM_LIMIT = 370;
 	{
+		//std::cout << "Catching up on top...\n";
 		if (Camera::getCamSpeed() < const_cam_catchup_top_max_speed) //CONST_CATCHUP_MAXSPEED = 20
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_top_delta_speed * ySpeed * -1); //CONST_YSPEED_FACTOR = 0.066
 		else Camera::setCamSpeed(const_cam_catchup_top_max_speed);
 	}
 	else if (cjSp.getPosition().y < pl.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0)
 	{
+		//std::cout << "Catching up on bottom...\n";
 		if (Camera::getCamSpeed() < const_cam_catchup_bottom_max_speed) //CONST_CATCHUP_MAXSPEED = 20
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_bottom_delta_speed * ySpeed * -1); //CONST_YSPEED_FACTOR = 0.066
 		else Camera::setCamSpeed(const_cam_catchup_bottom_max_speed);
@@ -327,8 +332,7 @@ void Player::checkGameOver(PlatformLayer& pl) //wip
 	if (cjSp.getPosition().y > pl.getViewCenter() + 240)
 	{
 		onGround = false;
-		Timer::setStarted(false);
-		Score::stop();
+		GameOver::stopGame();
 	}
 }
 
@@ -336,7 +340,7 @@ void Player::checkCandy(sf::RenderWindow& window, PlatformLayer& pl)
 {
 	if (jumpStrenght == 3 && Score::isComboMode()) 
 	{
-		ece.addCandy(cjSp.getPosition().x, cjSp.getPosition().y);
+		ece.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
 	}
 	ece.doLogic(window, pl);
 }
@@ -350,11 +354,29 @@ void Player::doLogic(sf::RenderWindow& window, PlatformLayer& pl)
 	checkGameOver(pl);
 	checkCandy(window, pl);
 
-	if (!Timer::getStarted() && cjSp.getPosition().y < const_timer_start_bound)
+	if (!Timer::getStarted() && cjSp.getPosition().y < const_timer_start_bound && !GameOver::isGameOver())
 		Timer::setStarted(true);
 }
 
 void Player::render(sf::RenderWindow& window, PlatformLayer& pl)
 {
 	window.draw(cjSp);
+}
+
+void Player::reset()
+{
+	onGround = true;
+	curPlatform = &PlatformLayer::arrPlatform[0];
+	level = 1;
+	jumpStrenght = 0;
+	xSpeed = 0;
+	ySpeed = 0;
+	accelerating = false;
+	deltaSpeed = 0;
+	side = 0;
+
+	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
+	cjSp.setRotation(0);
+
+	ece.reset();
 }

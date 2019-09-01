@@ -8,7 +8,9 @@ private:
 	std::vector<EyeCandy> engine;
 public:
 	EyeCandyEngine();
-	void addCandy(float posX, float posY);
-	void doLogic(sf::RenderWindow& window, PlatformLayer& pl);
+	void addCandy(const float& posX, const float& posY, int count);
+	void addCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, int count);
+	void doLogic(sf::RenderWindow& window, Layer& pl);
+	void reset();
 };
 

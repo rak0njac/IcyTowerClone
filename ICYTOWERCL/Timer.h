@@ -14,4 +14,5 @@ namespace Timer {
 
 	void init();
 	void doLogic();
+	void reset();
 }
