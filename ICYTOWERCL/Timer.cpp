@@ -2,6 +2,8 @@
 #include <Camera.h>
 #include <iostream>
 #include <GameOver.h>
+#include <Font.h>
+#include <RainbowEngine.h>
 
 using namespace Timer;
 
@@ -11,11 +13,15 @@ int i = 0;
 bool started = false;
 bool berserk = false;
 bool shaking = false;
+bool hurrying = false;
 
 sf::Texture TxClock;
 sf::Sprite Timer::SpClock;
 sf::Texture TxClockHandle;
 sf::Sprite Timer::SpClockHandle;
+
+sf::Text textHurry("HURRY UP!", Font::getFont(), 160);
+RainbowEngine reHurry(textHurry);
 
 sf::Clock clox;
 sf::Time timez;
@@ -29,6 +35,10 @@ void Timer::init() {
 	SpClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 	SpClockHandle.setOrigin(37, 47);
 	SpClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+	textHurry.setScale(0.5, 0.5);
+	textHurry.setOutlineThickness(5);
+	textHurry.setOrigin(textHurry.getLocalBounds().width * 0.5, textHurry.getLocalBounds().height * 0.5);
+	textHurry.setPosition(320, 540);
 }
 
 void shakeAnim()
@@ -87,6 +97,19 @@ void shakeAnim()
 	}
 }
 
+void displayHurryUp()
+{
+	if (hurrying && textHurry.getPosition().y > -80)
+	{
+		textHurry.move(0, -2);
+	}
+	else
+	{
+		textHurry.setPosition(320, 540);
+		hurrying = false;
+	}
+}
+
 
 void Timer::doLogic()
 {
@@ -96,10 +119,11 @@ void Timer::doLogic()
 		if (!berserk)
 		{
 			SpClockHandle.setRotation(timez.asSeconds() * 12);
-			//std::cout << timez.asSeconds() << "\n";
-			if (timez.asSeconds() > 30.0f)
+			//std::cout  << timez.asSeconds() << "\n";
+			if (timez.asSeconds() > 30)
 			{
 				shaking = true;
+				hurrying = true;
 				if (i < 4)
 					i++;
 				else
@@ -117,6 +141,7 @@ void Timer::doLogic()
 			shaking = true;
 		}
 		shakeAnim();
+		displayHurryUp();
 	}
 }
 
@@ -140,5 +165,12 @@ void Timer::reset()
 	started = false;
 	shaking = false;
 	berserk = false;
+	hurrying = false;
 	SpClockHandle.setRotation(0);
+}
+
+void Timer::render(Layer layer, sf::RenderWindow& window)
+{
+	//layer.render(window, textHurry);
+	reHurry.textMagic(window);
 }

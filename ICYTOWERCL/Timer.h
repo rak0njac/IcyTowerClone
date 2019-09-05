@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <Layer.h>
 
 const int const_timer_start_pos_x = 42;
 const int const_timer_start_pos_y = 56;
@@ -15,4 +16,5 @@ namespace Timer {
 	void init();
 	void doLogic();
 	void reset();
+	void render(Layer layer, sf::RenderWindow& window);
 }

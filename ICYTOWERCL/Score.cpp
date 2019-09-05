@@ -258,7 +258,7 @@ void updateComboScore(int score)
 {
 	timesJumped++;
 	comboScore += (score) * 0.1f;
-	if (comboScore > bestCombo)
+	if (comboScore > bestCombo && timesJumped > 1)
 		bestCombo = comboScore;
 	textComboFloors.setString(std::to_string(comboScore));
 	textComboFloors.setPosition(38 - textComboFloors.getLocalBounds().width * 0.5f, 215); //center the text
@@ -364,7 +364,7 @@ sf::Vector2i Score::stop()
 	{
 		comboMode = false;
 		//
-		rewardMode = false;
+		//rewardMode = false;
 		stopMode = true;
 		phase = 1;
 		textScoreTemp = textScore;
@@ -442,7 +442,7 @@ void Score::reset()
 	playerPos = 0;
 
 	timesJumped = 0;
-	comboMode = false;
+	//comboMode = false;
 	rewardMode = false;
 	stopMode = false;
 	rewardReset = false;

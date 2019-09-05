@@ -78,7 +78,7 @@ void GameOver::doLogic()
 		if (textBestCombo.getPosition().y > 390)
 			textBestCombo.move(0, -2);
 		else if (textPressEnter.getPosition().y > 450)
-			textPressEnter.move(0, -2.75);
+			textPressEnter.move(0, -2);
 	}
 	else
 	{

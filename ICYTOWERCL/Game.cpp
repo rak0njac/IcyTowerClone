@@ -64,6 +64,8 @@ void Game::logic()
 		layerBkg.move();
 		layerBkg.render(window, Background::getSpBkg());
 
+		Timer::render(layerHud, window);
+
 		layerPlatform.move();
 		layerPlatform.render(window); //layerplatform -- layerengine?
 

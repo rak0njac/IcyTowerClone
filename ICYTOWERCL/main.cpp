@@ -1,24 +1,16 @@
-#include <SFML/Graphics.hpp>
-#include <Background.h>
-#include <Camera.h>
-#include <Player.h>
-#include <Timer.h>
-#include <Score.h>
-#include <EyeCandy.h>
-#include <iostream>
-#include <Font.h>
-#include <GameOver.h>
 #include <Game.h>
 
 //brzine 1,2,4,6,9,11
 //text scaling instead of font size
 //Add comments?
 
-//game over
+//fix reward after game restart
+//fix rainbowengine to render on layer and hurry up text
+//best combo after end combo
 //start screen
 //launcher in qt?
 //audio
-//platform floor % 10 = 0 show -- to fix
+//platform floor number fix
 //multiple textures in one image
 //add platform variations
 
