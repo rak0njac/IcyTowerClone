@@ -1,5 +1,4 @@
 #include <Player.h>
-#include <GameOver.h>
 
 Player::Player()
 {
@@ -19,6 +18,17 @@ Player::Player()
 	cjSp.setTexture(cjTx);
 	cjSp.setOrigin(14, 35);
 	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
+
+	soundEdge.loadFromFile("..\\Assets\\Sounds\\edge.ogg");
+	soundJumpLo.loadFromFile("..\\Assets\\Sounds\\jump_lo.ogg");
+	soundJumpMid.loadFromFile("..\\Assets\\Sounds\\jump_mid.ogg");
+	soundJumpHi.loadFromFile("..\\Assets\\Sounds\\jump_hi.ogg");
+	soundWazup.loadFromFile("..\\Assets\\Sounds\\wazup.ogg");
+	soundYo.loadFromFile("..\\Assets\\Sounds\\yo.ogg");
+	soundFalling.loadFromFile("..\\Assets\\Sounds\\falling.ogg");
+
+	cjSound.setBuffer(soundYo);
+	cjSound.play();
 }
 
 Player::Player(std::string filename, int startPosX)
@@ -146,6 +156,17 @@ void Player::animationAndSound(PlatformLayer& pl)
 	else if (cjSp.getPosition().x >= curPlatform->startSp.getPosition().x - 14 &&										//ON LEFT EDGE
 		cjSp.getPosition().x <= curPlatform->startSp.getPosition().x + 12.5f)
 	{
+		if (cjSound.getStatus() != sf::Sound::SoundSource::Status::Playing)
+		{
+			cjSound.setBuffer(soundEdge);
+			static int j = 30;
+			if (j == 30)
+			{
+				cjSound.playPitched();
+				j = 0;
+			}
+			j++;
+		}
 		cjSp.setScale(-1, 1);
 		if (j < 15)
 			cjSp.setTextureRect(Animation::cjAnimEdge1);
@@ -157,6 +178,17 @@ void Player::animationAndSound(PlatformLayer& pl)
 	else if (cjSp.getPosition().x >= curPlatform->endSp.getPosition().x &&												//ON RIGHT EDGE
 		cjSp.getPosition().x <= curPlatform->endSp.getPosition().x + 14*2)
 	{
+		if (cjSound.getStatus() != sf::Sound::SoundSource::Status::Playing)
+		{
+			cjSound.setBuffer(soundEdge);
+			static int j = 30;
+			if (j == 30)
+			{
+				cjSound.playPitched();
+				j = 0;
+			}
+			j++;
+		}
 		cjSp.setScale(1, 1);
 		if (j < 15)
 			cjSp.setTextureRect(Animation::cjAnimEdge1);
@@ -231,16 +263,22 @@ void Player::checkJump()
 			ySpeed = xSpeed * -1.25 - 7.0f; //CONST_XSPEED_JUMP_HIGH_FACTOR
 			jumpStrenght = 3;
 			cjSp.move(0, 8);
+			cjSound.setBuffer(soundJumpHi);
+			cjSound.playPitched();
 		}
 		else if (xSpeed > 2.9f)
 		{
-			ySpeed = xSpeed * -0.85 - 7.0f; //CONST_XSPEED_JUMP_LOW_FACTOR
+			ySpeed = xSpeed * -0.55 - 7.0f; //CONST_XSPEED_JUMP_LOW_FACTOR
 			jumpStrenght = 2;
+			cjSound.setBuffer(soundJumpMid);
+			cjSound.playPitched();
 		}
 		else
 		{
 			ySpeed = -7.0f;
 			jumpStrenght = 1;
+			cjSound.setBuffer(soundJumpLo);
+			cjSound.playPitched();
 		}
 	}
 	if (!onGround)
@@ -329,9 +367,12 @@ void Player::checkCam(PlatformLayer& pl)
 
 void Player::checkGameOver(PlatformLayer& pl) //wip
 {
-	if (cjSp.getPosition().y > pl.getViewCenter() + 240)
+	if (cjSp.getPosition().y > pl.getViewCenter() + 240 && !GameOver::isGameOver())
 	{
 		onGround = false;
+		cjSound.setBuffer(soundFalling);
+		cjSound.setPitch(1);
+		cjSound.play();
 		GameOver::stopGame();
 	}
 }

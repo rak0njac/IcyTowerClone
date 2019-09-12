@@ -3,6 +3,7 @@
 sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML", sf::Style::Close);
 sf::Event event;
 
+sf::Music music;
 Player player;
 Layer layerBkg;
 Layer layerWall(3);
@@ -15,6 +16,10 @@ void Game::init()
 {
 	window.setFramerateLimit(100);
 	window.setKeyRepeatEnabled(false);
+	music.openFromFile("..\\Assets\\Sounds\\beat.ogg");
+	music.setLoop(true);
+	music.setVolume(70);
+	music.play();
 
 	Font::init();
 	Background::init();
@@ -64,7 +69,8 @@ void Game::logic()
 		layerBkg.move();
 		layerBkg.render(window, Background::getSpBkg());
 
-		Timer::render(layerHud, window);
+		if(!GameOver::isGameOver())
+			Timer::render(layerHud, window);
 
 		layerPlatform.move();
 		layerPlatform.render(window); //layerplatform -- layerengine?
@@ -80,14 +86,14 @@ void Game::logic()
 			Timer::doLogic();
 		}
 		Score::doLogic();
-
+		
 		Score::render(layerHud, window);
-
+		
 		layerHud.render(window, Timer::SpClock);
 		layerHud.render(window, Timer::SpClockHandle);
-
+		
 		GameOver::doLogic();
-		GameOver::render(window);
+		GameOver::render(window, layerHud);
 
 		window.display();
 	}

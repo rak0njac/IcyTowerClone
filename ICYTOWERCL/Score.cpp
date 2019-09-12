@@ -13,8 +13,9 @@ bool comboMode;
 bool rewardMode;
 bool stopMode;
 bool rewardReset;
+bool rewardAnimReset;
 
-std::string rewardStr;
+int rewardIndex;
 float rewardSize;
 
 int score;	//total score
@@ -22,11 +23,14 @@ int comboScore;		//current combo session score
 int comboScoreTotal;	//score accumulated from all combo sessions
 int bestCombo;
 
-sf::Text textScore("SCORE: 0", Font::getFont(), 140);
+sf::Text textScore("SCORE: 0", Font::getFont(), 60);
 
 sf::Text textConstFloors("floors", Font::getFont(), 20);
+RainbowEngine re1("floors", Font::getFont(), 20);						//(textConstFloors);
 sf::Text textComboFloors("", Font::getFont(), 30);
 sf::Text textComboReward("", Font::getFont(), 140);
+RainbowEngine re2("QWERTYUIOPASDFGHJKLZXCVBNM!", Font::getFont(), 140);
+
 
 sf::Texture txComboMeter;
 sf::Sprite spComboMeter;
@@ -39,11 +43,29 @@ sf::ConvexShape star;
 
 sf::Color color(255, 0, 0, 255);
 
-RainbowEngine re1(textConstFloors);
-RainbowEngine re2(textComboReward);
 EyeCandyEngine ece;
 
+
+
 using namespace Score;
+
+enum Reward
+{
+	Good,
+	Sweet,
+	Great,
+	Super,
+	Wow,
+	Amazing,
+	Extreme,
+	Fantastic,
+	Splendid,
+	NoWay,
+	RewardCount
+};
+
+sf::SoundBuffer soundBuffer[Reward::RewardCount];
+sf::Sound sound;
 
 void Score::init()
 {
@@ -53,6 +75,7 @@ void Score::init()
 	comboMode = false;
 	rewardMode = false;
 	rewardReset = false;
+	rewardAnimReset = true;
 
 	score = 0;
 	comboScore = 0;
@@ -63,8 +86,8 @@ void Score::init()
 
 	//////
 	textScore.setPosition(10, 440);
-	textScore.setScale(0.225, 0.225);
-	textScore.setOutlineThickness(12);
+	textScore.setScale(0.5, 0.5);
+	textScore.setOutlineThickness(6);
 	textScore.setOutlineColor(sf::Color(1, 26, 51, 255));
 	//textScore.setOrigin(textScore.getLocalBounds().width*0.5, textScore.getLocalBounds().height*0.5);
 
@@ -100,10 +123,24 @@ void Score::init()
 	textComboFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
 	textConstFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
 
-	textComboReward.setPosition(320, 290);
-	textComboReward.setScale(0.1f, 0.1f);
-	textComboReward.setOutlineThickness(7);
-	textComboReward.setOutlineColor(sf::Color(1, 26, 51, 255));
+	re1.setOutlineThickness(1);
+	re1.setOutlineColor(sf::Color(1, 26, 51, 255));
+
+	re2.setPosition(320, 290);
+	re2.setScale(0.1f, 0.1f);
+	re2.setOutlineThickness(7);
+	re2.setOutlineColor(sf::Color(1, 26, 51, 255));
+
+	soundBuffer[Reward::Good].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\good.ogg");
+	soundBuffer[Reward::Sweet].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\sweet.ogg");
+	soundBuffer[Reward::Great].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\great.ogg");
+	soundBuffer[Reward::Super].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\super.ogg");
+	soundBuffer[Reward::Wow].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\wow.ogg");
+	soundBuffer[Reward::Amazing].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\amazing.ogg");
+	soundBuffer[Reward::Extreme].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\extreme.ogg");
+	soundBuffer[Reward::Fantastic].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\fantastic.ogg");
+	soundBuffer[Reward::Splendid].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\splendid.ogg");
+	soundBuffer[Reward::NoWay].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\noway.ogg");
 }
 
 void changeColor()
@@ -122,32 +159,68 @@ void changeColor()
 	}
 }
 
+std::string getRewardString(int rewardIndex)
+{
+	if (rewardIndex == Reward::Good)
+		return "GOOD!";
+	if (rewardIndex == Reward::Sweet)
+		return "SWEET!";
+	if (rewardIndex == Reward::Great)
+		return "GREAT!";
+	if (rewardIndex == Reward::Super)
+		return "SUPER!";
+	if (rewardIndex == Reward::Wow)
+		return "WOW!";
+	if (rewardIndex == Reward::Amazing)
+		return "AMAZING!";
+	if (rewardIndex == Reward::Extreme)
+		return "EXTREME!";
+	if (rewardIndex == Reward::Fantastic)
+		return "FANTASTIC!";
+	if (rewardIndex == Reward::Splendid)
+		return "SPLENDID!";
+	if (rewardIndex == Reward::NoWay)
+		return "NO WAY!";
+}
+
 
 void rewardLogic()
 {
 	static int phase = 0;
 	static int step = 0;
 
+	if (rewardAnimReset)
+	{
+		phase = 0;
+		rewardAnimReset = false;
+	}
+
 	if (phase == 0)
 	{
-		textComboReward.setScale(0.05f, 0.05f);
-		textComboReward.setRotation(0);
+		if (comboScore > bestCombo)
+			bestCombo = comboScore;
+		if (comboScore >= 25)
+		{
+			ece.addCandy(320, 290, comboScore, 2, comboScore*0.5);
+		}
+		re2.setScale(0.05f, 0.05f);
+		re2.setRotation(0);
 		comboScore = 0;
 		timesJumped = 0;
 		step = 0;
-		textComboReward.setString(rewardStr);
+		re2.setString(getRewardString(rewardIndex));
+		sound.setBuffer(soundBuffer[rewardIndex]);
+		sound.play();
 		phase = 1;
-		ece.addCandy(320, 290, 20, 2, 10);
-
 	}
 
 	else if (phase == 1)		//animation
 	{
 		if (step<75)//textComboReward.getScale().x < rewardSize)
 		{	
-			textComboReward.scale(rewardSize, rewardSize);
-			textComboReward.rotate(4.8);
-			textComboReward.setOrigin(textComboReward.getLocalBounds().width * 0.5f, textComboReward.getLocalBounds().height * 0.5f);
+			re2.scale(rewardSize, rewardSize);
+			re2.rotate(4.8);
+			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
 
 
 			step++;
@@ -164,11 +237,11 @@ void rewardLogic()
 	}
 	else if (phase == 3)
 	{
-		if (textComboReward.getScale().x > 0.05f)
+		if (re2.getScale().x > 0.05f)
 		{
-			textComboReward.scale(0.85f, 0.85f);
-			textComboReward.rotate(-18);
-			textComboReward.setOrigin(textComboReward.getLocalBounds().width * 0.5f, textComboReward.getLocalBounds().height * 0.5f);
+			re2.scale(0.85f, 0.85f);
+			re2.rotate(-18);
+			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
 		}
 		else phase = 4;
 	}
@@ -185,61 +258,61 @@ void handleRewards()
 {
 	if (comboScore < 7)
 	{
-		rewardStr = "GOOD!";
+		rewardIndex = 0;
 		rewardSize = 1.028f;
 	}
 		//reward("GOOD!", 50);
 	else if (comboScore < 15)
 	{
-		rewardStr = "SWEET!";
+		rewardIndex = 1;
 		rewardSize = 1.03f;
 	}
 	//	reward("SWEET!", 60);
 	else if (comboScore < 25)
 	{
-		rewardStr = "GREAT!";
+		rewardIndex = 2;
 		rewardSize = 1.032f;
 	}
 	//	reward("GREAT!", 70);
 	else if (comboScore < 35)
 	{
-		rewardStr = "SUPER!";
+		rewardIndex = 3;
 		rewardSize = 1.034f;
 	}
 	//	reward("SUPER!", 80);
 	else if (comboScore < 50)
 	{
-		rewardStr = "WOW!";
+		rewardIndex = 4;
 		rewardSize = 1.04f;
 	}
 	//	reward("WOW!", 90);
 	else if (comboScore < 70)
 	{
-		rewardStr = "AMAZING!";
+		rewardIndex = 5;
 		rewardSize = 1.0375f;
 	}
 	//	reward("AMAZING!", 100);
 	else if (comboScore < 100)
 	{
-		rewardStr = "EXTREME!";
+		rewardIndex = 6;
 		rewardSize = 1.0375f;
 	}
 	//	reward("EXTREME!", 110);
 	else if (comboScore < 140)
 	{
-		rewardStr = "FANTASTIC!";
+		rewardIndex = 7;
 		rewardSize = 1.0375f;
 	}
 	//	reward("FANTASTIC!", 120);
 	else if (comboScore < 200)
 	{
-		rewardStr = "SPLENDID!";
+		rewardIndex = 8;
 		rewardSize = 1.038f;
 	}
 	//	reward("SPLENDID!", 130);
 	else 
 	{
-		rewardStr = "NO WAY!";
+		rewardIndex = 9;
 		rewardSize = 1.0425;
 	}//reward("NO WAY!", 140);
 }
@@ -251,15 +324,14 @@ void startCombo()
 	comboBarHeight = 100;
 
 	star.setPosition(0, 215);
-	textConstFloors.setPosition(6, 245);
+	//textConstFloors.setPosition(6, 245);
+	re1.setPosition(6, 245);
 }
 
 void updateComboScore(int score)
 {
 	timesJumped++;
 	comboScore += (score) * 0.1f;
-	if (comboScore > bestCombo && timesJumped > 1)
-		bestCombo = comboScore;
 	textComboFloors.setString(std::to_string(comboScore));
 	textComboFloors.setPosition(38 - textComboFloors.getLocalBounds().width * 0.5f, 215); //center the text
 }
@@ -351,7 +423,7 @@ sf::Vector2i Score::stop()
 	static sf::Vector2f deltaPos;
 	static sf::Vector2i values;
 
-	std::cout << phase << "\n";
+	//std::cout << phase << "\n";
 
 	if (!GameOver::isGameOver())
 	{
@@ -368,7 +440,7 @@ sf::Vector2i Score::stop()
 		stopMode = true;
 		phase = 1;
 		textScoreTemp = textScore;
-		textScoreTemp.setScale(0.352634, 0.352634);
+		textScoreTemp.setScale(0.63, 0.63);
 		textScoreTemp.setOrigin(textScore.getLocalBounds().width * 0.5, textScore.getLocalBounds().height * 0.5);
 		textScoreTemp.setPosition(320, 290);
 		deltaScale = textScoreTemp.getScale() - textScore.getScale();
@@ -378,10 +450,10 @@ sf::Vector2i Score::stop()
 
 	else if (phase == 1)
 	{
-		if (i < 150)
+		if (i < 75)
 		{
-			textScore.setScale(textScore.getScale().x + deltaScale.x / 150, textScore.getScale().y + deltaScale.y / 150);
-			textScore.move(deltaPos.x / 150, deltaPos.y / 150);
+			textScore.setScale(textScore.getScale().x + deltaScale.x / 75, textScore.getScale().y + deltaScale.y / 75);
+			textScore.move(deltaPos.x / 75, deltaPos.y / 75);
 			i++;
 			//std::cout << textScore.getScale().x << "\n";
 		}
@@ -413,25 +485,34 @@ void Score::doLogic()
 	{
 		stop();
 	}
+
 }
 
-void Score::render(Layer& l, sf::RenderWindow& window)
+void Score::render(Layer& layer, sf::RenderWindow& window)
 {
+	static bool init = false;
+	if (!init)
+	{
+		re1.textMagic(window, layer);
+		re2.textMagic(window, layer);
+		init = true;
+	}
+
 	changeColor();
-	l.render(window, textScore);
-	l.render(window, spComboMeter);
+	layer.render(window, textScore);
+	layer.render(window, spComboMeter);
 	if (comboMode)
 	{
-		l.render(window, spComboMeterBar);
-		l.render(window, star);
-		l.render(window, textComboFloors);
-		re1.textMagic(window);
+		layer.render(window, spComboMeterBar);
+		layer.render(window, star);
+		layer.render(window, textComboFloors);
+		re1.textMagic(window, layer);
 	}
 
 	if (rewardMode)
 	{
-		ece.doLogic(window, l);
-		re2.textMagic(window);
+		ece.doLogic(window, layer);
+		re2.textMagic(window, layer);
 	}
 }
 
@@ -446,6 +527,7 @@ void Score::reset()
 	rewardMode = false;
 	stopMode = false;
 	rewardReset = false;
+	rewardAnimReset = true;
 
 	score = 0;
 	comboScore = 0;
@@ -456,6 +538,6 @@ void Score::reset()
 
 	textScore.setOrigin(0, 0);
 	textScore.setPosition(10, 440);
-	textScore.setScale(0.225, 0.225);
+	textScore.setScale(0.5, 0.5);
 	textScore.setString("SCORE: " + std::to_string(score));
 }

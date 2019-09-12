@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <PlatformLayer.h>
 #include <Camera.h>
 #include <Animation.h>
@@ -8,8 +9,11 @@
 #include <EyeCandyEngine.h>
 #include <string>
 #include <iostream>
+#include <GameOver.h>
+#include <PitchedSound.h>
 
-const float const_player_gravity = 0.25f;
+
+const float const_player_gravity = 0.225f;
 const float const_player_start_pos_x = 180;
 const float const_player_start_pos_y = 417;
 const int const_left_bound = 87;
@@ -31,6 +35,14 @@ private:
 	sf::Image cjImg;
 	sf::Texture cjTx;
 	sf::Sprite cjSp;
+	sf::SoundBuffer soundJumpLo;
+	sf::SoundBuffer soundJumpMid;
+	sf::SoundBuffer soundJumpHi;
+	sf::SoundBuffer soundEdge;
+	sf::SoundBuffer soundFalling;
+	sf::SoundBuffer soundWazup;
+	sf::SoundBuffer soundYo;
+	PitchedSound cjSound;
 	short side;
 	short jumpStrenght;
 	bool accelerating;

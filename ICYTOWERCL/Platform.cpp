@@ -78,12 +78,13 @@ void Platform::regenerate()
 	endSp.setPosition(position + 25 + length * 16, floor * const_dist_between_platforms * -1);
 	if (floor % 10 == 0)
 	{
-		floorText.setOrigin(0, -508);
 		floorText.setString(std::to_string(floor));
 		floorText.setFont(Font::getFont());
-		floorText.setCharacterSize(20);
-		floorText.setPosition(endSp.getPosition().x - (endSp.getPosition().x - startSp.getPosition().x) * 0.5f, 
-			middleSp.getPosition().y + 7);
+		floorText.setCharacterSize(30);
+		floorText.setOrigin(floorText.getLocalBounds().width*0.5, floorText.getLocalBounds().height*0.5);
+		floorText.setScale(0.5, 0.5);
+		floorText.setPosition((endSp.getPosition().x + 14) - ((endSp.getPosition().x + 14) - startSp.getPosition().x) * 0.5f, 
+			middleSp.getPosition().y + 14 + 508);
 		floorText.setOutlineThickness(2);
 		floorText.setOutlineColor(sf::Color::Black);
 		floorText.setFillColor(sf::Color::White);

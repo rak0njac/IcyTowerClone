@@ -20,8 +20,8 @@ sf::Sprite Timer::SpClock;
 sf::Texture TxClockHandle;
 sf::Sprite Timer::SpClockHandle;
 
-sf::Text textHurry("HURRY UP!", Font::getFont(), 160);
-RainbowEngine reHurry(textHurry);
+RainbowEngine textHurry("HURRY UP!", Font::getFont(), 160);
+//RainbowEngine reHurry(textHurry);
 
 sf::Clock clox;
 sf::Time timez;
@@ -36,7 +36,8 @@ void Timer::init() {
 	SpClockHandle.setOrigin(37, 47);
 	SpClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 	textHurry.setScale(0.5, 0.5);
-	textHurry.setOutlineThickness(5);
+	textHurry.setOutlineThickness(10);
+	textHurry.setOutlineColor(sf::Color(1, 26, 51, 255));
 	textHurry.setOrigin(textHurry.getLocalBounds().width * 0.5, textHurry.getLocalBounds().height * 0.5);
 	textHurry.setPosition(320, 540);
 }
@@ -99,14 +100,15 @@ void shakeAnim()
 
 void displayHurryUp()
 {
-	if (hurrying && textHurry.getPosition().y > -80)
+	if (hurrying)
 	{
-		textHurry.move(0, -2);
-	}
-	else
-	{
-		textHurry.setPosition(320, 540);
-		hurrying = false;
+		if(textHurry.getPosition().y > -80)
+			textHurry.move(0, -2);
+		else
+		{
+			textHurry.setPosition(320, 540);
+			hurrying = false;
+		}
 	}
 }
 
@@ -172,5 +174,5 @@ void Timer::reset()
 void Timer::render(Layer layer, sf::RenderWindow& window)
 {
 	//layer.render(window, textHurry);
-	reHurry.textMagic(window);
+	textHurry.textMagic(window, layer);
 }

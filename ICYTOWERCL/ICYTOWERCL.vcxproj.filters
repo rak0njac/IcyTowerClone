@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Sounds">
+      <UniqueIdentifier>{1e4485ed-0cb5-4071-ad41-899aee4db8f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sounds\combo_rewards">
+      <UniqueIdentifier>{ef645956-f64e-4246-b28f-ad8e281f00fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +69,9 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PitchedSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h">
@@ -110,6 +119,9 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PitchedSound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\Bkg.png">
@@ -144,5 +156,79 @@
     <Font Include="..\Assets\RoteFlora.ttf">
       <Filter>Resource Files</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Sounds\edge.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\falling.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\jump_hi.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\jump_lo.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\jump_mid.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\wazup.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\yo.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\alright.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\beat.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\collide.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\amazing.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\extreme.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\fantastic.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\good.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\great.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\noway.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\splendid.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\super.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\sweet.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\combo_rewards\wow.ogg">
+      <Filter>Resource Files\Sounds\combo_rewards</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\boom.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\gameover.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\hurry.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\tryagain.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
   </ItemGroup>
 </Project>

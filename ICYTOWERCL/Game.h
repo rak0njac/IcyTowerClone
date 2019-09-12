@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <Background.h>
 #include <Camera.h>
 #include <Player.h>

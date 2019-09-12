@@ -1,9 +1,12 @@
 #pragma once
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <Layer.h>
+
 class RainbowEngine : public sf::Text
 {
 private:
+	bool reInitialized = false;
 	bool colorsInitialized;
 	bool charsInitialized;
 	sf::Text comp;
@@ -16,9 +19,14 @@ private:
 	int x;
 	int y;
 
+	void init();
+
 public:
-	RainbowEngine(sf::Text& text);
+	RainbowEngine(sf::Text text);
+	//RainbowEngine(){}
+	//using namespace sf;
+	using Text::Text;
 	static sf::Color changeColor(const sf::Color& color, const int col);
-	void textMagic(sf::RenderWindow& window);
+	void textMagic(sf::RenderWindow& window, Layer& layer);
 	void resetText(sf::Text& text);
 };

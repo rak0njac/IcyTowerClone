@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <Layer.h>
 
 namespace GameOver
 {
@@ -10,5 +11,5 @@ namespace GameOver
 	void restartGame();
 	void stopGame();
 	void doLogic();
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window, Layer& layer);
 }

@@ -7,16 +7,29 @@ void RainbowEngine::resetText(sf::Text& text)
 
 }
 
-RainbowEngine::RainbowEngine(sf::Text& text)
+void RainbowEngine::init()
 {
 	colorsInitialized = false;
 	charsInitialized = false;
-	//comp = text;
+	numOfColors = 18;
+	numOfChars = this->getString().getSize();
+	while (numOfColors < numOfChars)
+		numOfColors += 18;
+	skipper = 0;
+	x = 0;
+	y = 0;
+	reInitialized = true;
+}
+RainbowEngine::RainbowEngine(sf::Text text)
+{
+	colorsInitialized = false;
+	charsInitialized = false;
+	//this->text = &text;
 	numOfColors = 18;
 	numOfChars = text.getString().getSize();
 	while (numOfColors < numOfChars)
 		numOfColors += 18;
-	this->text = &text;
+	//this->text = &text;
 	skipper = 0;
 	x = 0;
 	y = 0;
@@ -65,9 +78,15 @@ sf::Color RainbowEngine::changeColor(const sf::Color& color, const int delta)
 	return out;
 }
 
-void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 continuous hours of tinkering before it
+void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one took 8 continuous hours of tinkering before it
 {																		//finally worked properly so u are required to appreciate it
-
+	//if(comparer.getString() != this->getString())
+	//{
+	//	charsInitialized = false;
+	//	comparer = *text;
+	//}
+	//else if (comparer.getScale()!=this->getScale()) {}
+	//else if (comparer.getRotation())
 	//if (charsInitialized)// && (text->getString() != comp.getString()))
 	//{
 	//	charsInitialized = false;
@@ -76,21 +95,40 @@ void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 contin
 	////else charsInitialized = true;
 	//if (!charsInitialized)
 	//{
-	if (skipper == 1)
+	if (!reInitialized)
 	{
-		numOfChars = text->getString().getSize();
-		chars.clear();
-		for (int i = 0; i < numOfChars; i++)
+		init();
+	}
+	if (1)
+	{
+		numOfChars = this->getString().getSize();
+		if (comp.getString() != this->getString())
 		{
-			chars.push_back(sf::Text(text->getString().substring(i, 1), Font::getFont(), text->getCharacterSize()));
-			chars[i].setScale(text->getScale());
-			chars[i].setRotation(text->getRotation());
-			chars[i].setPosition(text->findCharacterPos(i));
-			chars[i].setOutlineColor(text->getOutlineColor());
-			chars[i].setOutlineThickness(text->getOutlineThickness());
+			chars.clear();
+			for (int i = 0; i < numOfChars; i++)
+				chars.push_back(sf::Text(this->getString().substring(i, 1), Font::getFont(), this->getCharacterSize()));
+			comp = *this;
+			numOfColors = 0;
+			while (numOfColors < numOfChars)
+				numOfColors += 18;
 		}
-		comp = *text;
-		charsInitialized = true;
+		//else
+		//{
+			//std::cout << chars.size();
+
+			for (int i = 0; i < numOfChars; i++)
+			{
+				//chars[i].setOrigin(this->getOrigin());
+				chars[i].setScale(this->getScale());
+				chars[i].setRotation(this->getRotation());
+				chars[i].setPosition(this->findCharacterPos(i));
+				chars[i].setOutlineColor(this->getOutlineColor());
+				chars[i].setOutlineThickness(this->getOutlineThickness());
+			}
+		//}
+
+
+
 	}
 
 	//}
@@ -103,9 +141,14 @@ void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 contin
 			else
 			{
 				colors.push_back(changeColor(colors[i - 1], 85));
+
 			}
+
 		}
+		//std::cout << numOfColors << "\n";
+
 		colorsInitialized = true;
+
 	}
 
 
@@ -115,16 +158,21 @@ void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 contin
 		{
 			if ((x + i) >= numOfColors - 1)
 			{
+				//chars[i].setFillColor(colors[0]);
+				//sf::Color s = colors[y];
 				chars[i].setFillColor(colors[y]);
+
 				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << y << "]\n";
 				y++;
 			}
 			else
 			{
 				chars[i].setFillColor(colors[x + i]);//x+i
+
 				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << x + i << "]\n";
 				//std::cout << i << "\n";
 			}
+
 		}
 		y = 0;
 		x++;
@@ -141,7 +189,8 @@ void RainbowEngine::textMagic(sf::RenderWindow& window) //This one took 8 contin
 	{
 		for (sf::Text& ch : chars)
 		{
-			window.draw(ch);
+			layer.render(window, ch);
+			//window.draw(ch);
 		}
 
 	}
