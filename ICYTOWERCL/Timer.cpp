@@ -4,6 +4,7 @@
 #include <GameOver.h>
 #include <Font.h>
 #include <RainbowEngine.h>
+#include <SFML\Audio.hpp>
 
 using namespace Timer;
 
@@ -26,6 +27,9 @@ RainbowEngine textHurry("HURRY UP!", Font::getFont(), 160);
 sf::Clock clox;
 sf::Time timez;
 
+sf::SoundBuffer sb;
+static sf::Sound sound;
+
 void Timer::init() {
 	TxClock.loadFromFile("..\\Assets\\Clock.png");
 	SpClock.setTexture(TxClock);
@@ -40,6 +44,9 @@ void Timer::init() {
 	textHurry.setOutlineColor(sf::Color(1, 26, 51, 255));
 	textHurry.setOrigin(textHurry.getLocalBounds().width * 0.5, textHurry.getLocalBounds().height * 0.5);
 	textHurry.setPosition(320, 540);
+
+	sb.loadFromFile("..\\Assets\\Sounds\\hurry.ogg");
+	sound.setBuffer(sb);
 }
 
 void shakeAnim()
@@ -126,6 +133,7 @@ void Timer::doLogic()
 			{
 				shaking = true;
 				hurrying = true;
+				sound.play();
 				if (i < 4)
 					i++;
 				else

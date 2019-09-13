@@ -7,10 +7,11 @@ sf::Music music;
 Player player;
 Layer layerBkg;
 Layer layerWall(3);
-PlatformLayer layerPlatform(2);
-Layer layerHud(0);
+PlatformLayer Game::layerPlatform(2);
+Layer Game::layerHud(0);
 
 bool debug;
+bool resetting;
 
 void Game::init()
 {
@@ -26,8 +27,10 @@ void Game::init()
 	Timer::init();
 	Score::init();		 //rework if multiplayer
 	GameOver::init();
+	FadeEffect::init();
 
 	debug = false;
+	resetting = false;
 }
 
 void Game::logic()
@@ -58,44 +61,63 @@ void Game::logic()
 					//}
 					if (GameOver::isGameOver())
 					{
-						GameOver::restartGame();
+						resetting = true;
 					}
 				}
 			}
 		}
 
-		window.clear();
-
-		layerBkg.move();
-		layerBkg.render(window, Background::getSpBkg());
-
-		if(!GameOver::isGameOver())
-			Timer::render(layerHud, window);
-
-		layerPlatform.move();
-		layerPlatform.render(window); //layerplatform -- layerengine?
-
-		player.doLogic(window, layerPlatform);
-		player.render(window, layerPlatform);
-
-		layerWall.move();
-		layerWall.render(window, Background::getSpWall());
-
-		if (!GameOver::isGameOver())
+		if (resetting)
 		{
-			Timer::doLogic();
+			//window.clear();
+			if (FadeEffect::fadeIn())
+			{
+				GameOver::restartGame();
+				window.clear();
+				layerBkg.render(window, Background::getSpBkg());
+				layerPlatform.render(window); //layerplatform -- layerengine?
+				player.render(window, layerPlatform);
+				layerWall.render(window, Background::getSpWall());
+				Score::render(layerHud, window);
+			}
+			layerHud.render(window, FadeEffect::getDrawable());
+			window.display();
 		}
-		Score::doLogic();
-		
-		Score::render(layerHud, window);
-		
-		layerHud.render(window, Timer::SpClock);
-		layerHud.render(window, Timer::SpClockHandle);
-		
-		GameOver::doLogic();
-		GameOver::render(window, layerHud);
+		else
+		{
+			window.clear();
 
-		window.display();
+			layerBkg.move();
+			layerBkg.render(window, Background::getSpBkg());
+
+			if (!GameOver::isGameOver())
+				Timer::render(layerHud, window);
+
+			layerPlatform.move();
+			layerPlatform.render(window); //layerplatform -- layerengine?
+
+			player.doLogic(window, layerPlatform);
+			player.render(window, layerPlatform);
+
+			layerWall.move();
+			layerWall.render(window, Background::getSpWall());
+
+			if (!GameOver::isGameOver())
+			{
+				Timer::doLogic();
+			}
+			Score::doLogic();
+
+			Score::render(layerHud, window);
+
+			layerHud.render(window, Timer::SpClock);
+			layerHud.render(window, Timer::SpClockHandle);
+
+			GameOver::doLogic();
+			GameOver::render(window, layerHud);
+
+			window.display();
+		}
 	}
 }
 

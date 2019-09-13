@@ -62,6 +62,36 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 	candy.setPosition(startPosX, startPosY);
 }
 
+EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, const float& _ySpeed)
+{
+	step = 5;									
+	std::random_device rd;
+	std::mt19937 rand(rd());
+	std::uniform_int_distribution<> randPos(_randPos * -1, _randPos);
+	std::uniform_real_distribution<> randDir(_randDir * -1, _randDir);
+	std::uniform_real_distribution<> randGrav(0.05, 0.1);
+	startPosX = posX + randPos(rand);
+	startPosY = posY;
+	xSpeed = randDir(rand);
+	ySpeed = _ySpeed;
+	gravity = randGrav(rand);
+
+	candy.setPointCount(10);
+	candy.setPoint(0, sf::Vector2f(5, 0));   //
+	candy.setPoint(1, sf::Vector2f(6, 3));
+	candy.setPoint(2, sf::Vector2f(10, 3));
+	candy.setPoint(3, sf::Vector2f(8, 6));
+	candy.setPoint(4, sf::Vector2f(9, 9));
+	candy.setPoint(5, sf::Vector2f(5, 8));
+	candy.setPoint(6, sf::Vector2f(1, 9));
+	candy.setPoint(7, sf::Vector2f(2, 6)); 	 //
+	candy.setPoint(8, sf::Vector2f(0, 3));	 //
+	candy.setPoint(9, sf::Vector2f(4, 3));	 //
+
+	candy.setOrigin(5, 4);
+	candy.setPosition(startPosX, startPosY);
+}
+
 const sf::ConvexShape& EyeCandy::getDrawable()
 {
 	return candy;

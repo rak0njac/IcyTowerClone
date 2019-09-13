@@ -1,10 +1,12 @@
 #include <Player.h>
+#include <Game.h>
 
 Player::Player()
 {
 	onGround = true;
 	curPlatform = &PlatformLayer::arrPlatform[0];
-	level = 1;
+	curLevel = 1;
+	levelMilestone = 50;
 	jumpStrenght = 0;
 	xSpeed = 0;
 	ySpeed = 0;
@@ -27,6 +29,9 @@ Player::Player()
 	soundYo.loadFromFile("..\\Assets\\Sounds\\yo.ogg");
 	soundFalling.loadFromFile("..\\Assets\\Sounds\\falling.ogg");
 
+	soundMilestone.loadFromFile("..\\Assets\\Sounds\\alright.ogg");
+	cjSoundMilestone.setBuffer(soundMilestone);
+
 	cjSound.setBuffer(soundYo);
 	cjSound.play();
 }
@@ -35,7 +40,8 @@ Player::Player(std::string filename, int startPosX)
 {
 	onGround = true;
 	curPlatform = &PlatformLayer::arrPlatform[0];
-	level = 1;
+	curLevel = 1;
+	levelMilestone = 50;
 	jumpStrenght = 0;
 	xSpeed = 0;
 	ySpeed = 0;
@@ -60,6 +66,13 @@ int Player::checkBoundaries()
 	else return const_right_bound;
 }
 
+void Player::milestoneReward()
+{
+	cjSoundMilestone.play();
+	eceMilestone.addCandy(320, 480, 320, 3, -9, 100);
+	levelMilestone += 50;
+}
+
 void Player::collide()
 {
 	static float swat;
@@ -68,11 +81,11 @@ void Player::collide()
 		swat = const_dist_between_platforms - 8;
 	}
 	else swat = const_dist_between_platforms;
-	if (cjSp.getPosition().y > - const_dist_between_platforms * level + const_player_start_pos_y + swat) // CONST_BETWEEN_PLATFORM_DISTANCE = 80
+	if (cjSp.getPosition().y > - const_dist_between_platforms * curLevel + const_player_start_pos_y + swat) // CONST_BETWEEN_PLATFORM_DISTANCE = 80
 	{
 		for (Platform& p : PlatformLayer::arrPlatform)
 		{
-			if (p.getFloor() == level && 
+			if (p.getFloor() == curLevel && 
 				cjSp.getPosition().x >= p.startSp.getPosition().x - 12.5f && // CONST_START_TILE_WIDTH = 12
 				cjSp.getPosition().x <= p.endSp.getPosition().x + 14 + 12.5f) // CONST_END_TILE_WIDTH = 14
 			{
@@ -80,10 +93,14 @@ void Player::collide()
 				ySpeed = 0;
 				cjSp.setOrigin(14, 35);
 				cjSp.setRotation(0);
-				cjSp.setPosition(cjSp.getPosition().x, const_player_start_pos_y - const_dist_between_platforms * (level - 1));
+				cjSp.setPosition(cjSp.getPosition().x, const_player_start_pos_y - const_dist_between_platforms * (curLevel - 1));
 				onGround = true;
 				curPlatform = &p;
-				Score::changeScore((level-1) * 10);
+				Score::changeScore((curLevel-1) * 10);
+				if (curLevel >= levelMilestone)
+				{
+					milestoneReward();
+				}
 			}
 		}
 	}
@@ -289,7 +306,7 @@ void Player::checkJump()
 	{
 		ySpeed = 0.0f;
 	}
-	level = (cjSp.getPosition().y - const_player_start_pos_y) / -80 + 1;
+	curLevel = (cjSp.getPosition().y - const_player_start_pos_y) / -80 + 1;
 }
 
 void Player::checkMove()
@@ -381,9 +398,10 @@ void Player::checkCandy(sf::RenderWindow& window, PlatformLayer& pl)
 {
 	if (jumpStrenght == 3 && Score::isComboMode()) 
 	{
-		ece.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
+		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
 	}
-	ece.doLogic(window, pl);
+	eceCombo.doLogic(window, pl);
+	eceMilestone.doLogic(window, Game::layerHud);
 }
 
 void Player::doLogic(sf::RenderWindow& window, PlatformLayer& pl)
@@ -401,14 +419,15 @@ void Player::doLogic(sf::RenderWindow& window, PlatformLayer& pl)
 
 void Player::render(sf::RenderWindow& window, PlatformLayer& pl)
 {
-	window.draw(cjSp);
+	pl.render(window, cjSp);
 }
 
 void Player::reset()
 {
 	onGround = true;
 	curPlatform = &PlatformLayer::arrPlatform[0];
-	level = 1;
+	curLevel = 1;
+	levelMilestone = 50;
 	jumpStrenght = 0;
 	xSpeed = 0;
 	ySpeed = 0;
@@ -420,5 +439,6 @@ void Player::reset()
 	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
 	cjSp.setRotation(0);
 
-	ece.reset();
+	eceCombo.reset();
+	eceMilestone.reset();
 }

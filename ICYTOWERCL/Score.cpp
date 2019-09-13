@@ -159,7 +159,7 @@ void changeColor()
 	}
 }
 
-std::string getRewardString(int rewardIndex)
+std::string getRewardString()
 {
 	if (rewardIndex == Reward::Good)
 		return "GOOD!";
@@ -199,16 +199,13 @@ void rewardLogic()
 	{
 		if (comboScore > bestCombo)
 			bestCombo = comboScore;
-		if (comboScore >= 25)
-		{
-			ece.addCandy(320, 290, comboScore, 2, comboScore*0.5);
-		}
+		ece.addCandy(320, 290, comboScore, 2, comboScore*0.5);
 		re2.setScale(0.05f, 0.05f);
 		re2.setRotation(0);
 		comboScore = 0;
 		timesJumped = 0;
 		step = 0;
-		re2.setString(getRewardString(rewardIndex));
+		re2.setString(getRewardString());
 		sound.setBuffer(soundBuffer[rewardIndex]);
 		sound.play();
 		phase = 1;

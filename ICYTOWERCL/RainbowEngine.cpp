@@ -80,58 +80,29 @@ sf::Color RainbowEngine::changeColor(const sf::Color& color, const int delta)
 
 void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one took 8 continuous hours of tinkering before it
 {																		//finally worked properly so u are required to appreciate it
-	//if(comparer.getString() != this->getString())
-	//{
-	//	charsInitialized = false;
-	//	comparer = *text;
-	//}
-	//else if (comparer.getScale()!=this->getScale()) {}
-	//else if (comparer.getRotation())
-	//if (charsInitialized)// && (text->getString() != comp.getString()))
-	//{
-	//	charsInitialized = false;
-	//	numOfChars = text->getString().getSize();
-	//}
-	////else charsInitialized = true;
-	//if (!charsInitialized)
-	//{
 	if (!reInitialized)
 	{
 		init();
 	}
-	if (1)
+	numOfChars = this->getString().getSize();
+	if (comp.getString() != this->getString())
 	{
-		numOfChars = this->getString().getSize();
-		if (comp.getString() != this->getString())
-		{
-			chars.clear();
-			for (int i = 0; i < numOfChars; i++)
-				chars.push_back(sf::Text(this->getString().substring(i, 1), Font::getFont(), this->getCharacterSize()));
-			comp = *this;
-			numOfColors = 0;
-			while (numOfColors < numOfChars)
-				numOfColors += 18;
-		}
-		//else
-		//{
-			//std::cout << chars.size();
-
-			for (int i = 0; i < numOfChars; i++)
-			{
-				//chars[i].setOrigin(this->getOrigin());
-				chars[i].setScale(this->getScale());
-				chars[i].setRotation(this->getRotation());
-				chars[i].setPosition(this->findCharacterPos(i));
-				chars[i].setOutlineColor(this->getOutlineColor());
-				chars[i].setOutlineThickness(this->getOutlineThickness());
-			}
-		//}
-
-
-
+		chars.clear();
+		for (int i = 0; i < numOfChars; i++)
+			chars.push_back(sf::Text(this->getString().substring(i, 1), Font::getFont(), this->getCharacterSize()));
+		comp = *this;
+		numOfColors = 0;
+		while (numOfColors < numOfChars)
+			numOfColors += 18;
 	}
-
-	//}
+		for (int i = 0; i < numOfChars; i++)
+		{
+			chars[i].setScale(this->getScale());
+			chars[i].setRotation(this->getRotation());
+			chars[i].setPosition(this->findCharacterPos(i));
+			chars[i].setOutlineColor(this->getOutlineColor());
+			chars[i].setOutlineThickness(this->getOutlineThickness());
+		}
 	if (!colorsInitialized)
 	{
 		for (int i = 0; i < numOfColors; i++)
@@ -141,36 +112,22 @@ void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one
 			else
 			{
 				colors.push_back(changeColor(colors[i - 1], 85));
-
 			}
-
 		}
-		//std::cout << numOfColors << "\n";
-
 		colorsInitialized = true;
-
 	}
-
-
 	if (skipper == 1)
 	{
 		for (int i = 0; i < numOfChars; i++)
 		{
 			if ((x + i) >= numOfColors - 1)
 			{
-				//chars[i].setFillColor(colors[0]);
-				//sf::Color s = colors[y];
 				chars[i].setFillColor(colors[y]);
-
-				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << y << "]\n";
 				y++;
 			}
 			else
 			{
 				chars[i].setFillColor(colors[x + i]);//x+i
-
-				//std::cout << "ACCESSING: chars[" << i << "] AND colors[" << x + i << "]\n";
-				//std::cout << i << "\n";
 			}
 
 		}
@@ -181,17 +138,10 @@ void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one
 			x = 0;
 		}
 		skipper = 0;
-
 	}
 	else skipper++;
-
-	if (1)//skipper == 1)
+	for (sf::Text& ch : chars)
 	{
-		for (sf::Text& ch : chars)
-		{
-			layer.render(window, ch);
-			//window.draw(ch);
-		}
-
+		layer.render(window, ch);
 	}
 }

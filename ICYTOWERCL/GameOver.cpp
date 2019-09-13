@@ -65,10 +65,13 @@ void GameOver::restartGame()
 {
 	sound.setBuffer(sbTryAgain);
 	sound.play();
-	//fade
-	Background::reset();
-	Score::reset();
-	Timer::reset();
+	if (FadeEffect::fadeIn())
+	{
+		Background::reset();
+		Score::reset();
+		Timer::reset();
+	}
+
 	Game::reset();
 	gameOver = false;
 }

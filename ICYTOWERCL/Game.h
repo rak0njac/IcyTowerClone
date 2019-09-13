@@ -10,6 +10,7 @@
 #include <iostream>
 #include <Font.h>
 #include <GameOver.h>
+#include <FadeEffect.h>
 
 namespace Game
 {
@@ -23,6 +24,9 @@ namespace Game
 	//Layer layerHud;
 
 	//bool debug;
+
+	extern PlatformLayer layerPlatform;
+	extern Layer layerHud;
 
 	void init();
 	void logic();

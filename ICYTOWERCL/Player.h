@@ -30,8 +30,9 @@ class Player
 private:
 	bool onGround;
 	Platform* curPlatform;
-	EyeCandyEngine ece;
-	int level;
+	EyeCandyEngine eceCombo;
+	int curLevel;
+	int levelMilestone;
 	sf::Image cjImg;
 	sf::Texture cjTx;
 	sf::Sprite cjSp;
@@ -43,6 +44,10 @@ private:
 	sf::SoundBuffer soundWazup;
 	sf::SoundBuffer soundYo;
 	PitchedSound cjSound;
+
+	sf::SoundBuffer soundMilestone;
+	sf::Sound cjSoundMilestone;
+
 	short side;
 	short jumpStrenght;
 	bool accelerating;
@@ -53,6 +58,8 @@ private:
 	int checkBoundaries();
 	void collide();
 	void checkCollision();
+	void milestoneReward();
+
 	void animationAndSound(PlatformLayer& pl);
 	void move();
 	void jump();
@@ -63,6 +70,7 @@ private:
 	void checkCandy(sf::RenderWindow& window, PlatformLayer& pl);
 	void checkGameOver(PlatformLayer& pl);
 public:
+	EyeCandyEngine eceMilestone;
 	Player();
 	Player(std::string filename, int startPosX); //multiplayer eventually?
 	void doLogic(sf::RenderWindow& window, PlatformLayer& pl);

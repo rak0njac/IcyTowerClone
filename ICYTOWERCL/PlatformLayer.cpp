@@ -27,8 +27,14 @@ void PlatformLayer::render(sf::RenderWindow& window)
 	window.setView(view);
 	for (Platform& p : arrPlatform)
 	{
-		p.render(window);			
+		p.render(window);
 	}
+}
+
+void PlatformLayer::render(sf::RenderWindow& window, sf::Drawable& drawable)
+{
+	window.setView(view);
+	window.draw(drawable);
 }
 
 void PlatformLayer::reset()
