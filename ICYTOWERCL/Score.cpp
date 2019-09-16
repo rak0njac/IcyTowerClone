@@ -23,13 +23,13 @@ int comboScore;		//current combo session score
 int comboScoreTotal;	//score accumulated from all combo sessions
 int bestCombo;
 
-sf::Text textScore("SCORE: 0", Font::getFont(), 60);
+sf::Text textScore("SCORE: 0", DefaultFont::getFont(), 60);
 
-sf::Text textConstFloors("floors", Font::getFont(), 20);
-RainbowEngine re1("floors", Font::getFont(), 20);						//(textConstFloors);
-sf::Text textComboFloors("", Font::getFont(), 30);
-sf::Text textComboReward("", Font::getFont(), 140);
-RainbowEngine re2("QWERTYUIOPASDFGHJKLZXCVBNM!", Font::getFont(), 140);
+sf::Text textConstFloors("floors", DefaultFont::getFont(), 20);
+RainbowText re1("floors", DefaultFont::getFont(), 20);						//(textConstFloors);
+sf::Text textComboFloors("", DefaultFont::getFont(), 30);
+sf::Text textComboReward("", DefaultFont::getFont(), 140);
+RainbowText re2("QWERTYUIOPASDFGHJKLZXCVBNM!", DefaultFont::getFont(), 140);
 
 
 sf::Texture txComboMeter;
@@ -45,6 +45,7 @@ sf::Color color(255, 0, 0, 255);
 
 EyeCandyEngine ece;
 
+static Layer& curLayer = Game::Layers::layerHud;
 
 
 using namespace Score;
@@ -69,6 +70,7 @@ sf::Sound sound;
 
 void Score::init()
 {
+	//curLayer.addVector(re1.getVector());
 	playerPos = 0;
 
 	timesJumped = 0;
@@ -123,6 +125,9 @@ void Score::init()
 	textComboFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
 	textConstFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
 
+	re1.init();
+	re2.init();
+
 	re1.setOutlineThickness(1);
 	re1.setOutlineColor(sf::Color(1, 26, 51, 255));
 
@@ -141,6 +146,10 @@ void Score::init()
 	soundBuffer[Reward::Fantastic].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\fantastic.ogg");
 	soundBuffer[Reward::Splendid].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\splendid.ogg");
 	soundBuffer[Reward::NoWay].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\noway.ogg");
+
+	ece.setLayer(curLayer);
+	re1.setLayer(curLayer);
+	re2.setLayer(curLayer);
 }
 
 void changeColor()
@@ -151,11 +160,11 @@ void changeColor()
 	{
 		star.setFillColor(sf::Color(color.g, color.r, color.b, 255));
 		textComboFloors.setFillColor(sf::Color(color.b, color.g, color.r, 255));
-		color = RainbowEngine::changeColor(color, 51);
+		color = RainbowText::changeColor(color, 51);
 	}
 	else
 	{
-		color = RainbowEngine::changeColor(color, 5);
+		color = RainbowText::changeColor(color, 5);
 	}
 }
 
@@ -218,7 +227,7 @@ void rewardLogic()
 			re2.scale(rewardSize, rewardSize);
 			re2.rotate(4.8);
 			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
-
+			re2.textMagic();
 
 			step++;
 		}
@@ -229,6 +238,7 @@ void rewardLogic()
 		if (step < 150)
 		{
 			step++;
+			re2.textMagic();
 		}
 		else phase = 3;
 	}
@@ -239,6 +249,7 @@ void rewardLogic()
 			re2.scale(0.85f, 0.85f);
 			re2.rotate(-18);
 			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
+			re2.textMagic();
 		}
 		else phase = 4;
 	}
@@ -378,6 +389,7 @@ void comboLogic()
 			skipper = 1;
 		}
 		else skipper = 0;
+		re1.textMagic();
 	}
 	else
 	{
@@ -466,7 +478,7 @@ sf::Vector2i Score::stop()
 }
 
 
-void Score::doLogic()
+void Score::logic()
 {
 	if (comboMode)
 	{
@@ -482,34 +494,35 @@ void Score::doLogic()
 	{
 		stop();
 	}
-
+	changeColor();
 }
 
-void Score::render(Layer& layer, sf::RenderWindow& window)
+void Score::render(sf::RenderWindow& window)
 {
 	static bool init = false;
 	if (!init)
 	{
-		re1.textMagic(window, layer);
-		re2.textMagic(window, layer);
+		re1.textMagic();
+		re1.render(window);
+		re2.textMagic();
+		re2.render(window);
 		init = true;
 	}
 
-	changeColor();
-	layer.render(window, textScore);
-	layer.render(window, spComboMeter);
+	curLayer.render(window, textScore);
+	curLayer.render(window, spComboMeter);
 	if (comboMode)
 	{
-		layer.render(window, spComboMeterBar);
-		layer.render(window, star);
-		layer.render(window, textComboFloors);
-		re1.textMagic(window, layer);
+		curLayer.render(window, spComboMeterBar);
+		curLayer.render(window, star);
+		curLayer.render(window, textComboFloors);
+		re1.render(window);
 	}
 
 	if (rewardMode)
 	{
-		ece.doLogic(window, layer);
-		re2.textMagic(window, layer);
+		ece.render(window);
+		re2.render(window);
 	}
 }
 

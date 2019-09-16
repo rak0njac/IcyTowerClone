@@ -1,18 +1,18 @@
 #include <Game.h>
 #include <RainbowEngine.h>
 
+//basic init
 sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML", sf::Style::Close);
 sf::Event event;
 
+//object init
 sf::Music music;
 Player player;
-Layer layerBkg;
-Layer layerWall(3);
-PlatformLayer Game::layerPlatform(2);
-Layer Game::layerHud(0);
-
-bool debug;
-bool resetting;
+Layer Game::Layers::layerBkg;
+Layer Game::Layers::layerWall(3);
+Layer Game::Layers::layerHurryText(0);
+PlatformEngine Game::Layers::platformEngine(2);
+Layer Game::Layers::layerHud(0);
 
 int gameState;
 
@@ -42,17 +42,7 @@ void Game::logic()
 				}
 				if (event.key.code == sf::Keyboard::Enter)
 				{
-					//if (!debug)
-					//{
-					//	debug = 1;
-					//	window.setFramerateLimit(3);
-					//}
-					//else
-					//{
-					//	debug = 0;
-					//	window.setFramerateLimit(100);
-					//}
-					if (GameOver::isGameOver())
+					if (gameState == Game::State::GameOver)
 					{
 						GameOver::restartGame();
 					}
@@ -60,150 +50,138 @@ void Game::logic()
 			}
 		}
 
-		if (gameState == State::InGame)
+		if (gameState == Game::State::InGame)
 		{
 			window.clear();
 
-			layerBkg.move();
-			layerBkg.render(window, Background::getSpBkg());
+			//logic processing
+			Layers::layerBkg.logic();
+			Layers::layerWall.logic();
+			Layers::platformEngine.logic();
+			Timer::logic();
+			Score::logic();
+			player.logic();
 
-			//if (!GameOver::isGameOver())
-			Timer::render(layerHud, window);	//hurryup
-
-			layerPlatform.move();
-			layerPlatform.render(window); //layerplatform -- layerengine?
-
-			player.doLogic(window, layerPlatform);
-			player.render(window, layerPlatform);
-
-			layerWall.move();
-			layerWall.render(window, Background::getSpWall());
-
-			//if (!GameOver::isGameOver())
-			//{
-			Timer::doLogic();
-			//}
-			Score::doLogic();
-
-			Score::render(layerHud, window);
-
-			layerHud.render(window, Timer::SpClock);
-			layerHud.render(window, Timer::SpClockHandle);
-
-			//GameOver::doLogic();
-			//GameOver::render(window, layerHud);
+			//rendering (in order)
+			Background::render(window, Background::Sprites::Background);
+			Timer::render(window, Timer::Sprites::HurryUpText);
+			Layers::platformEngine.render(window);
+			Background::render(window, Background::Sprites::Wall);
+			player.render(window);
+			Score::render(window);
+			Timer::render(window, Timer::Sprites::Clock);
 
 			window.display();
 		}
-		else if (gameState ==  State::GameOver)
-		{ 
-			window.clear();
-			layerBkg.render(window, Background::getSpBkg());
-			layerPlatform.render(window); //layerplatform -- layerengine?
-			player.doLogic(window, layerPlatform);
-			player.render(window, layerPlatform);
-			layerWall.render(window, Background::getSpWall());
-			Score::doLogic();
-			Score::render(layerHud, window);
+		//else if (gameState ==  State::GameOver)
+		//{ 
+		//	window.clear();
 
-			layerHud.render(window, Timer::SpClock);
-			layerHud.render(window, Timer::SpClockHandle);
-			GameOver::doLogic();
-			GameOver::render(window, layerHud);
+		//	layerBkg.render(window, Background::Sprite::spBkg);
+		//	layerPlatform.render(window);
+		//	player.logic();
+		//	player.render(window, layerPlatform); //work on
+		//	layerWall.render(window, Background::Sprite::spWall);
+		//	Score::logic();
+		//	Score::render(window, layerHud);
 
-			window.display();
+		//	//layerHud.render(window, Timer::SpClock);
+		//	//layerHud.render(window, Timer::SpClockHandle);
+		//	GameOver::logic();
+		//	GameOver::render(window, layerHud);
 
-		}
-		else if (gameState == State::Resetting)
-		{
-			static int i = 0;
-			static int phase = 0;
-			if (phase == 0)
-			{
-				music.stop();
-				phase++;
-			}
-			else if (phase == 1)
-			{
-				if (i < 51)
-				{
-					window.clear();
-					layerBkg.render(window, Background::getSpBkg());
-					layerPlatform.render(window); //layerplatform -- layerengine?
-					player.render(window, layerPlatform);
-					layerWall.render(window, Background::getSpWall());
-					Score::render(layerHud, window);
+		//	window.display();
+		//}
+		//else if (gameState == State::Resetting)
+		//{
+		//	static int i = 0;
+		//	static int phase = 0;
+		//	if (phase == 0)
+		//	{
+		//		music.stop();
+		//		GameOver::reset();
+		//		phase++;
+		//	}
+		//	else if (phase == 1)
+		//	{
+		//		if (i < 51)
+		//		{
+		//			window.clear();
 
-					layerHud.render(window, Timer::SpClock);
-					layerHud.render(window, Timer::SpClockHandle);
-					GameOver::render(window, layerHud);
-					FadeEffect::fade(i * 5);
-					layerHud.render(window, FadeEffect::getDrawable());
-					window.display();
+		//			layerBkg.render(window, Background::Sprite::spBkg);
+		//			layerPlatform.render(window);
+		//			player.render(window, layerPlatform);
+		//			layerWall.render(window, Background::Sprite::spWall);
+		//			Score::render(layerHud, window);
 
-					i++;
-				}
-				else phase++;
-			}
-			else if (phase == 2)
-			{
-				Background::reset();
-				Score::reset();
-				Timer::reset();
-				Game::reset();
-				GameOver::reset();
+		//			//layerHud.render(window, Timer::SpClock);
+		//			//layerHud.render(window, Timer::SpClockHandle);
 
-				music.stop();
-				window.clear();
+		//			GameOver::render(window, layerHud);
+		//			FadeEffect::fade(i * 5);
+		//			layerHud.render(window, FadeEffect::getDrawable()); //CHECK
+		//			window.display();
 
-				layerBkg.render(window, Background::getSpBkg());
+		//			i++;
+		//		}
+		//		else phase++;
+		//	}
+		//	else if (phase == 2)
+		//	{
+		//		Background::reset();
+		//		player.reset();
+		//		Score::reset();
+		//		Timer::reset();
+		//		Game::reset();
 
-				layerPlatform.render(window); //layerplatform -- layerengine?
+		//		music.stop();
+		//		window.clear();
 
-				player.doLogic(window, layerPlatform);
-				player.render(window, layerPlatform);
-				layerWall.render(window, Background::getSpWall());
+		//		layerBkg.render(window, Background::Sprite::spBkg);
+		//		layerPlatform.render(window);
+		//		player.logic();
+		//		player.render(window, layerPlatform);
+		//		layerWall.render(window, Background::Sprite::spWall);
+		//		Timer::logic();
+		//		Score::logic();
 
-				Timer::doLogic();
-				Score::doLogic();
+		//		Score::render(window, layerHud);
 
-				Score::render(layerHud, window);
+		//		//layerHud.render(window, Timer::SpClock);
+		//		//layerHud.render(window, Timer::SpClockHandle);
+		//		phase++;
+		//	}
+		//	else if (phase == 3)
+		//	{
+		//		if (i > 0)
+		//		{
+		//			window.clear();
 
-				layerHud.render(window, Timer::SpClock);
-				layerHud.render(window, Timer::SpClockHandle);
-				//window.display();
-				phase++;
-			}
-			else if (phase == 3)
-			{
-				if (i > 0)
-				{
-					window.clear();
-					layerBkg.render(window, Background::getSpBkg());
-					layerPlatform.render(window); //layerplatform -- layerengine?
-					player.render(window, layerPlatform);
-					layerWall.render(window, Background::getSpWall());
-					Score::render(layerHud, window);
+		//			layerBkg.render(window, Background::Sprite::spBkg);
+		//			layerPlatform.render(window); //layerplatform -- layerengine?
+		//			player.render(window, layerPlatform);
+		//			layerWall.render(window, Background::Sprite::spWall);
+		//			Score::render(window, layerHud);
 
-					layerHud.render(window, Timer::SpClock);
-					layerHud.render(window, Timer::SpClockHandle);
-					GameOver::render(window, layerHud);
-					FadeEffect::fade(i * 5);
-					layerHud.render(window, FadeEffect::getDrawable());
-					window.display();
+		//			//layerHud.render(window, Timer::SpClock);
+		//			//layerHud.render(window, Timer::SpClockHandle);
+		//			GameOver::render(window, layerHud);
+		//			FadeEffect::fade(i * 5);
+		//			layerHud.render(window, FadeEffect::getDrawable());
+		//			window.display();
 
-					i--;
-				}
-				else phase++;
-			}
-			else if (phase == 4)
-			{
-				music.play();
-				setState(Game::State::InGame);
-				phase = 0;
-				//done!
-			}
-		}
+		//			i--;
+		//		}
+		//		else phase++;
+		//	}
+		//	else if (phase == 4)
+		//	{
+		//		music.play();
+		//		setState(Game::State::InGame);
+		//		phase = 0;
+		//		//done!
+		//	}
+		//}
 		else if (gameState == Game::State::Loading)
 		{
 			window.setFramerateLimit(100);
@@ -213,11 +191,12 @@ void Game::logic()
 			music.setLoop(true);
 			music.setVolume(70);
 
-			Font::init();
-			RainbowEngine re("LOADING...", Font::getFont(), 140);
+			DefaultFont::init();
+			RainbowText re("LOADING...", DefaultFont::getFont(), 140);
 			re.setOrigin(re.getLocalBounds().width * 0.5, re.getLocalBounds().height * 0.5);
 			re.setPosition(320, 240);
-			re.textMagic(window, layerHud);
+			re.textMagic();
+			//Layers::layerHud.render(window);
 
 			window.display();
 
@@ -239,9 +218,8 @@ void Game::logic()
 
 void Game::reset()
 {
-	layerBkg.reset();
-	layerWall.reset();
-	layerHud.reset();
-	layerPlatform.reset();
-	player.reset();
+	Layers::layerBkg.reset();
+	Layers::layerWall.reset();
+	Layers::layerHud.reset();
+	Layers::platformEngine.reset();
 }

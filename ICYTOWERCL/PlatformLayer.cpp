@@ -2,14 +2,14 @@
 #include <iostream>
 
 //std::vector<Platform> PlatformLayer::arrPlatform;
-Platform PlatformLayer::arrPlatform[7]{ 1, 2, 3, 4, 5, 6, 7 };
+Platform PlatformEngine::arrPlatform[7]{ 1, 2, 3, 4, 5, 6, 7 };
 int index = 0;
 
-void PlatformLayer::move()
+void PlatformEngine::logic()
 {						
 	float camSpeed = Camera::getCamSpeed();
-	view.reset(sf::FloatRect(0, camY, 640, 480));
-	camY -= const_cam_speed_delta * camSpeed * speedDelta;
+	view.reset(sf::FloatRect(0, camPosY, 640, 480));
+	camPosY -= const_cam_speed_delta * camSpeed * speedDelta;
 	step -= camSpeed;
 	//std::cout << arrPlatform[index].getFloor() << '\n';
 
@@ -22,7 +22,7 @@ void PlatformLayer::move()
 	}
 }
 
-void PlatformLayer::render(sf::RenderWindow& window)
+void PlatformEngine::render(sf::RenderWindow& window)
 {
 	window.setView(view);
 	for (Platform& p : arrPlatform)
@@ -31,16 +31,10 @@ void PlatformLayer::render(sf::RenderWindow& window)
 	}
 }
 
-void PlatformLayer::render(sf::RenderWindow& window, sf::Drawable& drawable)
-{
-	window.setView(view);
-	window.draw(drawable);
-}
-
-void PlatformLayer::reset()
+void PlatformEngine::reset()
 {
 	view.reset(sf::FloatRect(0, 0, 640, 480));
-	camY = 0;
+	camPosY = 0;
 	index = 0;
 	step = conststep;
 	

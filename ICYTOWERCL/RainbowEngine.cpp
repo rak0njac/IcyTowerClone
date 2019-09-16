@@ -1,101 +1,86 @@
 #include "RainbowEngine.h"
-#include <Font.h>
-#include <iostream>
 
-void RainbowEngine::resetText(sf::Text& text)
-{
-
-}
-
-void RainbowEngine::init()
+void RainbowText::init()
 {
 	colorsInitialized = false;
 	charsInitialized = false;
 	numOfColors = 18;
 	numOfChars = this->getString().getSize();
-	while (numOfColors < numOfChars)
+	while (numOfColors < numOfChars)	//clean this shit up - see textMagic()
 		numOfColors += 18;
-	skipper = 0;
-	x = 0;
-	y = 0;
-	reInitialized = true;
-}
-RainbowEngine::RainbowEngine(sf::Text text)
-{
-	colorsInitialized = false;
-	charsInitialized = false;
-	//this->text = &text;
-	numOfColors = 18;
-	numOfChars = text.getString().getSize();
-	while (numOfColors < numOfChars)
-		numOfColors += 18;
-	//this->text = &text;
-	skipper = 0;
-	x = 0;
-	y = 0;
+	layer = nullptr;
+	magicSkipper = false;
+	magicX = 0;
+	magicY = 0;
+	initialized = true;
 }
 
-sf::Color RainbowEngine::changeColor(const sf::Color& color, const int delta)
+sf::Color RainbowText::changeColor(const sf::Color& color, const int delta)
 {
-	int colX = color.r;
-	int colY = color.g;
-	int colZ = color.b;
+	//tempstore the original color values
+	int colR = color.r;
+	int colG = color.g;
+	int colB = color.b;
 
+	//color changing logic
 	if (color.r == 255 && color.g < 255 && color.b == 0)
-		colY += delta;
+		colG += delta;
 	else if (color.r > 0 && color.g == 255 && color.b == 0)
-		colX -= delta;
+		colR -= delta;
 	else if (color.r == 0 && color.g == 255 && color.b < 255)
-		colZ += delta;
+		colB += delta;
 	else if (color.r == 0 && color.g > 0 && color.b == 255)
-		colY -= delta;
+		colG -= delta;
 	else if (color.r < 255 && color.g == 0 && color.b == 255)
-		colX += delta;
+		colR += delta;
 	else if (color.r == 255 && color.g == 0 && color.b > 0)
-		colZ -= delta;
+		colB -= delta;
 
-	if (colX > 255)
-		colX = 255;
-	if (colY > 255)
-		colY = 255;
-	if (colZ > 255)
-		colZ = 255;
-	if (colX < 0)
-		colX = 0;
-	if (colY < 0)
-		colY = 0;
-	if (colZ < 0)
-		colZ = 0;
+	//rgb values cant be greater than 255 or lesser than 0 or else undefined behavior
+	if (colR > 255)
+		colR = 255;
+	if (colG > 255)
+		colG = 255;
+	if (colB > 255)
+		colB = 255;
+	if (colR < 0)
+		colR = 0;
+	if (colG < 0)
+		colG = 0;
+	if (colB < 0)
+		colB = 0;
 
-	//std::cout << "ColX: " << colX << "\nColY: " << colY << "\nColZ: " << colZ << "\n\n";
-	//std::cout << "col:" << col << "\n";
-
+	//create color of new values
 	sf::Color out;
-	out.r = colX;
-	out.g = colY;
-	out.b = colZ;
+	out.r = colR;
+	out.g = colG;
+	out.b = colB;
 
 	return out;
 }
 
-void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one took 8 continuous hours of tinkering before it
-{																		//finally worked properly so u are required to appreciate it
-	if (!reInitialized)
+void RainbowText::textMagic()		//This one took 8 continuous hours of tinkering before it
+{																		//finally worked properly and a few more hours before the code was clean
+																		//so appreciate what I do for little details :p
+	if (!initialized)
 	{
-		init();
+		std::cout << "RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.";
 	}
-	numOfChars = this->getString().getSize();
-	if (comp.getString() != this->getString())
+	else
 	{
-		chars.clear();
-		for (int i = 0; i < numOfChars; i++)
-			chars.push_back(sf::Text(this->getString().substring(i, 1), Font::getFont(), this->getCharacterSize()));
-		comp = *this;
-		numOfColors = 0;
-		while (numOfColors < numOfChars)
-			numOfColors += 18;
-	}
-		for (int i = 0; i < numOfChars; i++)
+		numOfChars = this->getString().getSize();
+		if (comp.getString() != this->getString())	//if string gets changed
+		{
+			chars.clear();
+			for (int i = 0; i < numOfChars; i++)	//push each character individually into the chars vector
+				chars.push_back(sf::Text(this->getString().substring(i, 1), DefaultFont::getFont(), this->getCharacterSize()));
+			comp = *this;
+			numOfColors = 0;
+			while (numOfColors < numOfChars)
+				numOfColors += 18;
+		}
+		for (int i = 0; i < numOfChars; i++)	//most important attributes are here. if any of these get changed in text itself,
+												//individual characters are updated with the new values. not performance hogging.
 		{
 			chars[i].setScale(this->getScale());
 			chars[i].setRotation(this->getRotation());
@@ -103,45 +88,112 @@ void RainbowEngine::textMagic(sf::RenderWindow& window, Layer& layer) //This one
 			chars[i].setOutlineColor(this->getOutlineColor());
 			chars[i].setOutlineThickness(this->getOutlineThickness());
 		}
-	if (!colorsInitialized)
-	{
-		for (int i = 0; i < numOfColors; i++)
+		if (!colorsInitialized)		//this could be done with fixed color rgb values but changeColor() may be useful for something else in the future
 		{
-			if (i == 0)
-				colors.push_back(sf::Color(255, 0, 0, 255));
-			else
+			for (int i = 0; i < numOfColors; i++)
 			{
-				colors.push_back(changeColor(colors[i - 1], 85));
+				if (i == 0)
+					colors.push_back(sf::Color(255, 0, 0, 255));
+				else
+				{
+					colors.push_back(changeColor(colors[i - 1], 85));
+				}
 			}
+			colorsInitialized = true;
 		}
-		colorsInitialized = true;
-	}
-	if (skipper == 1)
-	{
-		for (int i = 0; i < numOfChars; i++)
+		if (magicSkipper == 1)
 		{
-			if ((x + i) >= numOfColors - 1)
+			for (int i = 0; i < numOfChars; i++)	//this is where the magic starts. for every character, set a different color. see explanation below
 			{
-				chars[i].setFillColor(colors[y]);
-				y++;
-			}
-			else
-			{
-				chars[i].setFillColor(colors[x + i]);//x+i
-			}
+				if ((magicX + i) < numOfColors - 1)
+				{
+					chars[i].setFillColor(colors[magicX + i]);
+				}
+				else
+				{
+					chars[i].setFillColor(colors[magicY]);
 
+					magicY++;
+				}
+			}
+			magicY = 0;
+			magicX++;
+			if (magicX == numOfColors)
+			{
+				magicX = 0;
+			}
+			magicSkipper = 0;
 		}
-		y = 0;
-		x++;
-		if (x > numOfColors - 1)
-		{
-			x = 0;
-		}
-		skipper = 0;
+		else magicSkipper++;
 	}
-	else skipper++;
-	for (sf::Text& ch : chars)
+
+	//It is really difficult to explain this algorithm. If you want to understand it better, I suggest you start commenting out parts of code
+	//to see exactly what does what. Here is the best explanation I could come up with:
+
+	//	Let's say we have a word constited of 4 characters, which defaults to 18 different colors to shift through them.
+	//
+	//	first frame...
+	//
+	//	magicX = 0
+	//	magicY = 0
+	//
+	//	chars[0] = colors[0 + 0]
+	//	chars[1] = colors[0 + 1]
+	//	chars[2] = colors[0 + 2]
+	//	chars[3] = colors[0 + 3]
+	//
+	//	next frame...
+	//
+	//	magicX = 1
+	//	magicY = 0
+	//
+	//	chars[0] = colors[1 + 0]
+	//	chars[1] = colors[1 + 1]
+	//	chars[2] = colors[1 + 2]
+	//	chars[3] = colors[1 + 3]
+	//
+	//	13 frames later...
+	//
+	//	magicX = 15
+	//	magicY = 0
+	//
+	//	chars[0] = colors[15 + 0]
+	//	chars[1] = colors[15 + 1]
+	//	chars[2] = colors[15 + 2]
+	//	chars[3] = colors[15 + 3] ? Oops!Out of range.This breaks the if statement and we go to the magicY resort.
+	//	chars[3] = colors[0] We are back at the beginning of the rainbow.
+	//
+	//	3 frames later...
+	//
+	//	magicX = 18
+	//	magicY = 0
+	//
+	//	chars[0] = colors[18 + 0] - nope!we go to magicY again
+	//	chars[0] = colors[0]
+	//	chars[1] = colors[1] -	remember, magicY is incremented after each iteration in the for loop and gets reset to 0 after leaving it, 
+	//							but magicX is incremented outside of the for loop on every frame
+	//	chars[2] = colors[2]
+	//	chars[3] = colors[3]
+	//
+	//	Since magicX reached numOfColors(18), we reset it to 0 and start all over again.
+}
+
+void RainbowText::setLayer(Layer& _layer)
+{
+	if (!initialized)
 	{
-		layer.render(window, ch);
+		std::cout << "RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.";
+	}
+	else layer = &_layer;
+}
+
+void RainbowText::render(sf::RenderWindow& window)
+{
+	if (layer != nullptr)
+	{
+		for (int i = 0; i < chars.size(); i++)
+		{
+			layer->render(window, chars.at(i));
+		}
 	}
 }

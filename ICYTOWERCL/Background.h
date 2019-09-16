@@ -1,14 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <Game.h>
 
 namespace Background
 {
-	namespace Sprite
+	enum Sprites
 	{
-		extern sf::Sprite spBkg;
-		extern sf::Sprite spWall;
-	}
+		Background,
+		Wall
+	};
 
 	void init();
+	void render(sf::RenderWindow& window, int sprite);
 	void reset();
 }

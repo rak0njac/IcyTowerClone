@@ -8,7 +8,6 @@ void PitchedSound::playPitched()
 	std::uniform_real_distribution<> urd(0.95, 1.25);
 	float pitch = urd(mt);
 
-	//std::cout << pitch << "\n";
 	this->setPitch(pitch);
 	this->play();
 }

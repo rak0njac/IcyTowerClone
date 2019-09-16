@@ -2,31 +2,31 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <Layer.h>
+#include <Font.h>
+#include <iostream>
 
-class RainbowEngine : public sf::Text
+class RainbowText : public sf::Text
 {
 private:
-	bool reInitialized = false;
+	bool initialized;
 	bool colorsInitialized;
 	bool charsInitialized;
-	sf::Text comp;
+	sf::Text comp;	//used in textMagic() to compare old and new strings
 	int numOfColors;
 	int numOfChars;
-	sf::Text* text;
 	std::vector<sf::Text> chars;
 	std::vector<sf::Color> colors;
-	bool skipper;
-	int x;
-	int y;
+	Layer* layer;
 
-	void init();
-
+	//see explanation for these in textMagic()
+	bool magicSkipper;
+	int magicX;
+	int magicY;
 public:
-	RainbowEngine(sf::Text text);
-	//RainbowEngine(){}
-	//using namespace sf;
 	using Text::Text;
 	static sf::Color changeColor(const sf::Color& color, const int col);
-	void textMagic(sf::RenderWindow& window, Layer& layer);
-	void resetText(sf::Text& text);
+	void init();
+	void setLayer(Layer& _layer);
+	void textMagic();
+	void render(sf::RenderWindow& window);
 };

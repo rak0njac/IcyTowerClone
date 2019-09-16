@@ -1,10 +1,12 @@
 #include <Player.h>
 #include <Game.h>
 
+Layer& curLayer = Game::Layers::platformEngine;
+
 void Player::init()
 {
 	onGround = true;								//colliding
-	curPlatform = &PlatformLayer::arrPlatform[0];
+	curPlatform = &PlatformEngine::arrPlatform[0];
 	curLevel = 1;									//platform which the player is standing on currently
 	levelMilestone = 50;
 	jumpStrenght = 0;								//depends on xSpeed, used to determine ySpeed, animation, and sound
@@ -32,6 +34,9 @@ void Player::init()
 
 	soundMilestone.loadFromFile("..\\Assets\\Sounds\\alright.ogg");
 	cjSoundMilestone.setBuffer(soundMilestone);
+
+	eceCombo.setLayer(curLayer);
+	eceMilestone.setLayer(Game::Layers::layerHud);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();
@@ -87,7 +92,7 @@ void Player::collide()
 
 	if (cjSp.getPosition().y > const_dist_between_platforms * -1 * curLevel + const_player_start_pos_y + dist) // -1 is for UP on y axis, const_player_start_pos_y is because player doesn't start on pos 0, and dist is for fine tuning
 	{
-		for (Platform& p : PlatformLayer::arrPlatform)
+		for (Platform& p : PlatformEngine::arrPlatform)
 		{
 			if (p.getFloor() == curLevel &&	
 				cjSp.getPosition().x >= p.startSp.getPosition().x - 12.5f && // rework when tilemap
@@ -121,7 +126,7 @@ void Player::checkCollision()	//checks on every frame if the player is still on 
 	}
 }
 
-void Player::animationAndSound(PlatformLayer& pl)
+void Player::animationAndSound()
 {
 	static int i = 0;
 	static int j = 0;
@@ -221,7 +226,7 @@ void Player::animationAndSound(PlatformLayer& pl)
 		else j = 0;
 		j++;
 	}
-	else if (Camera::getCamLevel() > 0 && cjSp.getPosition().y > pl.getViewCenter() + const_chock_anim_trigger_bound) //CHOCK
+	else if (Camera::getCamLevel() > 0 && cjSp.getPosition().y > curLayer.getViewCenter() + const_chock_anim_trigger_bound) //CHOCK
 	{
 		cjSp.setTextureRect(Animation::cjAnimChock);
 	}
@@ -355,15 +360,15 @@ void Player::checkMove()
 	}
 }
 
-void Player::checkCam(PlatformLayer& pl)	//called on every frame
+void Player::checkCam()	//called on every frame
 {
-	if ((cjSp.getPosition().y  < pl.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
+	if ((cjSp.getPosition().y  < curLayer.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_top_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_top_delta_speed * ySpeed * -1);
 		else Camera::setCamSpeed(const_cam_catchup_top_max_speed);
 	}
-	else if (cjSp.getPosition().y < pl.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning 
+	else if (cjSp.getPosition().y < curLayer.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning 
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_bottom_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_bottom_delta_speed * ySpeed * -1);
@@ -379,9 +384,9 @@ void Player::checkCam(PlatformLayer& pl)	//called on every frame
 	}
 }
 
-void Player::checkGameOver(PlatformLayer& pl)
+void Player::checkGameOver()
 {
-	if (cjSp.getPosition().y > pl.getViewCenter() + 240 && !GameOver::isGameOver())
+	if (cjSp.getPosition().y > curLayer.getViewCenter() + 240 && !GameOver::isGameOver())
 	{
 		onGround = false;	//make the player fall down, sometimes the downmost platform is not deleted as soon as off screen
 
@@ -393,14 +398,12 @@ void Player::checkGameOver(PlatformLayer& pl)
 	}
 }
 
-void Player::checkCandy(sf::RenderWindow& window, PlatformLayer& pl)
+void Player::checkCandy()
 {
 	if (jumpStrenght == 3 && Score::isComboMode()) 
 	{
 		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
 	}
-	eceCombo.doLogic(window, pl);
-	eceMilestone.doLogic(window, Game::layerHud);
 }
 
 void Player::checkTimer()	//checks if the bound to start the timer is broken by the player
@@ -409,27 +412,34 @@ void Player::checkTimer()	//checks if the bound to start the timer is broken by 
 		Timer::setStarted(true);
 }
 
-void Player::doLogic(sf::RenderWindow& window, PlatformLayer& pl)
+void Player::logic()
 {
 	checkJump();
 	checkMove();
 	checkCollision();
 	checkTimer();
-	checkCam(pl);
-	checkGameOver(pl);
-	checkCandy(window, pl);
-	animationAndSound(pl);
+	checkCam();
+	checkGameOver();
+	checkCandy();
+	animationAndSound();
 }
 
-void Player::render(sf::RenderWindow& window, PlatformLayer& pl)
+void Player::render(sf::RenderWindow& window)
 {
-	pl.render(window, cjSp);
+	curLayer.render(window, cjSp);
+	eceCombo.render(window);
+	eceMilestone.render(window);
+}
+
+sf::Drawable& Player::getDrawable()
+{
+	return cjSp;
 }
 
 void Player::reset()
 {
 	onGround = true;
-	curPlatform = &PlatformLayer::arrPlatform[0];
+	curPlatform = &PlatformEngine::arrPlatform[0];
 	curLevel = 1;
 	levelMilestone = 50;
 	jumpStrenght = 0;

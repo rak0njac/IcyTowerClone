@@ -33,8 +33,14 @@ namespace Game
 		Loading
 	};
 
-	extern PlatformLayer layerPlatform;
-	extern Layer layerHud;
+	namespace Layers
+	{
+		extern Layer layerBkg;
+		extern Layer layerWall;
+		extern Layer layerHurryText;
+		extern Layer layerHud;
+		extern PlatformEngine platformEngine;
+	}
 
 	void init();
 	void setState(int state);

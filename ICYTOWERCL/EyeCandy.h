@@ -4,7 +4,7 @@ const float const_eyecandy_gravity = 0.075f;
 class EyeCandy
 {
 private:
-	int step;
+	int colorChangeIndex;
 	float gravity;
 	int startPosX;
 	int startPosY;
@@ -13,13 +13,14 @@ private:
 	sf::ConvexShape candy;
 
 	void changeColor();
+	void createStarShape();
 public:
 	EyeCandy(const float &posX, const float &posY);
 	EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir);
 	EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, const float& _ySpeed);
 
-	const sf::ConvexShape& getDrawable();
+	sf::ConvexShape& getDrawable();
 	float getPosY();
 
-	void doLogic();
+	void logic();
 };

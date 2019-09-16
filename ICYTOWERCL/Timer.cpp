@@ -5,6 +5,7 @@
 #include <Font.h>
 #include <RainbowEngine.h>
 #include <SFML\Audio.hpp>
+#include <Game.h>
 
 using namespace Timer;
 
@@ -21,7 +22,7 @@ sf::Sprite Timer::SpClock;
 sf::Texture TxClockHandle;
 sf::Sprite Timer::SpClockHandle;
 
-RainbowEngine textHurry("HURRY UP!", Font::getFont(), 160);
+RainbowText textHurry("HURRY UP!", DefaultFont::getFont(), 160);
 //RainbowEngine reHurry(textHurry);
 
 sf::Clock clox;
@@ -29,6 +30,8 @@ sf::Time timez;
 
 sf::SoundBuffer sb;
 static sf::Sound sound;
+
+Layer* curLayer;
 
 void Timer::init() {
 	TxClock.loadFromFile("..\\Assets\\Clock.png");
@@ -47,6 +50,11 @@ void Timer::init() {
 
 	sb.loadFromFile("..\\Assets\\Sounds\\hurry.ogg");
 	sound.setBuffer(sb);
+
+	curLayer = &Game::Layers::layerHud;
+
+	textHurry.init();
+	textHurry.setLayer(*curLayer);
 }
 
 void shakeAnim()
@@ -109,8 +117,11 @@ void displayHurryUp()
 {
 	if (hurrying)
 	{
-		if(textHurry.getPosition().y > -80)
+		if (textHurry.getPosition().y > -80)
+		{
 			textHurry.move(0, -1);
+			textHurry.textMagic();
+		}
 		else
 		{
 			textHurry.setPosition(320, 540);
@@ -120,7 +131,7 @@ void displayHurryUp()
 }
 
 
-void Timer::doLogic()
+void Timer::logic()
 {
 	timez = clox.getElapsedTime();
 	if (started)
@@ -180,8 +191,16 @@ void Timer::reset()
 	textHurry.setPosition(320, 540);
 }
 
-void Timer::render(Layer layer, sf::RenderWindow& window)
+void Timer::render(sf::RenderWindow& window, int sprite)
 {
-	//layer.render(window, textHurry);
-	textHurry.textMagic(window, layer);
+	if (sprite == Sprites::Clock)
+	{
+		curLayer->render(window, SpClock);
+		curLayer->render(window, SpClockHandle);
+	}
+	else if (sprite == Sprites::HurryUpText)
+	{
+		if(hurrying)
+			textHurry.render(window);
+	}
 }

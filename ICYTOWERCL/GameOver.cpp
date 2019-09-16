@@ -7,35 +7,31 @@
 #include <Player.h>
 #include <Game.h>
 
-bool gameOver = false;
-bool gameOverReset = false;
-RainbowEngine textGameOver("GAME OVER!", Font::getFont(), 168);
-RainbowEngine textFloor("", Font::getFont(), 60);
-RainbowEngine textBestCombo("", Font::getFont(), 60);
-RainbowEngine textPressEnter("PRESS ENTER TO RESTART...", Font::getFont(), 60);
-RainbowEngine reGameOver("GAME OVER!", Font::getFont(), 168);
-RainbowEngine reFloor("", Font::getFont(), 60);
-RainbowEngine reBestCombo("", Font::getFont(), 60);
-RainbowEngine rePressEnter("PRESS ENTER TO RESTART...", Font::getFont(), 60);
+static bool gameOver;
+static RainbowText textGameOver("GAME OVER!", DefaultFont::getFont(), 168);
+static RainbowText textFloor("", DefaultFont::getFont(), 60);
+static RainbowText textBestCombo("", DefaultFont::getFont(), 60);
+static RainbowText textPressEnter("PRESS ENTER TO RESTART...", DefaultFont::getFont(), 60);
 
-sf::SoundBuffer sbGameOver;
-sf::SoundBuffer sbTryAgain;
+static sf::SoundBuffer sbGameOver;
+static sf::SoundBuffer sbTryAgain;
 static sf::Sound sound;
 
-sf::Vector2i values;
+static sf::Vector2i values;		//floor and best combo values
 
 void GameOver::init()
 {
+	gameOver = false;
+
 	textGameOver.setOutlineThickness(7);
 	textGameOver.setScale(0.5, 0.5);
-	textGameOver.setOrigin(textGameOver.getLocalBounds().width * 0.5, textGameOver.getLocalBounds().height * 0.5);
+	textGameOver.setOrigin(textGameOver.getLocalBounds().width / 2, textGameOver.getLocalBounds().height / 2);
 	textGameOver.setPosition(320, -140);
 	textGameOver.setOutlineColor(sf::Color(1, 26, 51, 255));
 	
 	textFloor.setOutlineThickness(4);
 	textFloor.setScale(0.5, 0.5);
 	textFloor.setPosition(320, 500);
-	//rextFloor.setOutlineColor(sf::Color(1, 26, 51, 255));
 	
 	textBestCombo.setOutlineThickness(4);
 	textBestCombo.setScale(0.5, 0.5);
@@ -43,7 +39,7 @@ void GameOver::init()
 	
 	textPressEnter.setOutlineThickness(4);
 	textPressEnter.setScale(0.5, 0.5);
-	textPressEnter.setOrigin(textPressEnter.getLocalBounds().width * 0.5, textPressEnter.getLocalBounds().height * 0.5);
+	textPressEnter.setOrigin(textPressEnter.getLocalBounds().width / 2, textPressEnter.getLocalBounds().height / 2);
 	textPressEnter.setPosition(320, 500);
 
 	sbGameOver.loadFromFile("..\\Assets\\Sounds\\gameover.ogg");
@@ -61,6 +57,7 @@ void GameOver::stopGame()
 
 	Camera::stop();
 	values = Score::stop();
+
 	gameOver = true;
 }
 
@@ -73,30 +70,18 @@ void GameOver::restartGame()
 	gameOver = false;
 }
 
-void GameOver::doLogic()
+void GameOver::logic()
 {
-	if (gameOver)
+	if (textGameOver.getPosition().y < 180)
 	{
-		if (!gameOverReset)
-		{
-			textFloor.setString("FLOOR: " + std::to_string(values.x));
-			textFloor.setOrigin(textFloor.getLocalBounds().width * 0.5, textFloor.getLocalBounds().height * 0.5);
-			textBestCombo.setString("BEST COMBO: " + std::to_string(values.y));
-			textBestCombo.setOrigin(textBestCombo.getLocalBounds().width * 0.5, textBestCombo.getLocalBounds().height * 0.5);
-			gameOverReset = true;
-		}
-
-		if (textGameOver.getPosition().y < 180)
-		{
-			textGameOver.move(0, 4);
-		}
-		if (textFloor.getPosition().y > 360)
-			textFloor.move(0, -2);
-		if (textBestCombo.getPosition().y > 390)
-			textBestCombo.move(0, -2);
-		else if (textPressEnter.getPosition().y > 450)
-			textPressEnter.move(0, -2);
+		textGameOver.move(0, 4);
 	}
+	if (textFloor.getPosition().y > 360)
+		textFloor.move(0, -2);
+	if (textBestCombo.getPosition().y > 390)
+		textBestCombo.move(0, -2);
+	else if (textPressEnter.getPosition().y > 450)
+		textPressEnter.move(0, -2);
 }
 
 void GameOver::reset()
@@ -105,20 +90,9 @@ void GameOver::reset()
 	textFloor.setPosition(320, 500);
 	textBestCombo.setPosition(320, 530);
 	textPressEnter.setPosition(320, 500);
-	gameOverReset = false;
-}
 
-void GameOver::render(sf::RenderWindow& window, Layer& layer)
-{
-	//if(gameOver) -- render always but outside of view if not game over. 
-	//Workaround for text appearing in the middle for one frame on every game over.
-	//if too expensive find proper solution?
-	if (gameOver)
-	{
-		textGameOver.textMagic(window, layer);
-		textFloor.textMagic(window, layer);
-		textBestCombo.textMagic(window, layer);
-		textPressEnter.textMagic(window, layer);
-	}
-
+	textFloor.setString("FLOOR: " + std::to_string(values.x));
+	textFloor.setOrigin(textFloor.getLocalBounds().width * 0.5, textFloor.getLocalBounds().height * 0.5);
+	textBestCombo.setString("BEST COMBO: " + std::to_string(values.y));
+	textBestCombo.setOrigin(textBestCombo.getLocalBounds().width * 0.5, textBestCombo.getLocalBounds().height * 0.5);
 }

@@ -1,8 +1,8 @@
 #include "Font.h"
 
-sf::Font Font::font;
+sf::Font DefaultFont::font;
 
-void Font::init()
+void DefaultFont::init()
 {
 	font.loadFromFile("..\\Assets\\freshmarker.ttf");
 }														//SFML uses automatic text smoothing which applies a smoothing filter that is extremely strong
@@ -10,7 +10,7 @@ void Font::init()
 														//and then scale the text halfway down. This eliminates the awkward smoothing. This is a known
 														//issue with SFML with no known proper solutions. This is the best workaround I could come up with,
 														//even though double font sizes use significantly more memory.
-const sf::Font& Font::getFont()											
+const sf::Font& DefaultFont::getFont()											
 {
 	return font;
 }

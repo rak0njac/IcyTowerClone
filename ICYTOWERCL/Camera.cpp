@@ -1,7 +1,8 @@
 #include <Camera.h>
 
-float camSpeed;
-int	camLevel;
+float camSpeed;		//the number of pixels to move the camera
+int	camLevel;		//game level - increases every time the clock rings, in normal occasions camSpeed = camLevel, when camera is catching up to the
+					//player, camSpeed = camLevel + catching up float
 
 int Camera::getCamLevel()
 {

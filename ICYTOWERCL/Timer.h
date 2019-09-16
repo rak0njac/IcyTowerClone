@@ -14,7 +14,13 @@ namespace Timer {
 	void setStarted(bool start);
 
 	void init();
-	void doLogic();
+	void logic();
 	void reset();
-	void render(Layer layer, sf::RenderWindow& window);
+	void render(sf::RenderWindow& window, int sprite);
+
+	enum Sprites
+	{
+		Clock,
+		HurryUpText
+	};
 }

@@ -79,7 +79,7 @@ void Platform::regenerate()
 	if (floor % 10 == 0)
 	{
 		floorText.setString(std::to_string(floor));
-		floorText.setFont(Font::getFont());
+		floorText.setFont(DefaultFont::getFont());
 		floorText.setCharacterSize(30);
 		floorText.setOrigin(floorText.getLocalBounds().width*0.5, floorText.getLocalBounds().height*0.5);
 		floorText.setScale(0.5, 0.5);

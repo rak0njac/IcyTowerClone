@@ -10,10 +10,10 @@ namespace Score
 {
 	void changeScore(int i);
 	void init();
-	void doLogic();
+	void logic();
 	sf::Vector2i stop(); //
 	bool isComboMode();
 
-	void render(Layer& l, sf::RenderWindow& window);
+	void render(sf::RenderWindow& window);
 	void reset();
 }

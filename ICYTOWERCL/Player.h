@@ -60,21 +60,22 @@ private:
 	void checkCollision();
 	void milestoneReward();
 
-	void animationAndSound(PlatformLayer& pl);
+	void animationAndSound();
 	void move();
 	void jump();
 
 	void checkTimer();
 	void checkMove();
 	void checkJump();
-	void checkCam(PlatformLayer& pl);
-	void checkCandy(sf::RenderWindow& window, PlatformLayer& pl);
-	void checkGameOver(PlatformLayer& pl);
+	void checkCam();
+	void checkCandy();
+	void checkGameOver();
 public:
 	EyeCandyEngine eceMilestone;
 
 	void init();
-	void doLogic(sf::RenderWindow& window, PlatformLayer& pl);
-	void render(sf::RenderWindow& window, PlatformLayer& pl);
+	void logic();
+	void render(sf::RenderWindow& window);
 	void reset();
+	sf::Drawable& getDrawable();
 };

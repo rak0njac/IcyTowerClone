@@ -2,10 +2,9 @@
 
 sf::Texture txBkg;
 sf::Texture txWall;
-sf::Sprite Background::Sprite::spBkg;
-sf::Sprite Background::Sprite::spWall;
+sf::Sprite spBkg;
+sf::Sprite spWall;
 
-using namespace Background::Sprite;
 
 void Background::init()
 {
@@ -19,6 +18,14 @@ void Background::init()
 	spWall.setOrigin(0, 124);
 
 	//each line of bricks in bkg is 31px high and in wall 62px
+}
+
+void Background::render(sf::RenderWindow& window, int sprite)
+{
+	if(sprite == Background::Sprites::Background)
+		Game::Layers::layerBkg.render(window, spBkg);
+	else if (sprite == Background::Sprites::Wall)
+		Game::Layers::layerWall.render(window, spWall);
 }
 
 void Background::reset()

@@ -1,19 +1,20 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <Camera.h>
+#include <vector>
 
 class Layer
 {
 protected:
-	float camY;
+	float camPosY;
 	float speedDelta;
 	float step;
 	float conststep;
 	sf::View view;
 public:
-	virtual void move();
+	virtual void logic();
 	float getViewCenter();
-	void render(sf::RenderWindow& window, const sf::Drawable& sprite);
+	void render(sf::RenderWindow& window, sf::Drawable& sprite);
 	virtual void reset();
 	Layer();
 	Layer(float speedDelta);

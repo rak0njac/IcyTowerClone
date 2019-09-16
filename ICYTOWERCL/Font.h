@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-class Font
+class DefaultFont
 {
 private:
 	static sf::Font font;

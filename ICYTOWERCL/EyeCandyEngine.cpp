@@ -3,8 +3,11 @@
 
 EyeCandyEngine::EyeCandyEngine()
 {
-	//a legend is born
+	layer = nullptr;
 }
+
+//is there a way to make EyeCandyEngine inherit these parameters automatically from all EyeCandy constructors, so I don't
+//have to add a new function here whenever I add a new EyeCandy constructor?
 
 void EyeCandyEngine::addCandy(const float& posX, const float& posY, int count)
 {
@@ -22,23 +25,28 @@ void EyeCandyEngine::addCandy(const float& posX, const float& posY, const float&
 {
 	for (int i = 0; i < count;i++)
 		engine.push_back(EyeCandy(posX, posY, _randPos, _randDir, _ySpeed));
-
 }
 
-void EyeCandyEngine::doLogic(sf::RenderWindow &window, Layer& pl)
+void EyeCandyEngine::setLayer(Layer& _layer)
 {
-	for (int i = 0; i < engine.size(); i++)
+	layer = &_layer;
+}
+
+void EyeCandyEngine::render(sf::RenderWindow& window)
+{
+	if (layer != nullptr)
 	{
-		EyeCandy& eck = engine.at(i);
-		eck.doLogic();
-		//window.draw(eck.getDrawable());
-		pl.render(window, eck.getDrawable());
-		if (eck.getPosY() > pl.getViewCenter() + 240 && engine.size() > 0)
+		for (int i = 0; i < engine.size(); i++)
 		{
-				engine.erase(engine.begin()+i);
+			EyeCandy& ecref = engine.at(i);
+			ecref.logic();
+			layer->render(window, ecref.getDrawable());
+			if (ecref.getPosY() > layer->getViewCenter() + 240 && engine.size() > 0)
+			{
+				engine.erase(engine.begin() + i);
+			}
 		}
 	}
-	//std::cout << engine.size() << "\n";
 }
 
 void EyeCandyEngine::reset()
