@@ -15,7 +15,7 @@ private:
 	sf::Text* text;
 	std::vector<sf::Text> chars;
 	std::vector<sf::Color> colors;
-	int skipper;
+	bool skipper;
 	int x;
 	int y;
 

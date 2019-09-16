@@ -56,6 +56,9 @@ void GameOver::stopGame()
 {
 	sound.setBuffer(sbGameOver);
 	sound.play();
+
+	Game::setState(Game::State::GameOver);
+
 	Camera::stop();
 	values = Score::stop();
 	gameOver = true;
@@ -65,14 +68,8 @@ void GameOver::restartGame()
 {
 	sound.setBuffer(sbTryAgain);
 	sound.play();
-	if (FadeEffect::fadeIn())
-	{
-		Background::reset();
-		Score::reset();
-		Timer::reset();
-	}
+	Game::setState(Game::State::Resetting);
 
-	Game::reset();
 	gameOver = false;
 }
 
@@ -86,6 +83,7 @@ void GameOver::doLogic()
 			textFloor.setOrigin(textFloor.getLocalBounds().width * 0.5, textFloor.getLocalBounds().height * 0.5);
 			textBestCombo.setString("BEST COMBO: " + std::to_string(values.y));
 			textBestCombo.setOrigin(textBestCombo.getLocalBounds().width * 0.5, textBestCombo.getLocalBounds().height * 0.5);
+			gameOverReset = true;
 		}
 
 		if (textGameOver.getPosition().y < 180)
@@ -98,16 +96,16 @@ void GameOver::doLogic()
 			textBestCombo.move(0, -2);
 		else if (textPressEnter.getPosition().y > 450)
 			textPressEnter.move(0, -2);
-		gameOverReset = true;
 	}
-	else if(gameOverReset)
-	{
-		textGameOver.setPosition(320, -140);
-		textFloor.setPosition(320, 500);
-		textBestCombo.setPosition(320, 530);
-		textPressEnter.setPosition(320, 500);
-		gameOverReset = false;
-	}
+}
+
+void GameOver::reset()
+{
+	textGameOver.setPosition(320, -140);
+	textFloor.setPosition(320, 500);
+	textBestCombo.setPosition(320, 530);
+	textPressEnter.setPosition(320, 500);
+	gameOverReset = false;
 }
 
 void GameOver::render(sf::RenderWindow& window, Layer& layer)

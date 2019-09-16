@@ -25,10 +25,19 @@ namespace Game
 
 	//bool debug;
 
+	enum State
+	{
+		InGame,
+		GameOver,
+		Resetting,
+		Loading
+	};
+
 	extern PlatformLayer layerPlatform;
 	extern Layer layerHud;
 
 	void init();
+	void setState(int state);
 	void logic();
 	void reset();
 }

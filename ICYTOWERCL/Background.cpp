@@ -2,35 +2,27 @@
 
 sf::Texture txBkg;
 sf::Texture txWall;
-sf::Sprite spBkg;
-sf::Sprite spWall;
+sf::Sprite Background::Sprite::spBkg;
+sf::Sprite Background::Sprite::spWall;
+
+using namespace Background::Sprite;
 
 void Background::init()
 {
 	txBkg.loadFromFile("..\\Assets\\Bkg2.png");
 	spBkg.setTexture(txBkg);
-	spBkg.setOrigin(253, 0);
-	spBkg.setPosition(320, -62);
-	spBkg.scale(1.02f, 1);					//Corrects a small asset mistake where a few golden pixels can be seen
+	spBkg.setOrigin(txBkg.getSize().x / 2, 62);
+	spBkg.setPosition(320, 0);
 
 	txWall.loadFromFile("..\\Assets\\Wallz3.png");
 	spWall.setTexture(txWall);
-	//SWall.setOrigin(320, 0);
-	spWall.setPosition(0, -124);
-}
+	spWall.setOrigin(0, 124);
 
-const sf::Sprite& Background::getSpBkg()
-{
-	return spBkg;
-}
-
-const sf::Sprite& Background::getSpWall()
-{
-	return spWall;
+	//each line of bricks in bkg is 31px high and in wall 62px
 }
 
 void Background::reset()
 {
-	spBkg.setPosition(320, -62);
-	spWall.setPosition(0, -124);
+	spBkg.setPosition(320, 0);
+	spWall.setPosition(0, 0); //CHECK
 }

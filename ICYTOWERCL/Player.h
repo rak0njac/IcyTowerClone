@@ -64,6 +64,7 @@ private:
 	void move();
 	void jump();
 
+	void checkTimer();
 	void checkMove();
 	void checkJump();
 	void checkCam(PlatformLayer& pl);
@@ -71,8 +72,8 @@ private:
 	void checkGameOver(PlatformLayer& pl);
 public:
 	EyeCandyEngine eceMilestone;
-	Player();
-	Player(std::string filename, int startPosX); //multiplayer eventually?
+
+	void init();
 	void doLogic(sf::RenderWindow& window, PlatformLayer& pl);
 	void render(sf::RenderWindow& window, PlatformLayer& pl);
 	void reset();

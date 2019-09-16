@@ -110,7 +110,7 @@ void displayHurryUp()
 	if (hurrying)
 	{
 		if(textHurry.getPosition().y > -80)
-			textHurry.move(0, -2);
+			textHurry.move(0, -1);
 		else
 		{
 			textHurry.setPosition(320, 540);
@@ -177,6 +177,7 @@ void Timer::reset()
 	berserk = false;
 	hurrying = false;
 	SpClockHandle.setRotation(0);
+	textHurry.setPosition(320, 540);
 }
 
 void Timer::render(Layer layer, sf::RenderWindow& window)

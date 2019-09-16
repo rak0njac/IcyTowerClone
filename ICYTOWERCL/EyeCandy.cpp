@@ -105,7 +105,7 @@ void EyeCandy::changeColor()
 	static std::mt19937 rand(rd());
 	static std::uniform_int_distribution<> randCol(0, 5);
 
-	if (step < 5)
+	if (step < 4)
 		step++;
 	else
 	{
@@ -118,9 +118,9 @@ void EyeCandy::doLogic()
 {
 	changeColor();
 	candy.move(xSpeed, ySpeed);
-	//candy.rotate(60);
+	//candy.rotate(1);
 
-	if (ySpeed < 5)
+	if (ySpeed < 6)
 		ySpeed += gravity;//const_eyecandy_gravity;
 
 	if (xSpeed < -0.5)

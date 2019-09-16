@@ -5,6 +5,7 @@ sf::RectangleShape black(sf::Vector2f(640,480));
 
 void FadeEffect::init()
 {
+	black.setFillColor(sf::Color(0, 0, 0, 1));
 }
 
 //1. press enter
@@ -15,6 +16,11 @@ void FadeEffect::init()
 //6. on every tick, fade out black by 1
 //7. when alpha is 0, start clearing and redrawing on every tick
 //8. play 'yo' and music.
+
+void FadeEffect::fade(int alpha)
+{
+	black.setFillColor(sf::Color(0, 0, 0, alpha));
+}
 
 bool FadeEffect::fadeIn()
 {

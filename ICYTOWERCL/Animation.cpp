@@ -1,5 +1,7 @@
 #include <Animation.h>
 
+//these are the rectangle coordinates for each appropriate player animation from harold.bmp
+
 sf::IntRect Animation::cjAnimIdle1(3, 4, 28, 52);
 sf::IntRect Animation::cjAnimWalk1(36, 4, 28, 52);
 sf::IntRect Animation::cjAnimWalk2(69, 4, 28, 52);

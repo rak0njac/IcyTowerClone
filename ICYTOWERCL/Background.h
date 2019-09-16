@@ -3,8 +3,12 @@
 
 namespace Background
 {
-	const sf::Sprite& getSpBkg();
-	const sf::Sprite& getSpWall();
+	namespace Sprite
+	{
+		extern sf::Sprite spBkg;
+		extern sf::Sprite spWall;
+	}
+
 	void init();
 	void reset();
 }

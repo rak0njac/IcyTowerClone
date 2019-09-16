@@ -12,4 +12,5 @@ namespace GameOver
 	void stopGame();
 	void doLogic();
 	void render(sf::RenderWindow& window, Layer& layer);
+	void reset();
 }

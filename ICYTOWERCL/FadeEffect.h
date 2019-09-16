@@ -4,6 +4,7 @@
 namespace FadeEffect
 {
 	void init();
+	void fade(int alpha);
 	bool fadeIn();
 	bool fadeOut();
 
