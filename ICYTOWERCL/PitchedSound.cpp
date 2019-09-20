@@ -1,5 +1,4 @@
 #include "PitchedSound.h"
-#include <iostream>
 
 void PitchedSound::playPitched()
 {

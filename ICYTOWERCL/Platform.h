@@ -5,6 +5,10 @@
 const int const_dist_between_platforms = 80;
 
 #pragma once
+#include <SFML/Graphics.hpp>
+#include <DefaultFont.h>
+#include <random>
+
 class Platform
 {
 private:

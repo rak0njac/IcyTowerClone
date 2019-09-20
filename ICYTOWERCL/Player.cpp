@@ -1,7 +1,6 @@
 #include <Player.h>
-#include <Game.h>
 
-Layer& curLayer = Game::Layers::platformEngine;
+Layer& curLayer = Game::Layers::Platforms;
 
 void Player::init()
 {
@@ -36,7 +35,7 @@ void Player::init()
 	cjSoundMilestone.setBuffer(soundMilestone);
 
 	eceCombo.setLayer(curLayer);
-	eceMilestone.setLayer(Game::Layers::layerHud);
+	eceMilestone.setLayer(Game::Layers::HUD);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();
@@ -284,7 +283,7 @@ void Player::checkJump()		//WIP
 		onGround = false;
 		if (xSpeed > 5.9f)
 		{
-			ySpeed = xSpeed * -1.25 - 7.0f; //CONST_XSPEED_JUMP_HIGH_FACTOR
+			ySpeed = xSpeed * -1.25 - 7.0f;
 			jumpStrenght = 3;
 			cjSp.move(0, -8);	//since the rotation animation texture is 8 pixels higher, immediately move the player up 8 pixels so it doesn't look like
 								//he is intersecting the ground when the animation kicks in. it couldn't be done by changing the y origin because the rotation
@@ -292,9 +291,9 @@ void Player::checkJump()		//WIP
 			cjSound.setBuffer(soundJumpHi);
 			cjSound.playPitched();
 		}
-		else if (xSpeed > 2.9f)
+		else if (xSpeed > 3.9f)
 		{
-			ySpeed = xSpeed * -0.55 - 7.0f; //CONST_XSPEED_JUMP_LOW_FACTOR
+			ySpeed = xSpeed * -0.55 - 7.0f;
 			jumpStrenght = 2;
 			cjSound.setBuffer(soundJumpMid);
 			cjSound.playPitched();

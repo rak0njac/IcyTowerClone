@@ -1,5 +1,4 @@
-#include "PlatformLayer.h"
-#include <iostream>
+#include "PlatformEngine.h"
 
 //std::vector<Platform> PlatformLayer::arrPlatform;
 Platform PlatformEngine::arrPlatform[7]{ 1, 2, 3, 4, 5, 6, 7 };
@@ -36,7 +35,7 @@ void PlatformEngine::reset()
 	view.reset(sf::FloatRect(0, 0, 640, 480));
 	camPosY = 0;
 	index = 0;
-	step = conststep;
+	step = constStep;
 	
 	for (int i = 0; i < 7; i++)
 	{

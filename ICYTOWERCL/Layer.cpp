@@ -6,7 +6,7 @@ Layer::Layer()
 	camPosY = 0;
 	speedDelta = 1;
 	step = const_cam_start_step;
-	conststep = step;
+	constStep = step;
 }
 
 Layer::Layer(float speedDelta)
@@ -15,7 +15,7 @@ Layer::Layer(float speedDelta)
 	camPosY = 0;
 	step = const_cam_start_step - const_cam_start_step / speedDelta;
 	this->speedDelta = speedDelta;
-	conststep = step;
+	constStep = step;
 }
 
 void Layer::logic()
@@ -49,5 +49,5 @@ void Layer::reset()
 {
 	view.reset(sf::FloatRect(0, 0, 640, 480));
 	camPosY = 0;
-	step = conststep;
+	step = constStep;
 }

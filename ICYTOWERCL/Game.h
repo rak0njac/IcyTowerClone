@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
 #include <Background.h>
 #include <Camera.h>
 #include <Player.h>
@@ -8,9 +9,9 @@
 #include <Score.h>
 #include <EyeCandy.h>
 #include <iostream>
-#include <Font.h>
+#include <DefaultFont.h>
 #include <GameOver.h>
-#include <FadeEffect.h>
+#include <RainbowText.h>
 
 namespace Game
 {
@@ -35,11 +36,11 @@ namespace Game
 
 	namespace Layers
 	{
-		extern Layer layerBkg;
-		extern Layer layerWall;
-		extern Layer layerHurryText;
-		extern Layer layerHud;
-		extern PlatformEngine platformEngine;
+		extern Layer Background;
+		extern Layer Wall;
+		//extern Layer layerHurryText;
+		extern Layer HUD;
+		extern PlatformEngine Platforms;
 	}
 
 	void init();

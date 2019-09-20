@@ -23,9 +23,9 @@ void Background::init()
 void Background::render(sf::RenderWindow& window, int sprite)
 {
 	if(sprite == Background::Sprites::Background)
-		Game::Layers::layerBkg.render(window, spBkg);
+		Game::Layers::Background.render(window, spBkg);
 	else if (sprite == Background::Sprites::Wall)
-		Game::Layers::layerWall.render(window, spWall);
+		Game::Layers::Wall.render(window, spWall);
 }
 
 void Background::reset()

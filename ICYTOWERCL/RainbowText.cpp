@@ -1,17 +1,26 @@
-#include "RainbowEngine.h"
+#include "RainbowText.h"
 
 void RainbowText::init()
 {
 	colorsInitialized = false;
 	charsInitialized = false;
-	numOfColors = 18;
+
 	numOfChars = this->getString().getSize();
+	for (int i = 0; i < numOfChars; i++)	//push each character individually into the chars vector
+		chars.push_back(sf::Text(this->getString().substring(i, 1), DefaultFont::getFont(), this->getCharacterSize()));
+	comp = *this;
+
+	numOfColors = 18;
 	while (numOfColors < numOfChars)	//clean this shit up - see textMagic()
 		numOfColors += 18;
+
 	layer = nullptr;
 	magicSkipper = false;
 	magicX = 0;
 	magicY = 0;
+
+	getLocalBounds();
+
 	initialized = true;
 }
 
@@ -59,12 +68,12 @@ sf::Color RainbowText::changeColor(const sf::Color& color, const int delta)
 	return out;
 }
 
-void RainbowText::textMagic()		//This one took 8 continuous hours of tinkering before it
-{																		//finally worked properly and a few more hours before the code was clean
-																		//so appreciate what I do for little details :p
+void RainbowText::logic()		//This one took 8 continuous hours of tinkering before it
+{									//finally worked properly and a few more hours before the code was clean
+									//so appreciate what I do for little details!!!!!!!!!!!!! :p
 	if (!initialized)
 	{
-		std::cout << "RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.";
+		std::cout << "ITC INTERNAL ERROR: RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.\n";
 	}
 	else
 	{

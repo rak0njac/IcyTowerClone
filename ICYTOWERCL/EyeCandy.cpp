@@ -1,6 +1,4 @@
 #include "EyeCandy.h"
-#include <random>
-#include <iostream>
 
 EyeCandy::EyeCandy(const float &posX, const float &posY)	//used for stars coming out of the player while in combo mode
 {

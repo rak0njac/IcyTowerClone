@@ -1,10 +1,4 @@
-#include <iostream>
-#include <random>
 #include "Platform.h"
-#include <Font.h>
-#include <string>
-
-
 
 Platform::Platform(int flr)
 {

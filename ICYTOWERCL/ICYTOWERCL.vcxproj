@@ -140,17 +140,16 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EyeCandy.cpp" />
     <ClCompile Include="EyeCandyEngine.cpp" />
-    <ClCompile Include="FadeEffect.cpp" />
-    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="DefaultFont.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PitchedSound.cpp" />
     <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="PlatformLayer.cpp" />
+    <ClCompile Include="PlatformEngine.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="RainbowEngine.cpp" />
+    <ClCompile Include="RainbowText.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
@@ -160,16 +159,15 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EyeCandy.h" />
     <ClInclude Include="EyeCandyEngine.h" />
-    <ClInclude Include="FadeEffect.h" />
-    <ClInclude Include="Font.h" />
+    <ClInclude Include="DefaultFont.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="PitchedSound.h" />
     <ClInclude Include="Platform.h" />
-    <ClInclude Include="PlatformLayer.h" />
+    <ClInclude Include="PlatformEngine.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="RainbowEngine.h" />
+    <ClInclude Include="RainbowText.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

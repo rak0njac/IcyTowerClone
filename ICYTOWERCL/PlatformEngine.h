@@ -1,3 +1,4 @@
+#include <SFML/Graphics.hpp>
 #include "Layer.h"
 #include <Platform.h>
 #include <vector>

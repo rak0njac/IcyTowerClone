@@ -1,126 +1,115 @@
 #include <Timer.h>
-#include <Camera.h>
-#include <iostream>
-#include <GameOver.h>
-#include <Font.h>
-#include <RainbowEngine.h>
-#include <SFML\Audio.hpp>
-#include <Game.h>
 
-using namespace Timer;
+static int levels[7] { 0,1,2,4,6,9,11 };
+static int curLevel = 0;
 
-int levels[6] { 1,2,4,6,9,11 };
-int i = 0;
+static bool started = false;	//has the player advanced high enough so the timer can start counting & camera start moving?
+static bool berserk = false;	//final level of the game, the clock handle rotates counter-clockwise and clock keeps shaking (used mostly for clockShakeAnim() )
+static bool shaking = false;	//is the clock shaking?
+static bool hurrying = false;	//is the hurry up text being displayed?
 
-bool started = false;
-bool berserk = false;
-bool shaking = false;
-bool hurrying = false;
+static sf::Texture txClock;
+static sf::Sprite spClock;
+static sf::Texture txClockHandle;
+static sf::Sprite spClockHandle;
 
-sf::Texture TxClock;
-sf::Sprite Timer::SpClock;
-sf::Texture TxClockHandle;
-sf::Sprite Timer::SpClockHandle;
+static RainbowText textHurry("HURRY UP!", DefaultFont::getFont(), const_text_size_large);
 
-RainbowText textHurry("HURRY UP!", DefaultFont::getFont(), 160);
-//RainbowEngine reHurry(textHurry);
-
-sf::Clock clox;
-sf::Time timez;
-
-sf::SoundBuffer sb;
+static sf::SoundBuffer sb;
 static sf::Sound sound;
 
-Layer* curLayer;
+static Layer* curLayer;
 
 void Timer::init() {
-	TxClock.loadFromFile("..\\Assets\\Clock.png");
-	SpClock.setTexture(TxClock);
-	TxClockHandle.loadFromFile("..\\Assets\\ClockHandle.png");
-	SpClockHandle.setTexture(TxClockHandle);
-	SpClock.setOrigin(37, 47);
-	SpClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
-	SpClockHandle.setOrigin(37, 47);
-	SpClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
-	textHurry.setScale(0.5, 0.5);
-	textHurry.setOutlineThickness(10);
+	txClock.loadFromFile("..\\Assets\\Clock.png");
+	spClock.setTexture(txClock);
+	txClockHandle.loadFromFile("..\\Assets\\ClockHandle.png");
+	spClockHandle.setTexture(txClockHandle);
+	spClock.setOrigin(37, 47);
+	spClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+	spClockHandle.setOrigin(37, 47);
+	spClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+
+	textHurry.setOutlineThickness(const_text_outline_large);
 	textHurry.setOutlineColor(sf::Color(1, 26, 51, 255));
-	textHurry.setOrigin(textHurry.getLocalBounds().width * 0.5, textHurry.getLocalBounds().height * 0.5);
+	textHurry.setOrigin(textHurry.getLocalBounds().width / 2, textHurry.getLocalBounds().height / 2);
 	textHurry.setPosition(320, 540);
+	textHurry.setScale(0.6, 0.6);
 
 	sb.loadFromFile("..\\Assets\\Sounds\\hurry.ogg");
 	sound.setBuffer(sb);
 
-	curLayer = &Game::Layers::layerHud;
+	curLayer = &Game::Layers::HUD;
 
 	textHurry.init();
 	textHurry.setLayer(*curLayer);
 }
 
-void shakeAnim()
+void clockShakeAnim()
 {
-	static int count = 0;
-	//std::cout << count << "\n";
+	static int step = 0;
 
-	static bool xside = 1;
-	static bool yside = 1;
-	static float x = 0;
-	static float y = 0;
-	if (count < 400 && shaking)
+	static bool xSide = 1;	//where is the clock going on the x axis (left or right)
+	static bool ySide = 1;
+	static float xPos = -1;	//clock position in pixels 
+	static float yPos = -1;
+
+	if (shaking && step < 400)
 	{
-		if (xside)
+		if (xSide)
 		{
-			if (x < 1)
-				x++;
-			else xside = 0;
+			if (xPos < 1)
+				xPos++;
+			else xSide = 0;
 		}
-		else if (!xside)
+		else
 		{ 
-			if (x > -1)
-				x--;
-			else xside = 1;
+			if (xPos > -1)
+				xPos--;
+			else xSide = 1;
 		}
-		if (yside)
+		if (ySide)
 		{
-			if (y < 1)
-				y+= 1.5f;
-			else yside = 0;
+			if (yPos < 1)
+				yPos+= 1.5f;
+			else ySide = 0;
 		}
-		else if (!yside)
+		else
 		{
-			if (y > -1)
-				y-=1.5f;
-			else yside = 1;
+			if (yPos > -1)
+				yPos-=1.5f;
+			else ySide = 1;
 		}
-		if (count % 2 == 0)
+		if (step % 2 == 0)
 		{
-			Timer::SpClockHandle.setPosition(const_timer_start_pos_x + x, const_timer_start_pos_y + y);
-			if(count<350 || berserk)
-				Timer::SpClock.setPosition(const_timer_start_pos_x + x, const_timer_start_pos_y + y);
-			else if(Timer::SpClock.getPosition().x != const_timer_start_pos_x && Timer::SpClock.getPosition().y != const_timer_start_pos_y)
-				Timer::SpClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+			spClockHandle.setPosition(const_timer_start_pos_x + xPos, const_timer_start_pos_y + yPos);
+
+			if(step < 350 || berserk)	//the handle should shake a few more moments than the clock itself (nice for attention to detail lol)
+				spClock.setPosition(const_timer_start_pos_x + xPos, const_timer_start_pos_y + yPos);
+			else if(spClock.getPosition().x != const_timer_start_pos_x && spClock.getPosition().y != const_timer_start_pos_y)
+				spClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 		}
-		count++;
+		step++;
 	}
 	else
 	{
-		count = 0;
-		shaking = 0;
-		if (Timer::SpClockHandle.getPosition().x != const_timer_start_pos_x && Timer::SpClockHandle.getPosition().y != const_timer_start_pos_y)
+		step = 0;
+		shaking = false;
+		if (spClockHandle.getPosition().x != const_timer_start_pos_x && spClockHandle.getPosition().y != const_timer_start_pos_y)
 		{
-			Timer::SpClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+			spClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
 		}
 	}
 }
 
-void displayHurryUp()
+void hurryUpAnim()
 {
 	if (hurrying)
 	{
 		if (textHurry.getPosition().y > -80)
 		{
 			textHurry.move(0, -1);
-			textHurry.textMagic();
+			textHurry.logic();
 		}
 		else
 		{
@@ -133,36 +122,50 @@ void displayHurryUp()
 
 void Timer::logic()
 {
-	timez = clox.getElapsedTime();
-	if (started)
+	static int phase = 0;
+	time = clock.getElapsedTime();
+	if (phase == 0)
 	{
-		if (!berserk)
+		if (started)
 		{
-			SpClockHandle.setRotation(timez.asSeconds() * 12);
-			//std::cout  << timez.asSeconds() << "\n";
-			if (timez.asSeconds() > 30)
-			{
-				shaking = true;
-				hurrying = true;
-				sound.play();
-				if (i < 4)
-					i++;
-				else
-				{
-					berserk = true;
-					i = 5;
-				}
-				Camera::setCamLevel(levels[i]);
-				clox.restart();
-			}
+			curLevel = 1;
+			Camera::setCamLevel(curLevel);
+			clock.restart();
+			phase++;
 		}
-		else
+	}
+	else if (phase == 1)
+	{
+		spClockHandle.setRotation(time.asSeconds() * 12);
+		clockShakeAnim();
+		hurryUpAnim();
+
+		if (time.asSeconds() > 30)
 		{
-			SpClockHandle.rotate(-3);
 			shaking = true;
+			hurrying = true;
+			sound.play();
+
+			if (curLevel < 5)
+			{
+				curLevel++;
+				clock.restart();
+				Camera::setCamLevel(curLevel);
+			}
+			else
+				phase++;
 		}
-		shakeAnim();
-		displayHurryUp();
+	}
+	else if (phase == 2)
+	{
+		if (started)
+		{
+			curLevel = 5;
+			berserk = true;
+			shaking = true;
+			spClockHandle.rotate(-3);
+		}
+		else phase = 0;
 	}
 }
 
@@ -170,24 +173,18 @@ bool Timer::getStarted() { return started; }
 
 void Timer::setStarted(bool start)
 {
-	if (start)
-	{
-		started = start;
-		Camera::setCamLevel(1);
-		clox.restart();
-	}
-	else started = false;
+	started = start;
 }
 
 void Timer::reset()
 {
-	i = 0;
-	clox.restart();
+	curLevel = 0;
+	clock.restart();
 	started = false;
 	shaking = false;
 	berserk = false;
 	hurrying = false;
-	SpClockHandle.setRotation(0);
+	spClockHandle.setRotation(0);
 	textHurry.setPosition(320, 540);
 }
 
@@ -195,8 +192,8 @@ void Timer::render(sf::RenderWindow& window, int sprite)
 {
 	if (sprite == Sprites::Clock)
 	{
-		curLayer->render(window, SpClock);
-		curLayer->render(window, SpClockHandle);
+		curLayer->render(window, spClock);
+		curLayer->render(window, spClockHandle);
 	}
 	else if (sprite == Sprites::HurryUpText)
 	{

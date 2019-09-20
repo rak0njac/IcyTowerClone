@@ -1,5 +1,4 @@
 #include "EyeCandyEngine.h"
-#include <iostream>
 
 EyeCandyEngine::EyeCandyEngine()
 {
@@ -32,7 +31,7 @@ void EyeCandyEngine::setLayer(Layer& _layer)
 	layer = &_layer;
 }
 
-void EyeCandyEngine::render(sf::RenderWindow& window)
+void EyeCandyEngine::render(sf::RenderWindow& window)	//todo: separate logic and render, needed for Score::rewardLogic() optimization
 {
 	if (layer != nullptr)
 	{

@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <random>
+
 const float const_eyecandy_gravity = 0.075f;
 class EyeCandy
 {

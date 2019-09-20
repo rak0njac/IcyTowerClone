@@ -1,10 +1,13 @@
 #include <Score.h>
-#include <string.h>
-#include <iostream>
-#include <RainbowEngine.h>
-#include <GameOver.h>
-#include <EyeCandyEngine.h>
-#include <Game.h>
+
+//Scoring sequence goes like this: changeScore() is called each time the player collides a platform from the Player.cpp collide(). 
+//a check is performed to see whether or not the player has jumped more than one platform, if so, it activates the combo mode.
+//in combo mode, the combo bar is drained as a matter of time the player has to extend his combo. if the player jumps more than one platform,
+//the combo bar is reset and extended, but if the player jumps only one platform up or any number of platforms down, endCombo() is called directly from changeScore()
+//elsewhere it is called by comboLogic() when the combo bar is drained. when endCombo() is called, a check is performed to see whether the combo made by the player
+//meets the rule for combo score calculation - needs to jump at least twice. handleRewards() is called to set the combo reward index and font size.
+//the game then goes into reward mode, a reward animation sequence starts in rewardLogic(), along with the star and number of floors to the left of the
+//screen (just like in combo mode).
 
 int playerPos;	//used to calculate if the player has jumped two or more platforms in order to enter combo mode
 
@@ -12,25 +15,21 @@ int timesJumped;	//it is not a combo if the player doesn't jump at least twice
 bool comboMode;
 bool rewardMode;
 bool stopMode;
-bool rewardReset;
-bool rewardAnimReset;
+bool rewardAnimReset;	//if the reward is still being displayed, but the player finishes a new combo for a new reward, used to interrupt the old reward
 
 int rewardIndex;
-float rewardSize;
+float rewardSize;	//size in graphical matter
 
 int score;	//total score
 int comboScore;		//current combo session score
 int comboScoreTotal;	//score accumulated from all combo sessions
 int bestCombo;
 
-sf::Text textScore("SCORE: 0", DefaultFont::getFont(), 60);
+sf::Text textScore("SCORE: 0", DefaultFont::getFont(), 40);
 
-sf::Text textConstFloors("floors", DefaultFont::getFont(), 20);
-RainbowText re1("floors", DefaultFont::getFont(), 20);						//(textConstFloors);
-sf::Text textComboFloors("", DefaultFont::getFont(), 30);
-sf::Text textComboReward("", DefaultFont::getFont(), 140);
-RainbowText re2("QWERTYUIOPASDFGHJKLZXCVBNM!", DefaultFont::getFont(), 140);
-
+RainbowText rtFloors("FLOORS", DefaultFont::getFont(), const_text_size_small);		
+sf::Text textNumOfFloors("", DefaultFont::getFont(), const_text_size_medium);
+RainbowText rtReward("", DefaultFont::getFont(), const_text_size_large);
 
 sf::Texture txComboMeter;
 sf::Sprite spComboMeter;
@@ -45,10 +44,7 @@ sf::Color color(255, 0, 0, 255);
 
 EyeCandyEngine ece;
 
-static Layer& curLayer = Game::Layers::layerHud;
-
-
-using namespace Score;
+static Layer& curLayer = Game::Layers::HUD;
 
 enum Reward
 {
@@ -66,17 +62,16 @@ enum Reward
 };
 
 sf::SoundBuffer soundBuffer[Reward::RewardCount];
+std::string rewardStrings[Reward::RewardCount];
 sf::Sound sound;
 
 void Score::init()
 {
-	//curLayer.addVector(re1.getVector());
 	playerPos = 0;
 
 	timesJumped = 0;
 	comboMode = false;
 	rewardMode = false;
-	rewardReset = false;
 	rewardAnimReset = true;
 
 	score = 0;
@@ -86,12 +81,10 @@ void Score::init()
 
 	comboBarHeight = 0;
 
-	//////
 	textScore.setPosition(10, 440);
-	textScore.setScale(0.5, 0.5);
-	textScore.setOutlineThickness(6);
-	textScore.setOutlineColor(sf::Color(1, 26, 51, 255));
-	//textScore.setOrigin(textScore.getLocalBounds().width*0.5, textScore.getLocalBounds().height*0.5);
+	textScore.setScale(0.75, 0.75);
+	textScore.setOutlineThickness(const_text_outline_medium);
+	textScore.setOutlineColor(const_color_outline);
 
 	txComboMeter.loadFromFile("..\\Assets\\ComboMeter.png");
 	txComboMeterBar.loadFromFile("..\\Assets\\ComboMeterBar.png");
@@ -119,22 +112,24 @@ void Score::init()
 	star.setPoint(15, sf::Vector2f(28, 1));
 
 	star.setOutlineThickness(4);
-	star.setOutlineColor(sf::Color(1, 26, 51, 255));
-	textConstFloors.setOutlineThickness(1);
-	textComboFloors.setOutlineThickness(3);
-	textComboFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
-	textConstFloors.setOutlineColor(sf::Color(1, 26, 51, 255));
+	star.setOutlineColor(const_color_outline);
 
-	re1.init();
-	re2.init();
+	star.setPosition(0, 215);
+	rtFloors.setPosition(6, 245);
 
-	re1.setOutlineThickness(1);
-	re1.setOutlineColor(sf::Color(1, 26, 51, 255));
+	textNumOfFloors.setOutlineThickness(const_text_outline_medium);
+	textNumOfFloors.setOutlineColor(const_color_outline);
+	textNumOfFloors.setPosition(42, 227);
 
-	re2.setPosition(320, 290);
-	re2.setScale(0.1f, 0.1f);
-	re2.setOutlineThickness(7);
-	re2.setOutlineColor(sf::Color(1, 26, 51, 255));
+	rtFloors.init();
+	rtReward.init();
+
+	rtFloors.setOutlineThickness(const_text_outline_small);
+	rtFloors.setOutlineColor(const_color_outline);
+
+	rtReward.setPosition(320, 290);		//set position here, it is not changed afterwards!
+	rtReward.setOutlineThickness(const_text_outline_large);
+	rtReward.setOutlineColor(const_color_outline);
 
 	soundBuffer[Reward::Good].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\good.ogg");
 	soundBuffer[Reward::Sweet].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\sweet.ogg");
@@ -147,19 +142,40 @@ void Score::init()
 	soundBuffer[Reward::Splendid].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\splendid.ogg");
 	soundBuffer[Reward::NoWay].loadFromFile("..\\Assets\\Sounds\\combo_rewards\\noway.ogg");
 
+	rewardStrings[Reward::Good] = "GOOD!";
+	rewardStrings[Reward::Sweet] = "SWEET!";
+	rewardStrings[Reward::Great] = "GREAT!";
+	rewardStrings[Reward::Super] = "SUPER!";
+	rewardStrings[Reward::Wow] = "WOW!";
+	rewardStrings[Reward::Amazing] = "AMAZING!";
+	rewardStrings[Reward::Extreme] = "EXTREME!";
+	rewardStrings[Reward::Fantastic] = "FANTASTIC!";
+	rewardStrings[Reward::Splendid] = "SPLENDID!";
+	rewardStrings[Reward::NoWay] = "NO WAY!";
+
+	//for some reason getLocalBounds() is extremely expensive, probably because it requests all the glyphs for the current string from the font
+	//which would make it as expensive as draw(). But once the glyphs are in memory they are just reused whenever requested, so this way we request all
+	//the glyphs at load time. If it wasn't for this then the game would stutter when the first combo reward in a game session was displayed.
+	for (std::string s : rewardStrings)
+	{
+		rtReward.setString(s);
+		rtReward.getLocalBounds();
+	}
+	rtFloors.getLocalBounds();
+
 	ece.setLayer(curLayer);
-	re1.setLayer(curLayer);
-	re2.setLayer(curLayer);
+	rtFloors.setLayer(curLayer);
+	rtReward.setLayer(curLayer);
 }
 
 void changeColor()
 {
 	textScore.setFillColor(color);
 
-	if (comboMode)
+	if (comboMode || rewardMode)
 	{
 		star.setFillColor(sf::Color(color.g, color.r, color.b, 255));
-		textComboFloors.setFillColor(sf::Color(color.b, color.g, color.r, 255));
+		textNumOfFloors.setFillColor(sf::Color(color.b, color.g, color.r, 255));
 		color = RainbowText::changeColor(color, 51);
 	}
 	else
@@ -167,31 +183,6 @@ void changeColor()
 		color = RainbowText::changeColor(color, 5);
 	}
 }
-
-std::string getRewardString()
-{
-	if (rewardIndex == Reward::Good)
-		return "GOOD!";
-	if (rewardIndex == Reward::Sweet)
-		return "SWEET!";
-	if (rewardIndex == Reward::Great)
-		return "GREAT!";
-	if (rewardIndex == Reward::Super)
-		return "SUPER!";
-	if (rewardIndex == Reward::Wow)
-		return "WOW!";
-	if (rewardIndex == Reward::Amazing)
-		return "AMAZING!";
-	if (rewardIndex == Reward::Extreme)
-		return "EXTREME!";
-	if (rewardIndex == Reward::Fantastic)
-		return "FANTASTIC!";
-	if (rewardIndex == Reward::Splendid)
-		return "SPLENDID!";
-	if (rewardIndex == Reward::NoWay)
-		return "NO WAY!";
-}
-
 
 void rewardLogic()
 {
@@ -204,125 +195,110 @@ void rewardLogic()
 		rewardAnimReset = false;
 	}
 
-	if (phase == 0)
+	if (phase == 0)		//init
 	{
-		if (comboScore > bestCombo)
-			bestCombo = comboScore;
-		ece.addCandy(320, 290, comboScore, 2, comboScore*0.5);
-		re2.setScale(0.05f, 0.05f);
-		re2.setRotation(0);
-		comboScore = 0;
-		timesJumped = 0;
+		rtReward.setScale(0.05f, 0.05f);
+		rtReward.setRotation(0);
 		step = 0;
-		re2.setString(getRewardString());
+		rtReward.setString(rewardStrings[rewardIndex]);
 		sound.setBuffer(soundBuffer[rewardIndex]);
 		sound.play();
-		phase = 1;
+		phase++;
 	}
 
-	else if (phase == 1)		//animation
+	else if (phase == 1)		//animation 1st sequence
 	{
-		if (step<75)//textComboReward.getScale().x < rewardSize)
-		{	
-			re2.scale(rewardSize, rewardSize);
-			re2.rotate(4.8);
-			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
-			re2.textMagic();
+		if (step < 75)
+		{
+			rtReward.scale(rewardSize, rewardSize);
+			rtReward.rotate(4.8);
+			rtReward.setOrigin(rtReward.getLocalBounds().width / 2, rtReward.getLocalBounds().height / 2);
+			rtReward.logic();
 
 			step++;
 		}
-		else phase = 2;
+		else phase++;
 	}
 	else if (phase == 2)		//show reward for some time after animation finishes
 	{
 		if (step < 150)
 		{
 			step++;
-			re2.textMagic();
+			rtReward.logic();
 		}
-		else phase = 3;
+		else phase++;
 	}
-	else if (phase == 3)
+	else if (phase == 3)	//animation last sequence
 	{
-		if (re2.getScale().x > 0.05f)
+		if (rtReward.getScale().x > 0.05f)
 		{
-			re2.scale(0.85f, 0.85f);
-			re2.rotate(-18);
-			re2.setOrigin(re2.getLocalBounds().width * 0.5f, re2.getLocalBounds().height * 0.5f);
-			re2.textMagic();
+			rtReward.scale(0.85f, 0.85f);
+			rtReward.rotate(-18);
+			rtReward.setOrigin(rtReward.getLocalBounds().width / 2, rtReward.getLocalBounds().height / 2);
+			rtReward.logic();
 		}
-		else phase = 4;
+		else phase++;
 	}
-	else
+	else if (phase == 4)
 	{
 		phase = 0;
 		rewardMode = false;
-		rewardReset = false;
 	}
-
+	rtFloors.logic();
 }
 
 void handleRewards()
 {
 	if (comboScore < 7)
 	{
-		rewardIndex = 0;
+		rewardIndex = Reward::Good;
 		rewardSize = 1.028f;
 	}
-		//reward("GOOD!", 50);
 	else if (comboScore < 15)
 	{
-		rewardIndex = 1;
+		rewardIndex = Reward::Sweet;
 		rewardSize = 1.03f;
 	}
-	//	reward("SWEET!", 60);
 	else if (comboScore < 25)
 	{
-		rewardIndex = 2;
+		rewardIndex = Reward::Great;
 		rewardSize = 1.032f;
 	}
-	//	reward("GREAT!", 70);
 	else if (comboScore < 35)
 	{
-		rewardIndex = 3;
+		rewardIndex = Reward::Super;
 		rewardSize = 1.034f;
 	}
-	//	reward("SUPER!", 80);
 	else if (comboScore < 50)
 	{
-		rewardIndex = 4;
+		rewardIndex = Reward::Wow;
 		rewardSize = 1.04f;
 	}
-	//	reward("WOW!", 90);
 	else if (comboScore < 70)
 	{
-		rewardIndex = 5;
+		rewardIndex = Reward::Amazing;
 		rewardSize = 1.0375f;
 	}
-	//	reward("AMAZING!", 100);
 	else if (comboScore < 100)
 	{
-		rewardIndex = 6;
+		rewardIndex = Reward::Extreme;
 		rewardSize = 1.0375f;
 	}
-	//	reward("EXTREME!", 110);
 	else if (comboScore < 140)
 	{
-		rewardIndex = 7;
+		rewardIndex = Reward::Fantastic;
 		rewardSize = 1.0375f;
 	}
-	//	reward("FANTASTIC!", 120);
 	else if (comboScore < 200)
 	{
-		rewardIndex = 8;
+		rewardIndex = Reward::Splendid;
 		rewardSize = 1.038f;
 	}
-	//	reward("SPLENDID!", 130);
 	else 
 	{
-		rewardIndex = 9;
+		rewardIndex = Reward::NoWay;
 		rewardSize = 1.0425;
-	}//reward("NO WAY!", 140);
+	}
 }
 
 void startCombo()
@@ -330,51 +306,37 @@ void startCombo()
 	comboMode = true;
 	spComboMeterBar.setPosition(31, 119);
 	comboBarHeight = 100;
-
-	star.setPosition(0, 215);
-	//textConstFloors.setPosition(6, 245);
-	re1.setPosition(6, 245);
 }
 
 void updateComboScore(int score)
 {
 	timesJumped++;
-	comboScore += (score) * 0.1f;
-	textComboFloors.setString(std::to_string(comboScore));
-	textComboFloors.setPosition(38 - textComboFloors.getLocalBounds().width * 0.5f, 215); //center the text
+	comboScore += score / 10;
+	textNumOfFloors.setString(std::to_string(comboScore));
+	textNumOfFloors.setOrigin(textNumOfFloors.getLocalBounds().width / 2, textNumOfFloors.getLocalBounds().height / 2);
 }
 
-void updateScore()
-{
-	score = playerPos + comboScoreTotal;
-	textScore.setString("SCORE: " + std::to_string(score));
-	//std::cout << comboScoreTotal;
-}
-
-void endCombo()		//will be called once if no reward. called lots of times if reward. maybe fix this up hmm
+void endCombo()
 {
 	comboBarHeight = 0;
 	spComboMeterBar.setTextureRect(sf::IntRect(11, 19, 16, comboBarHeight));
-	if (comboScore >= 4 && timesJumped >= 2 && !rewardMode)	//prevent total combo score from multiplying on each call if reward is being presented
+	if (timesJumped >= 2)	//reward applicable
 	{
 		comboScoreTotal += comboScore * comboScore;
-		rewardMode = true;
-		handleRewards();	//call every frame until the reward presentation finishes
+		if (rewardMode)
+			rewardAnimReset = true;
+		else rewardMode = true;
 
+		//these need to be called before comboScore is set to 0
+		handleRewards();	
+		if (comboScore > bestCombo)
+			bestCombo = comboScore;
+		ece.addCandy(320, 290, comboScore, 2, comboScore / 2);
 	}
-	if (rewardMode)	
-	{
-	}
-	else		//immediately (or finally) finish the combo logic
-	{
-		comboScore = 0;
-		timesJumped = 0;
-		updateScore();
-		comboMode = false;
-	}
+	comboScore = 0;
+	timesJumped = 0;
+	comboMode = false;
 }
-
-
 
 void comboLogic()
 {
@@ -389,7 +351,7 @@ void comboLogic()
 			skipper = 1;
 		}
 		else skipper = 0;
-		re1.textMagic();
+		rtFloors.logic();
 	}
 	else
 	{
@@ -397,84 +359,87 @@ void comboLogic()
 	}
 }
 
-void Score::changeScore(int i)
+void Score::changeScore(int platform)
 {
-	if (playerPos + 20 <= i)	//jumped two or more floors - start combo
+	if (playerPos + 20 <= platform)	//jumped two or more floors - start combo
 	{
-		if (rewardMode && !rewardReset)
-		{
-			comboScore = 0;
-			timesJumped = 0;
-			rewardReset = true;
-		}
 		startCombo();
 	}
 
 	if (comboMode)
 	{
-		if(playerPos + 20 <= i)
-			updateComboScore(i - playerPos);
-		else if (playerPos == i) {}	//jumped on the same floor he was already on - do nothing
-		else endCombo();			//jumped one floor up, or any number of floors down - end the combo
+		if (playerPos + 20 <= platform)
+			updateComboScore(platform - playerPos);
+		else if (playerPos != platform) //if on the same floor he was already on - do nothing
+			endCombo(); //jumped one floor up, or any number of floors down - end the combo
 	}
 	
-	score = i + comboScoreTotal;
+	score = platform + comboScoreTotal;
 	textScore.setString("SCORE: " + std::to_string(score));
-	playerPos = i;
+	playerPos = platform;
 }
 
 sf::Vector2i Score::stop()
 {
+	stopMode = true;
+	sf::Vector2i values;
+	values.x = playerPos / 10;
+	values.y = bestCombo;
+	return values;
+}
+
+void stopLogic()	//animation where the score goes from the bottom left corner to the center of the screen
+{
 	static int phase = 0;
-	static int i = 0;
+	static int step = 0;
+
 	static sf::Text textScoreTemp;
 	static sf::Vector2f deltaScale;
 	static sf::Vector2f deltaPos;
-	static sf::Vector2i values;
 
-	//std::cout << phase << "\n";
-
-	if (!GameOver::isGameOver())
+	if (!GameOver::isGameOver())	//check on each frame if the game is no longer in game over state then reset all these statics
 	{
-		i = 0;
+		step = 0;
 		phase = 0;
 		stopMode = false;
 	}
-
-	if (phase == 0)
+	else 
 	{
-		comboMode = false;
-		//
-		//rewardMode = false;
-		stopMode = true;
-		phase = 1;
-		textScoreTemp = textScore;
-		textScoreTemp.setScale(0.63, 0.63);
-		textScoreTemp.setOrigin(textScore.getLocalBounds().width * 0.5, textScore.getLocalBounds().height * 0.5);
-		textScoreTemp.setPosition(320, 290);
-		deltaScale = textScoreTemp.getScale() - textScore.getScale();
-		deltaPos.x = textScoreTemp.getGlobalBounds().left - textScore.getGlobalBounds().left;
-		deltaPos.y = textScoreTemp.getGlobalBounds().top - textScore.getGlobalBounds().top;
-	}
-
-	else if (phase == 1)
-	{
-		if (i < 75)
+		if (phase == 0)
 		{
-			textScore.setScale(textScore.getScale().x + deltaScale.x / 75, textScore.getScale().y + deltaScale.y / 75);
-			textScore.move(deltaPos.x / 75, deltaPos.y / 75);
-			i++;
-			//std::cout << textScore.getScale().x << "\n";
+			comboMode = false;
+			//stopMode = true;
+
+			//calculate delta for every frame between current size/pos and desired size/pos
+			textScoreTemp = textScore;
+			textScoreTemp.setScale(1, 1);
+			textScoreTemp.setOrigin(textScore.getLocalBounds().width * 0.5, textScore.getLocalBounds().height * 0.5);
+			textScoreTemp.setPosition(320, 290);
+			deltaScale = textScoreTemp.getScale() - textScore.getScale();
+			deltaPos.x = textScoreTemp.getGlobalBounds().left - textScore.getGlobalBounds().left;
+			deltaPos.y = textScoreTemp.getGlobalBounds().top - textScore.getGlobalBounds().top;
+
+			phase++;
 		}
-		else phase = 2;
+
+		else if (phase == 1)
+		{
+			const int numOfFrames = 75;
+			if (step < numOfFrames)
+			{
+				textScore.setScale(textScore.getScale().x + deltaScale.x / numOfFrames, textScore.getScale().y + deltaScale.y / numOfFrames);
+				textScore.move(deltaPos.x / numOfFrames, deltaPos.y / numOfFrames);
+				step++;
+			}
+			else phase++;
+		}
+		else if (phase == 2)
+		{
+			textScore = textScoreTemp;
+		}
 	}
-	else if (phase == 2)
-	{
-		textScore = textScoreTemp;
-	}
-	values.x = playerPos * 0.1;
-	values.y = bestCombo;
-	return values;
+
+
 }
 
 
@@ -492,37 +457,27 @@ void Score::logic()
 	
 	if (stopMode)
 	{
-		stop();
+		stopLogic();
 	}
 	changeColor();
 }
 
 void Score::render(sf::RenderWindow& window)
 {
-	static bool init = false;
-	if (!init)
-	{
-		re1.textMagic();
-		re1.render(window);
-		re2.textMagic();
-		re2.render(window);
-		init = true;
-	}
-
 	curLayer.render(window, textScore);
 	curLayer.render(window, spComboMeter);
-	if (comboMode)
+	if (comboMode || rewardMode)
 	{
 		curLayer.render(window, spComboMeterBar);
 		curLayer.render(window, star);
-		curLayer.render(window, textComboFloors);
-		re1.render(window);
+		curLayer.render(window, textNumOfFloors);
+		rtFloors.render(window);
 	}
 
 	if (rewardMode)
 	{
 		ece.render(window);
-		re2.render(window);
+		rtReward.render(window);
 	}
 }
 
@@ -533,10 +488,9 @@ void Score::reset()
 	playerPos = 0;
 
 	timesJumped = 0;
-	//comboMode = false;
+	comboMode = false;
 	rewardMode = false;
-	stopMode = false;
-	rewardReset = false;
+	//stopMode = false;			//this is set to false on reset in stopLogic()
 	rewardAnimReset = true;
 
 	score = 0;
@@ -548,6 +502,6 @@ void Score::reset()
 
 	textScore.setOrigin(0, 0);
 	textScore.setPosition(10, 440);
-	textScore.setScale(0.5, 0.5);
-	textScore.setString("SCORE: " + std::to_string(score));
+	textScore.setScale(0.75, 0.75);
+	textScore.setString("SCORE: 0");
 }

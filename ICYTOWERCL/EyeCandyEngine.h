@@ -1,7 +1,9 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include "EyeCandy.h"
-#include <PlatformLayer.h>
+#include <Layer.h>
 #include <vector>
+
 class EyeCandyEngine
 {
 private:

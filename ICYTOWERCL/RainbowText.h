@@ -2,10 +2,10 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <Layer.h>
-#include <Font.h>
+#include <DefaultFont.h>
 #include <iostream>
 
-class RainbowText : public sf::Text
+class RainbowText : public sf::Text	//for proper OOP it would be better to inherit from Font, Drawable and Transformable, but I think it's overkill
 {
 private:
 	bool initialized;
@@ -27,6 +27,6 @@ public:
 	static sf::Color changeColor(const sf::Color& color, const int col);
 	void init();
 	void setLayer(Layer& _layer);
-	void textMagic();
+	void logic();
 	void render(sf::RenderWindow& window);
 };
