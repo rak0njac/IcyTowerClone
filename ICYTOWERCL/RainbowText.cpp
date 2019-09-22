@@ -68,9 +68,9 @@ sf::Color RainbowText::changeColor(const sf::Color& color, const int delta)
 	return out;
 }
 
-void RainbowText::logic()		//This one took 8 continuous hours of tinkering before it
-{									//finally worked properly and a few more hours before the code was clean
-									//so appreciate what I do for little details!!!!!!!!!!!!! :p
+void RainbowText::logic() //this one was hard as hell
+{						
+						
 	if (!initialized)
 	{
 		std::cout << "ITC INTERNAL ERROR: RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.\n";

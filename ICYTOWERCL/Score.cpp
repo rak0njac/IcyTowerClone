@@ -213,7 +213,6 @@ void rewardLogic()
 			rtReward.scale(rewardSize, rewardSize);
 			rtReward.rotate(4.8);
 			rtReward.setOrigin(rtReward.getLocalBounds().width / 2, rtReward.getLocalBounds().height / 2);
-			rtReward.logic();
 
 			step++;
 		}
@@ -224,7 +223,6 @@ void rewardLogic()
 		if (step < 150)
 		{
 			step++;
-			rtReward.logic();
 		}
 		else phase++;
 	}
@@ -235,7 +233,6 @@ void rewardLogic()
 			rtReward.scale(0.85f, 0.85f);
 			rtReward.rotate(-18);
 			rtReward.setOrigin(rtReward.getLocalBounds().width / 2, rtReward.getLocalBounds().height / 2);
-			rtReward.logic();
 		}
 		else phase++;
 	}
@@ -245,6 +242,7 @@ void rewardLogic()
 		rewardMode = false;
 	}
 	rtFloors.logic();
+	rtReward.logic();
 }
 
 void handleRewards()

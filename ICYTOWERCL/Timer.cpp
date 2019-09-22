@@ -134,39 +134,45 @@ void Timer::logic()
 			phase++;
 		}
 	}
-	else if (phase == 1)
+	if (started)
 	{
-		spClockHandle.setRotation(time.asSeconds() * 12);
-		clockShakeAnim();
-		hurryUpAnim();
-
-		if (time.asSeconds() > 30)
+		if (phase == 1)
 		{
-			shaking = true;
-			hurrying = true;
-			sound.play();
+			spClockHandle.setRotation(time.asSeconds() * 12);
 
-			if (curLevel < 5)
+			if (time.asSeconds() > 30)
 			{
-				curLevel++;
-				clock.restart();
-				Camera::setCamLevel(curLevel);
+				shaking = true;
+				hurrying = true;
+				sound.play();
+
+				if (curLevel < 5)
+				{
+					curLevel++;
+					clock.restart();
+					Camera::setCamLevel(curLevel);
+				}
+				else
+				{
+					Camera::setCamLevel(curLevel);
+					phase++;
+				}
 			}
-			else
-				phase++;
+			clockShakeAnim();
+			hurryUpAnim();
 		}
-	}
-	else if (phase == 2)
-	{
-		if (started)
+		else if (phase == 2)
 		{
 			curLevel = 5;
 			berserk = true;
 			shaking = true;
 			spClockHandle.rotate(-3);
+			clockShakeAnim();
+			hurryUpAnim();
 		}
-		else phase = 0;
 	}
+	else if (phase != 0)
+		phase = 0;
 }
 
 bool Timer::getStarted() { return started; }

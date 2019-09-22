@@ -45,6 +45,10 @@ void Game::logic()
 						GameOver::restartGame();
 					}
 				}
+				else if (event.key.code == sf::Keyboard::Q)
+				{
+					window.setFramerateLimit(5);
+				}
 			}
 		}
 
@@ -57,15 +61,15 @@ void Game::logic()
 			Layers::Wall.logic();
 			Layers::Platforms.logic();
 			Timer::logic();
-			Score::logic();
 			player.logic();
+			Score::logic();
 
 			//rendering (in order)
 			Background::render(window, Background::Sprites::Background);
 			Timer::render(window, Timer::Sprites::HurryUpText);
 			Layers::Platforms.render(window);
-			Background::render(window, Background::Sprites::Wall);
 			player.render(window);
+			Background::render(window, Background::Sprites::Wall);
 			Score::render(window);
 			Timer::render(window, Timer::Sprites::Clock);
 
@@ -81,8 +85,8 @@ void Game::logic()
 
 			Background::render(window, Background::Sprites::Background);
 			Layers::Platforms.render(window);
-			Background::render(window, Background::Sprites::Wall);
 			player.render(window);	//mostly for eye candy stars
+			Background::render(window, Background::Sprites::Wall);
 			Score::render(window);
 			Timer::render(window, Timer::Sprites::Clock);
 			GameOver::render(window);
@@ -111,8 +115,8 @@ void Game::logic()
 
 					Background::render(window, Background::Sprites::Background);
 					Layers::Platforms.render(window);
-					Background::render(window, Background::Sprites::Wall);
 					player.render(window);
+					Background::render(window, Background::Sprites::Wall);
 					Score::render(window);
 					Timer::render(window, Timer::Sprites::Clock);
 					GameOver::render(window);
@@ -144,8 +148,8 @@ void Game::logic()
 
 				Background::render(window, Background::Sprites::Background);
 				Layers::Platforms.render(window);
-				Background::render(window, Background::Sprites::Wall);
 				player.render(window);
+				Background::render(window, Background::Sprites::Wall);
 				Score::render(window);
 				Timer::render(window, Timer::Sprites::Clock);
 
@@ -159,8 +163,8 @@ void Game::logic()
 
 					Background::render(window, Background::Sprites::Background);
 					Layers::Platforms.render(window);
-					Background::render(window, Background::Sprites::Wall);
 					player.render(window);
+					Background::render(window, Background::Sprites::Wall);
 					Score::render(window);
 					Timer::render(window, Timer::Sprites::Clock);
 
