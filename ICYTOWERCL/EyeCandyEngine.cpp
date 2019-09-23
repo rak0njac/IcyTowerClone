@@ -31,21 +31,46 @@ void EyeCandyEngine::setLayer(Layer& _layer)
 	layer = &_layer;
 }
 
-void EyeCandyEngine::render(sf::RenderWindow& window)	//todo: separate logic and render, needed for Score::rewardLogic() optimization
+void EyeCandyEngine::logic()
+{
+	for (EyeCandy& ec : engine)
+	{
+		ec.logic();
+	}
+}
+
+void EyeCandyEngine::render(sf::RenderWindow& window, bool _reset)	//bool - when star goes off screen, delete it or reset?
 {
 	if (layer != nullptr)
 	{
 		for (int i = 0; i < engine.size(); i++)
 		{
-			EyeCandy& ecref = engine.at(i);
-			ecref.logic();
-			layer->render(window, ecref.getDrawable());
-			if (ecref.getPosY() > layer->getViewCenter() + 240 && engine.size() > 0)
+			EyeCandy& ec = engine.at(i);
+			//ecref.logic();
+			layer->render(window, ec.getDrawable());
+			if (ec.getPosY() > layer->getViewCenter() + 240 && engine.size() > 0)
 			{
+				if (_reset)
+					enginePassive.push_back(ec);
 				engine.erase(engine.begin() + i);
 			}
 		}
 	}
+}
+
+void EyeCandyEngine::resetCandy()
+{
+	for (EyeCandy& ec : enginePassive)
+	{
+		ec.reset();
+	}
+	engine = enginePassive;
+	enginePassive.clear();
+}
+
+int EyeCandyEngine::getCount()
+{
+	return engine.size();
 }
 
 void EyeCandyEngine::reset()

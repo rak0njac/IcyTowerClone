@@ -8,6 +8,7 @@ void Player::init()
 	curPlatform = &PlatformEngine::arrPlatform[0];
 	curLevel = 1;									//platform which the player is standing on currently
 	levelMilestone = 50;
+	milestoneMode = false;
 	jumpStrenght = 0;								//depends on xSpeed, used to determine ySpeed, animation, and sound
 	xSpeed = 0;
 	ySpeed = 0;
@@ -36,6 +37,7 @@ void Player::init()
 
 	eceCombo.setLayer(curLayer);
 	eceMilestone.setLayer(Game::Layers::HUD);
+	eceMilestone.addCandy(320, 480, 320, 4, -7, 100);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();
@@ -75,8 +77,21 @@ int Player::checkBoundaries()
 void Player::milestoneReward()
 {
 	cjSoundMilestone.play();
-	eceMilestone.addCandy(320, 480, 320, 4, -7, 100);
 	levelMilestone += 50;
+	milestoneMode = true;
+}
+
+void Player::checkMilestone()
+{
+	if (eceMilestone.getCount() == 0)
+	{
+		milestoneMode = false;
+		eceMilestone.resetCandy();
+	}
+	if (milestoneMode)
+	{
+		eceMilestone.logic();
+	}
 }
 
 void Player::collide()
@@ -403,6 +418,7 @@ void Player::checkCandy()
 	{
 		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
 	}
+	eceCombo.logic();
 }
 
 void Player::checkTimer()	//checks if the bound to start the timer is broken by the player
@@ -420,14 +436,16 @@ void Player::logic()
 	checkCam();
 	checkGameOver();
 	checkCandy();
+	checkMilestone();
 	animationAndSound();
 }
 
 void Player::render(sf::RenderWindow& window)
 {
 	curLayer.render(window, cjSp);
-	eceCombo.render(window);
-	eceMilestone.render(window);
+	eceCombo.render(window, false);
+	if(milestoneMode)	//render only if milestone because else the idling stars are visible at the bottom of the screen
+		eceMilestone.render(window, true);
 }
 
 sf::Drawable& Player::getDrawable()
@@ -453,7 +471,7 @@ void Player::reset()
 	cjSp.setRotation(0);
 
 	eceCombo.reset();
-	eceMilestone.reset();
+	//eceMilestone.reset();
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();

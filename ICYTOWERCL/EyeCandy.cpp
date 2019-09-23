@@ -5,13 +5,15 @@ EyeCandy::EyeCandy(const float &posX, const float &posY)	//used for stars coming
 	colorChangeIndex = 5;									
 	std::random_device rd;
 	std::mt19937 rand(rd());
-	std::uniform_int_distribution<> randPos(-3, 3);
+	std::uniform_int_distribution<> randPos(-10, 10);
 	std::uniform_real_distribution<> randDir(-2, 2);
 	std::uniform_real_distribution<> randGrav(0.05, 0.1);
 	startPosX = posX + randPos(rand);
 	startPosY = posY + randPos(rand); //CHECK
-	xSpeed = randDir(rand);
-	ySpeed = -2;
+	startXSpeed = randDir(rand);
+	startYSpeed = -2;
+	xSpeed = startXSpeed;
+	ySpeed = startYSpeed;
 	gravity = randGrav(rand);
 
 	createStarShape();
@@ -27,8 +29,10 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 	std::uniform_real_distribution<> randGrav(0.05, 0.1);
 	startPosX = posX + randPos(rand);
 	startPosY = posY;
-	xSpeed = randDir(rand);
-	ySpeed = -2;
+	startXSpeed = randDir(rand);
+	startYSpeed = -2;
+	xSpeed = startXSpeed;
+	ySpeed = startYSpeed;
 	gravity = randGrav(rand);
 
 	createStarShape();
@@ -44,8 +48,10 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 	std::uniform_real_distribution<> randGrav(0.05, 0.1);
 	startPosX = posX + randPos(rand);
 	startPosY = posY;
-	xSpeed = randDir(rand);
-	ySpeed = _ySpeed;
+	startXSpeed = randDir(rand);
+	startYSpeed = _ySpeed;
+	xSpeed = startXSpeed;
+	ySpeed = startYSpeed;
 	gravity = randGrav(rand);
 
 	createStarShape();
@@ -89,6 +95,14 @@ void EyeCandy::changeColor()
 		candy.setFillColor(col[randCol(mt)]);
 		colorChangeIndex = 0;
 	}
+}
+
+
+void EyeCandy::reset()
+{
+	candy.setPosition(startPosX, startPosY);
+	xSpeed = startXSpeed;
+	ySpeed = startYSpeed;
 }
 
 void EyeCandy::logic()

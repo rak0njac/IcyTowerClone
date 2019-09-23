@@ -33,6 +33,7 @@ private:
 	EyeCandyEngine eceCombo;
 	int curLevel;
 	int levelMilestone;
+	bool milestoneMode;
 	sf::Image cjImg;
 	sf::Texture cjTx;
 	sf::Sprite cjSp;
@@ -64,6 +65,7 @@ private:
 	void move();
 	void jump();
 
+	void checkMilestone();
 	void checkTimer();
 	void checkMove();
 	void checkJump();

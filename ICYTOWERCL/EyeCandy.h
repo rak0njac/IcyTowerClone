@@ -10,6 +10,8 @@ private:
 	float gravity;
 	int startPosX;
 	int startPosY;
+	float startXSpeed;
+	float startYSpeed;
 	float xSpeed;
 	float ySpeed;
 	sf::ConvexShape candy;
@@ -23,6 +25,6 @@ public:
 
 	sf::ConvexShape& getDrawable();
 	float getPosY();
-
+	void reset();
 	void logic();
 };

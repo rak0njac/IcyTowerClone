@@ -243,6 +243,7 @@ void rewardLogic()
 	}
 	rtFloors.logic();
 	rtReward.logic();
+	ece.logic();
 }
 
 void handleRewards()
@@ -474,7 +475,7 @@ void Score::render(sf::RenderWindow& window)
 
 	if (rewardMode)
 	{
-		ece.render(window);
+		ece.render(window, false);
 		rtReward.render(window);
 	}
 }
