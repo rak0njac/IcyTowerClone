@@ -120,10 +120,9 @@ void hurryUpAnim()
 }
 
 
-void Timer::logic()
+void Timer::logic()		//todo fix readability
 {
 	static int phase = 0;
-	time = clock.getElapsedTime();
 	if (phase == 0)
 	{
 		if (started)
@@ -134,6 +133,7 @@ void Timer::logic()
 			phase++;
 		}
 	}
+	time = clock.getElapsedTime();
 	if (started)
 	{
 		if (phase == 1)

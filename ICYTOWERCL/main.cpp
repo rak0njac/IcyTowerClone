@@ -6,7 +6,7 @@
 //add boom when player falls
 
 //wherever there is posiiton, cast to int
-//separate logic from render in eyecandyengine
+//make timer anim as 8
 
 int main()
 {

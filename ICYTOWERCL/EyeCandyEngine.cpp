@@ -76,4 +76,5 @@ int EyeCandyEngine::getCount()
 void EyeCandyEngine::reset()
 {
 	engine.clear();
+	enginePassive.clear();
 }

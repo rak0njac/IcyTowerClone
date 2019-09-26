@@ -24,6 +24,11 @@ void Game::setState(int state)
 	gameState = state;
 }
 
+int Game::getState()
+{
+	return gameState;
+}
+
 void Game::logic()
 {
 	while (window.isOpen())

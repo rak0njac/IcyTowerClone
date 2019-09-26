@@ -416,7 +416,7 @@ void Player::checkCandy()
 {
 	if (jumpStrenght == 3 && Score::isComboMode()) 
 	{
-		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 2);
+		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 1);
 	}
 	eceCombo.logic();
 }
@@ -429,8 +429,11 @@ void Player::checkTimer()	//checks if the bound to start the timer is broken by 
 
 void Player::logic()
 {
-	checkJump();
-	checkMove();
+	if (Game::getState() != Game::State::Resetting)	//to avoid other animations except for idle when the game is in resetting state
+	{
+		checkJump();
+		checkMove();
+	}
 	checkCollision();
 	checkTimer();
 	checkCam();
@@ -459,6 +462,7 @@ void Player::reset()
 	curPlatform = &PlatformEngine::arrPlatform[0];
 	curLevel = 1;
 	levelMilestone = 50;
+	milestoneMode = false;
 	jumpStrenght = 0;
 	xSpeed = 0;
 	ySpeed = 0;
@@ -471,7 +475,8 @@ void Player::reset()
 	cjSp.setRotation(0);
 
 	eceCombo.reset();
-	//eceMilestone.reset();
+	eceMilestone.reset();
+	eceMilestone.addCandy(320, 480, 320, 4, -7, 100);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();

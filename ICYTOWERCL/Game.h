@@ -45,6 +45,7 @@ namespace Game
 
 	void init();
 	void setState(int state);
+	int getState();
 	void logic();
 	void reset();
 }
