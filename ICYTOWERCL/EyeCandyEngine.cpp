@@ -10,7 +10,7 @@ EyeCandyEngine::EyeCandyEngine()
 
 void EyeCandyEngine::addCandy(const float& posX, const float& posY, int count)
 {
-	for(int i=0; i<count;i++)
+	for (int i = 0; i < count;i++)
 		engine.push_back(EyeCandy(posX, posY));
 }
 

@@ -18,7 +18,7 @@ private:
 	void changeColor();
 	void createStarShape();
 public:
-	EyeCandy(const float &posX, const float &posY);
+	EyeCandy(const float& posX, const float& posY);
 	EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir);
 	EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, const float& _ySpeed);
 

@@ -1,6 +1,6 @@
 #include <Score.h>
 
-//Scoring sequence goes like this: changeScore() is called each time the player collides a platform from the Player.cpp collide(). 
+//Scoring sequence goes like this: changeScore() is called each time the player collides a platform from the Player.cpp collide().
 //a check is performed to see whether or not the player has jumped more than one platform, if so, it activates the combo mode.
 //in combo mode, the combo bar is drained as a matter of time the player has to extend his combo. if the player jumps more than one platform,
 //the combo bar is reset and extended, but if the player jumps only one platform up or any number of platforms down, endCombo() is called directly from changeScore()
@@ -27,7 +27,7 @@ int bestCombo;
 
 sf::Text textScore("SCORE: 0", DefaultFont::getFont(), 40);
 
-RainbowText rtFloors("FLOORS", DefaultFont::getFont(), const_text_size_small);		
+RainbowText rtFloors("FLOORS", DefaultFont::getFont(), const_text_size_small);
 sf::Text textNumOfFloors("", DefaultFont::getFont(), const_text_size_medium);
 RainbowText rtReward("", DefaultFont::getFont(), const_text_size_large);
 
@@ -293,7 +293,7 @@ void handleRewards()
 		rewardIndex = Reward::Splendid;
 		rewardSize = 1.038f;
 	}
-	else 
+	else
 	{
 		rewardIndex = Reward::NoWay;
 		rewardSize = 1.0425;
@@ -327,7 +327,7 @@ void endCombo()
 		else rewardMode = true;
 
 		//these need to be called before comboScore is set to 0
-		handleRewards();	
+		handleRewards();
 		if (comboScore > bestCombo)
 			bestCombo = comboScore;
 		ece.addCandy(320, 290, comboScore, 2, comboScore / 2);
@@ -372,7 +372,7 @@ void Score::changeScore(int platform)
 		else if (playerPos != platform) //if on the same floor he was already on - do nothing
 			endCombo(); //jumped one floor up, or any number of floors down - end the combo
 	}
-	
+
 	score = platform + comboScoreTotal;
 	textScore.setString("SCORE: " + std::to_string(score));
 	playerPos = platform;
@@ -402,7 +402,7 @@ void stopLogic()	//animation where the score goes from the bottom left corner to
 		phase = 0;
 		stopMode = false;
 	}
-	else 
+	else
 	{
 		if (phase == 0)
 		{
@@ -437,10 +437,7 @@ void stopLogic()	//animation where the score goes from the bottom left corner to
 			textScore = textScoreTemp;
 		}
 	}
-
-
 }
-
 
 void Score::logic()
 {
@@ -453,7 +450,7 @@ void Score::logic()
 	{
 		rewardLogic();
 	}
-	
+
 	if (stopMode)
 	{
 		stopLogic();

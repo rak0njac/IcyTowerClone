@@ -41,19 +41,19 @@ void GameOver::init()
 	rtGameOver.setPosition(320, -140);
 	rtGameOver.setOutlineColor(sf::Color(1, 26, 51, 255));
 	rtGameOver.setLayer(curLayer);
-	
+
 	rtFloor.init();
 	rtFloor.setOutlineThickness(const_text_outline_medium);
 	//rtFloor.setScale(0.5, 0.5);
 	rtFloor.setPosition(320, 500);
 	rtFloor.setLayer(curLayer);
-	
+
 	rtBestCombo.init();
 	rtBestCombo.setOutlineThickness(const_text_outline_medium);
 	//rtBestCombo.setScale(0.5, 0.5);
 	rtBestCombo.setPosition(320, 530);
 	rtBestCombo.setLayer(curLayer);
-	
+
 	rtPressEnter.init();
 	rtPressEnter.setOutlineThickness(const_text_outline_medium);
 	//rtPressEnter.setScale(0.5, 0.5);

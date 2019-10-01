@@ -5,8 +5,6 @@
 #include <DefaultFont.h>
 #include <Game.h>
 
-
-
 namespace Timer {
 	static sf::Clock clock;
 	static sf::Time time;

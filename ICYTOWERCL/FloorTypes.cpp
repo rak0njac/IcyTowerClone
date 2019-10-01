@@ -1,37 +1,37 @@
 #include <FloorTypes.h>
 
-sf::IntRect FloorTypes::SnowX(0,0,25,37);
-sf::IntRect FloorTypes::IceX(0,38,25,37);
-sf::IntRect FloorTypes::WoodX(0,76,21,21);
-sf::IntRect FloorTypes::BlueX(4,98,17,12);
-sf::IntRect FloorTypes::PinkGooX(5,111,17,19);
-sf::IntRect FloorTypes::BoneX(7,131,16,16);
-sf::IntRect FloorTypes::LianaX(5,148,16,16);
-sf::IntRect FloorTypes::MarioX(5,167,16,19);
-sf::IntRect FloorTypes::CloudX(4,187,18,25);
-sf::IntRect FloorTypes::RainbowX(1,213,18,12);
+sf::IntRect FloorTypes::SnowX(0, 0, 25, 37);
+sf::IntRect FloorTypes::IceX(0, 38, 25, 37);
+sf::IntRect FloorTypes::WoodX(0, 76, 21, 21);
+sf::IntRect FloorTypes::BlueX(4, 98, 17, 12);
+sf::IntRect FloorTypes::PinkGooX(5, 111, 17, 19);
+sf::IntRect FloorTypes::BoneX(7, 131, 16, 16);
+sf::IntRect FloorTypes::LianaX(5, 148, 16, 16);
+sf::IntRect FloorTypes::MarioX(5, 167, 16, 19);
+sf::IntRect FloorTypes::CloudX(4, 187, 18, 25);
+sf::IntRect FloorTypes::RainbowX(1, 213, 18, 12);
 
-sf::IntRect FloorTypes::SnowY(25,0,16,37);
-sf::IntRect FloorTypes::IceY(25,38,16,37);
-sf::IntRect FloorTypes::WoodY(21,76,16,21);
-sf::IntRect FloorTypes::BlueY(21,98,17,12);
-sf::IntRect FloorTypes::PinkGooY(22,111,14,19);
-sf::IntRect FloorTypes::BoneY(23,131,14,16);
-sf::IntRect FloorTypes::LianaY(21,148,17,16);
-sf::IntRect FloorTypes::MarioY(21,167,15,19);
-sf::IntRect FloorTypes::CloudY(22,187,15,25);
-sf::IntRect FloorTypes::RainbowY(19,213,19,12);
+sf::IntRect FloorTypes::SnowY(25, 0, 16, 37);
+sf::IntRect FloorTypes::IceY(25, 38, 16, 37);
+sf::IntRect FloorTypes::WoodY(21, 76, 16, 21);
+sf::IntRect FloorTypes::BlueY(21, 98, 17, 12);
+sf::IntRect FloorTypes::PinkGooY(22, 111, 14, 19);
+sf::IntRect FloorTypes::BoneY(23, 131, 14, 16);
+sf::IntRect FloorTypes::LianaY(21, 148, 17, 16);
+sf::IntRect FloorTypes::MarioY(21, 167, 15, 19);
+sf::IntRect FloorTypes::CloudY(22, 187, 15, 25);
+sf::IntRect FloorTypes::RainbowY(19, 213, 19, 12);
 
-sf::IntRect FloorTypes::SnowZ(41,0,17,37);
-sf::IntRect FloorTypes::IceZ(41,38,17,37);
-sf::IntRect FloorTypes::WoodZ(37,76,21,21);
-sf::IntRect FloorTypes::BlueZ(38,98,17,12);
-sf::IntRect FloorTypes::PinkGooZ(36,111,17,19);
-sf::IntRect FloorTypes::BoneZ(37,131,15,16);
-sf::IntRect FloorTypes::LianaZ(38,148,13,16);
-sf::IntRect FloorTypes::MarioZ(36,167,18,19);
-sf::IntRect FloorTypes::CloudZ(37,187,19,25);
-sf::IntRect FloorTypes::RainbowZ(38,213,19,12);
+sf::IntRect FloorTypes::SnowZ(41, 0, 17, 37);
+sf::IntRect FloorTypes::IceZ(41, 38, 17, 37);
+sf::IntRect FloorTypes::WoodZ(37, 76, 21, 21);
+sf::IntRect FloorTypes::BlueZ(38, 98, 17, 12);
+sf::IntRect FloorTypes::PinkGooZ(36, 111, 17, 19);
+sf::IntRect FloorTypes::BoneZ(37, 131, 15, 16);
+sf::IntRect FloorTypes::LianaZ(38, 148, 13, 16);
+sf::IntRect FloorTypes::MarioZ(36, 167, 18, 19);
+sf::IntRect FloorTypes::CloudZ(37, 187, 19, 25);
+sf::IntRect FloorTypes::RainbowZ(38, 213, 19, 12);
 
 std::vector<sf::IntRect> FloorTypes::getIntRects(int type)
 {

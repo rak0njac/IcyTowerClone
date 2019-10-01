@@ -9,4 +9,3 @@ public:
 	static void init();
 	static const sf::Font& getFont();
 };
-

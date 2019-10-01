@@ -69,7 +69,7 @@ sf::Color RainbowText::changeColor(const sf::Color& color, const int delta)
 }
 
 void RainbowText::logic() //this one was hard as hell
-{						
+{
 	if (!initialized)
 	{
 		std::cout << "ITC INTERNAL ERROR: RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized. Issues on GitHub.\n";
@@ -178,7 +178,7 @@ void RainbowText::logic() //this one was hard as hell
 	//
 	//	chars[0] = colors[18 + 0] - nope!we go to magicY again
 	//	chars[0] = colors[0]
-	//	chars[1] = colors[1] -	remember, magicY is incremented after each iteration in the for loop and gets reset to 0 after leaving it, 
+	//	chars[1] = colors[1] -	remember, magicY is incremented after each iteration in the for loop and gets reset to 0 after leaving it,
 	//							but magicX is incremented outside of the for loop on every frame
 	//	chars[2] = colors[2]
 	//	chars[3] = colors[3]

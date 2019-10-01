@@ -1,6 +1,6 @@
 #include <Timer.h>
 
-static int levels[7] { 0,1,2,4,6,9,11 };
+static int levels[7]{ 0,1,2,4,6,9,11 };
 static int curLevel = 0;
 
 static bool started = false;	//has the player advanced high enough so the timer can start counting & camera start moving?
@@ -52,7 +52,7 @@ void clockShakeAnim()
 	static int phase = 0;
 	static bool xSide = 1;	//where is the clock going on the x axis (left or right)
 	static bool ySide = 1;
-	static float xPos = -1;	//clock position in pixels 
+	static float xPos = -1;	//clock position in pixels
 	static float yPos = -1;
 	static const sf::Vector2f defaultPos = spClock.getPosition();
 
@@ -118,7 +118,6 @@ void hurryUpAnim()
 		}
 	}
 }
-
 
 void Timer::logic()		//todo fix readability
 {
@@ -210,7 +209,7 @@ void Timer::render(sf::RenderWindow& window, int sprite)
 	}
 	else if (sprite == Sprites::HurryUpText)
 	{
-		if(hurrying)
+		if (hurrying)
 			textHurry.render(window);
 	}
 }

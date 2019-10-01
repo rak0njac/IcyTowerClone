@@ -24,7 +24,7 @@ void Layer::logic()
 	view.reset(sf::FloatRect(0, camPosY, 640, 480));
 	camPosY -= const_cam_speed_delta * camSpeed * speedDelta;
 	step -= camSpeed;
-	if (step <= 0) 
+	if (step <= 0)
 	{
 		camPosY = 0;
 		if (speedDelta != 1) {

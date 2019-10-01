@@ -12,8 +12,6 @@
 //rework as class in case of future multiplayer feature.
 //no redundancy, so no consts.
 
-
-
 namespace Score
 {
 	void changeScore(int i);

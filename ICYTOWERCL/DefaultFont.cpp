@@ -10,7 +10,7 @@ void DefaultFont::init()
 														//and then scale the text halfway down. This eliminates the awkward smoothing. This is a known
 														//issue with SFML with no known proper solutions. This is the best workaround I could come up with,
 														//even though double font sizes use significantly more memory.
-const sf::Font& DefaultFont::getFont()											
+const sf::Font& DefaultFont::getFont()
 {
 	return font;
 }

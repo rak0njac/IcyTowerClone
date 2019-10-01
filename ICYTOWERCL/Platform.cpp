@@ -42,7 +42,7 @@ int Platform::generateLen()
 		else if (position > 315)					// basically, if the starting drawing position reaches a point where a platform
 		{											// might overlap a wall if too long, we need to precisely control its possible length.
 			int temp = position;					// each middle texture is 16px long so we increment i until we reach the overlapping point
-			for (int i = 5; i <= 13; i++)	
+			for (int i = 5; i <= 13; i++)
 			{
 				temp += 16;
 				if (temp > 445)
@@ -54,7 +54,7 @@ int Platform::generateLen()
 			}
 		}
 	}
-	
+
 	else return 36;
 }
 

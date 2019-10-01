@@ -22,4 +22,3 @@ public:
 	int getCount();
 	void reset();
 };
-

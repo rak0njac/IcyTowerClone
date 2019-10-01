@@ -1,8 +1,8 @@
 #include "EyeCandy.h"
 
-EyeCandy::EyeCandy(const float &posX, const float &posY)	//used for stars coming out of the player while in combo mode
+EyeCandy::EyeCandy(const float& posX, const float& posY)	//used for stars coming out of the player while in combo mode
 {
-	colorChangeIndex = 5;									
+	colorChangeIndex = 5;
 	std::random_device rd;
 	std::mt19937 rand(rd());
 	std::uniform_int_distribution<> randPos(-10, 10);
@@ -21,10 +21,10 @@ EyeCandy::EyeCandy(const float &posX, const float &posY)	//used for stars coming
 
 EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir)		//used for stars in combo rewards
 {
-	colorChangeIndex = 5;	
+	colorChangeIndex = 5;
 	std::random_device rd;
 	std::mt19937 rand(rd());
-	std::uniform_int_distribution<> randPos(_randPos*-1, _randPos);
+	std::uniform_int_distribution<> randPos(_randPos * -1, _randPos);
 	std::uniform_real_distribution<> randDir(_randDir * -1, _randDir);
 	std::uniform_real_distribution<> randGrav(0.05, 0.1);
 	startPosX = posX + randPos(rand);
@@ -40,7 +40,7 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 
 EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, const float& _randDir, const float& _ySpeed)		//used for stars on platform milestones
 {
-	colorChangeIndex = 5;									
+	colorChangeIndex = 5;
 	std::random_device rd;
 	std::mt19937 rand(rd());
 	std::uniform_int_distribution<> randPos(_randPos * -1, _randPos);
@@ -83,7 +83,7 @@ sf::ConvexShape& EyeCandy::getDrawable()
 void EyeCandy::changeColor()
 {
 	static sf::Color col[6]{ sf::Color::Blue, sf::Color::Cyan , sf::Color::Green, sf::Color::Magenta, sf::Color::Red, sf::Color::Yellow };
-	
+
 	static std::random_device rd;
 	static std::mt19937 mt(rd());
 	static std::uniform_int_distribution<> randCol(0, 5);
@@ -96,7 +96,6 @@ void EyeCandy::changeColor()
 		colorChangeIndex = 0;
 	}
 }
-
 
 void EyeCandy::reset()
 {

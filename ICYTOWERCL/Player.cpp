@@ -46,7 +46,6 @@ void Player::init()
 	cjSound.play();
 }
 
-
 //Player::Player(std::string filename, int startPosX)		//for possible multiplayer in the future?
 //{
 //	onGround = true;
@@ -111,7 +110,7 @@ void Player::collide()
 	{
 		for (Platform& p : PlatformEngine::arrPlatform)
 		{
-			if (p.getFloor() == curLevel &&	
+			if (p.getFloor() == curLevel &&
 				internalPosX >= p.startPos - cjSp.getTextureRect().width / 2 &&
 				internalPosX <= p.endPos + cjSp.getTextureRect().width / 2)
 			{
@@ -125,7 +124,7 @@ void Player::collide()
 				//std::cout << "cjsp pos is: " << cjSp.getPosition().y << "\n";
 				onGround = true;
 				curPlatform = &p;
-				Score::changeScore((curLevel-1) * 10);
+				Score::changeScore((curLevel - 1) * 10);
 				if (curLevel >= levelMilestone)
 				{
 					milestoneReward();
@@ -137,9 +136,9 @@ void Player::collide()
 
 void Player::checkCollision()	//checks on every frame if the player is still on previously collided platform
 {
-	if  (onGround && 
+	if (onGround &&
 		!(internalPosX >= curPlatform->startPos - cjSp.getTextureRect().width / 2 &&
-		internalPosX <= curPlatform->endPos + cjSp.getTextureRect().width / 2)) 
+			internalPosX <= curPlatform->endPos + cjSp.getTextureRect().width / 2))
 	{
 		//std::cout << "Player pos is: " << cjSp.getPosition().x << ", endPos is: " << curPlatform->endPos << "\n";
 		jumpStrenght = 0;
@@ -385,13 +384,13 @@ void Player::checkMove()
 
 void Player::checkCam()	//called on every frame
 {
-	if ((internalPosY  < curLayer.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
+	if ((internalPosY < curLayer.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_top_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_top_delta_speed * ySpeed * -1);
 		else Camera::setCamSpeed(const_cam_catchup_top_max_speed);
 	}
-	else if (internalPosY < curLayer.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning 
+	else if (internalPosY < curLayer.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_bottom_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_bottom_delta_speed * ySpeed * -1);
@@ -423,7 +422,7 @@ void Player::checkGameOver()
 
 void Player::checkCandy()
 {
-	if (jumpStrenght == 3 && Score::isComboMode()) 
+	if (jumpStrenght == 3 && Score::isComboMode())
 	{
 		eceCombo.addCandy(internalPosX, internalPosY, 1);
 	}
@@ -450,7 +449,6 @@ void Player::logic()
 	checkCandy();
 	checkMilestone();
 	animationAndSound();
-
 }
 
 void Player::render(sf::RenderWindow& window)
@@ -459,7 +457,7 @@ void Player::render(sf::RenderWindow& window)
 
 	curLayer.render(window, cjSp);
 	eceCombo.render(window, false);
-	if(milestoneMode)	//render only if milestone because else the idling stars are visible at the bottom of the screen
+	if (milestoneMode)	//render only if milestone because else the idling stars are visible at the bottom of the screen
 		eceMilestone.render(window, true);
 }
 

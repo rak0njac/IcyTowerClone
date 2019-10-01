@@ -5,7 +5,6 @@ sf::Texture txWall;
 sf::Sprite spBkg;
 sf::Sprite spWall;
 
-
 void Background::init()
 {
 	txBkg.loadFromFile("..\\Assets\\Bkg2.png");
@@ -22,7 +21,7 @@ void Background::init()
 
 void Background::render(sf::RenderWindow& window, int sprite)
 {
-	if(sprite == Background::Sprites::Background)
+	if (sprite == Background::Sprites::Background)
 		Game::Layers::Background.render(window, spBkg);
 	else if (sprite == Background::Sprites::Wall)
 		Game::Layers::Wall.render(window, spWall);

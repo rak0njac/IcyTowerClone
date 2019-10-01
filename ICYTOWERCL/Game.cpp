@@ -80,8 +80,8 @@ void Game::logic()
 
 			window.display();
 		}
-		else if (gameState ==  State::GameOver)
-		{ 
+		else if (gameState == State::GameOver)
+		{
 			window.clear();
 
 			Layers::Background.logic();
@@ -129,7 +129,7 @@ void Game::logic()
 					Timer::render(window, Timer::Sprites::Clock);
 					GameOver::render(window);
 
-					black.setFillColor(sf::Color(0, 0, 0, step*5));
+					black.setFillColor(sf::Color(0, 0, 0, step * 5));
 
 					Layers::HUD.render(window, black);
 
@@ -215,7 +215,7 @@ void Game::logic()
 
 			Background::init();
 			Timer::init();
-			Score::init();	
+			Score::init();
 			GameOver::init();
 			player.init();
 			music.play();

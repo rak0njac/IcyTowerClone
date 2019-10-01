@@ -11,7 +11,7 @@ class Layer
 {
 protected:
 	float camPosY;
-	float speedDelta;	//determines how many times faster does the layer move than a layer with a speedDelta of 1. 
+	float speedDelta;	//determines how many times faster does the layer move than a layer with a speedDelta of 1.
 						//setting it to 0 makes the layer indepentent of camera movement(used for HUD)
 	float step;
 	float constStep;
@@ -24,4 +24,3 @@ public:
 	Layer();
 	Layer(float speedDelta);
 };
-
