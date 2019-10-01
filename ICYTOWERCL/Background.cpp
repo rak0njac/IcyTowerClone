@@ -9,7 +9,7 @@ void Background::init()
 {
 	txBkg.loadFromFile("..\\Assets\\Bkg2.png");
 	spBkg.setTexture(txBkg);
-	spBkg.setOrigin(txBkg.getSize().x / 2, 62);
+	spBkg.setOrigin(txBkg.getSize().x / 2, 64);
 	spBkg.setPosition(320, 0);
 
 	txWall.loadFromFile("..\\Assets\\Wallz3.png");
