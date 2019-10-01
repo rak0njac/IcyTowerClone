@@ -34,7 +34,7 @@ void Timer::init() {
 	textHurry.setOutlineColor(sf::Color(1, 26, 51, 255));
 	textHurry.setOrigin(textHurry.getLocalBounds().width / 2, textHurry.getLocalBounds().height / 2);
 	textHurry.setPosition(320, 540);
-	textHurry.setScale(0.6, 0.6);
+	textHurry.setScale(0.5, 0.5);
 
 	sb.loadFromFile("..\\Assets\\Sounds\\hurry.ogg");
 	sound.setBuffer(sb);
@@ -49,45 +49,48 @@ void clockShakeAnim()
 {
 	static int step = 0;
 
+	static int phase = 0;
 	static bool xSide = 1;	//where is the clock going on the x axis (left or right)
 	static bool ySide = 1;
 	static float xPos = -1;	//clock position in pixels 
 	static float yPos = -1;
+	static const sf::Vector2f defaultPos = spClock.getPosition();
 
 	if (shaking && step < 400)
 	{
-		if (xSide)
+		if (step % 3 == 0)
 		{
-			if (xPos < 1)
-				xPos++;
-			else xSide = 0;
-		}
-		else
-		{ 
-			if (xPos > -1)
-				xPos--;
-			else xSide = 1;
-		}
-		if (ySide)
-		{
-			if (yPos < 1)
-				yPos+= 1.5f;
-			else ySide = 0;
-		}
-		else
-		{
-			if (yPos > -1)
-				yPos-=1.5f;
-			else ySide = 1;
-		}
-		if (step % 2 == 0)
-		{
-			spClockHandle.setPosition(const_timer_start_pos_x + xPos, const_timer_start_pos_y + yPos);
+			if (phase == 0)
+			{
+				if (step < 350 || berserk)
+					spClock.setPosition(defaultPos.x + 1, defaultPos.y + 1);
+				else spClock.setPosition(defaultPos);
+				spClockHandle.setPosition(defaultPos.x + 1, defaultPos.y + 1);
+			}
+			else if (phase == 1)
+			{
+				if (step < 350 || berserk)
+					spClock.setPosition(defaultPos.x - 1, defaultPos.y + 1);
+				else spClock.setPosition(defaultPos);
+				spClockHandle.setPosition(defaultPos.x - 1, defaultPos.y + 1);
+			}
+			else if (phase == 2)
+			{
+				if (step < 350 || berserk)
+					spClock.setPosition(defaultPos.x + 1, defaultPos.y - 1);
+				else spClock.setPosition(defaultPos);
+				spClockHandle.setPosition(defaultPos.x + 1, defaultPos.y - 1);
+			}
+			else if (phase == 3)
+			{
+				if (step < 350 || berserk)
+					spClock.setPosition(defaultPos.x - 1, defaultPos.y - 1);
+				else spClock.setPosition(defaultPos);
+				spClockHandle.setPosition(defaultPos.x - 1, defaultPos.y - 1);
 
-			if(step < 350 || berserk)	//the handle should shake a few more moments than the clock itself (nice for attention to detail lol)
-				spClock.setPosition(const_timer_start_pos_x + xPos, const_timer_start_pos_y + yPos);
-			else if(spClock.getPosition().x != const_timer_start_pos_x && spClock.getPosition().y != const_timer_start_pos_y)
-				spClock.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
+				phase = 0;
+			}
+			phase++;
 		}
 		step++;
 	}
@@ -95,10 +98,7 @@ void clockShakeAnim()
 	{
 		step = 0;
 		shaking = false;
-		if (spClockHandle.getPosition().x != const_timer_start_pos_x && spClockHandle.getPosition().y != const_timer_start_pos_y)
-		{
-			spClockHandle.setPosition(const_timer_start_pos_x, const_timer_start_pos_y);
-		}
+		spClockHandle.setPosition(defaultPos);
 	}
 }
 

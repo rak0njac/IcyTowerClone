@@ -1,8 +1,6 @@
 #include <Game.h>
 
-//TODO: lots of code refactoring and readability improvements
-
-//make timer anim as 8
+//TODO: more code refactoring and readability improvements
 
 int main()
 {

@@ -1,7 +1,7 @@
 #include <Game.h>
 
 //basic init
-sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML", sf::Style::Fullscreen);
+sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML - v1.0", sf::Style::Close);
 sf::Event event;
 
 //object init
@@ -146,6 +146,7 @@ void Game::logic()
 				Score::reset();
 				Timer::reset();
 				Game::reset();
+				Camera::stop();
 
 				music.stop();
 				//window.clear();
