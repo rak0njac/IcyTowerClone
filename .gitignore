@@ -343,3 +343,7 @@ Assets/
 *.sln
 *.vcxproj
 *.vcxproj.filters
+/ICYTOWERCL/Icon.c
+/ICYTOWERCL/icon1.ico
+/ICYTOWERCL/ICYTOWERCL.rc
+/ICYTOWERCL/resource.h

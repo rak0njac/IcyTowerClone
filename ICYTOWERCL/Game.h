@@ -12,6 +12,7 @@
 #include <DefaultFont.h>
 #include <GameOver.h>
 #include <RainbowText.h>
+#include <Icon.c>
 
 namespace Game
 {

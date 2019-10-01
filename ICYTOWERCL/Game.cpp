@@ -198,6 +198,7 @@ void Game::logic()
 		{
 			window.setFramerateLimit(100);
 			window.setKeyRepeatEnabled(false);
+			window.setIcon(itIcon.width, itIcon.height, itIcon.pixel_data);
 			//sf::Listener s;
 			//s.setGlobalVolume(0);
 
