@@ -1,13 +1,12 @@
 #pragma once
 #include <SFML\Graphics.hpp>
 #include <Layer.h>
-
-const int const_dist_between_platforms = 80;
-
-#pragma once
 #include <SFML/Graphics.hpp>
 #include <DefaultFont.h>
 #include <random>
+#include <FloorTypes.h>
+#include <iostream>
+#include <Consts.h>
 
 class Platform
 {
@@ -15,21 +14,21 @@ private:
 	int floor;
 	int length;
 	int position;
-	sf::Texture startTx;
-	sf::Texture middleTx;
-	sf::Texture endTx;
-	sf::Text floorText;
+	static sf::Image imgPlatform;
+	static sf::Texture txPlatform;
+	sf::Text textFloor;
+	std::vector<sf::IntRect> vect;
 
 	int generatePos();
 	int generateLen();
 public:
-	sf::Sprite startSp;
-	sf::Sprite middleSp;
-	sf::Sprite endSp;
-
+	sf::Sprite spPlatform;
+	float startPos;
+	float endPos;
 	Platform(int lvl);
 
 	int getFloor();
+	static void init();
 	void render(sf::RenderWindow& window);
 	void regenerate();
 	void reset(int flr);

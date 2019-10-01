@@ -12,13 +12,7 @@
 //rework as class in case of future multiplayer feature.
 //no redundancy, so no consts.
 
-const sf::Color const_color_outline(1, 26, 51, 255);
-const int const_text_size_small = 20;
-const int const_text_size_medium = 30;
-const int const_text_size_large = 140;
-const int const_text_outline_small = 1;
-const int const_text_outline_medium = 3;
-const int const_text_outline_large = 7;
+
 
 namespace Score
 {

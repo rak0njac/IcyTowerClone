@@ -19,6 +19,7 @@ void Camera::setCamLevel(int value)
 void Camera::setCamSpeed(float value)
 {
 	camSpeed = value;
+	//std::cout << "CamSpeed is now: " << value << "\n";
 }
 
 void Camera::stop()

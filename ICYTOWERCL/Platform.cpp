@@ -1,22 +1,18 @@
 #include "Platform.h"
 
+sf::Image Platform::imgPlatform;
+sf::Texture Platform::txPlatform;
+
 Platform::Platform(int flr)
 {
-	startTx.loadFromFile("..\\Assets\\IceA.png");	//make it static
-	middleTx.loadFromFile("..\\Assets\\Ice.png");
-	endTx.loadFromFile("..\\Assets\\IceZ.png");
+	spPlatform.setTexture(txPlatform);
 	floor = flr;
 	position = generatePos();
 	length = generateLen();
-	startSp.setTexture(startTx);
-	middleSp.setTexture(middleTx);
-	endSp.setTexture(endTx);
-	startSp.setOrigin(0, -508);
-	startSp.setPosition(position, floor * const_dist_between_platforms * -1);				// get the start texture ready to draw with the first piece of	
-	middleSp.setPosition(position + 25, floor * const_dist_between_platforms * -1);		// the middle texture just right to it ready to be repeated
-	endSp.setOrigin(0, -508);													// and finally add end texture
-	endSp.setPosition(position + 25 + length * 16, floor * const_dist_between_platforms * -1);
-	//std::cout << length << "\n";
+	spPlatform.setPosition(position, floor * const_dist_between_platforms * -1 + 508);
+	vect = FloorTypes::getIntRects(FloorTypes::Type::Snow);
+	startPos = position;
+	endPos = position + vect[0].width + length * vect[1].width + vect[2].width;
 }
 
 int Platform::generatePos()
@@ -59,7 +55,7 @@ int Platform::generateLen()
 		}
 	}
 	
-	else return 32;
+	else return 36;
 }
 
 void Platform::regenerate()
@@ -67,21 +63,48 @@ void Platform::regenerate()
 	floor += 7;
 	position = generatePos();
 	length = generateLen();
-	startSp.setPosition(position, floor * const_dist_between_platforms * -1);
-	middleSp.setPosition(position + 25, floor * const_dist_between_platforms * -1);
-	endSp.setPosition(position + 25 + length * 16, floor * const_dist_between_platforms * -1);
+	spPlatform.setPosition(position, floor * const_dist_between_platforms * -1 + 508);
+
+	int floorType = -1;
+	if (floor < 50)
+		floorType = FloorTypes::Type::Snow;
+	else if (floor < 100)
+		floorType = FloorTypes::Type::Ice;
+	else if (floor < 150)
+		floorType = FloorTypes::Type::Wood;
+	else if (floor < 200)
+		floorType = FloorTypes::Type::Blue;
+	else if (floor < 250)
+		floorType = FloorTypes::Type::PinkGoo;
+	else if (floor < 300)
+		floorType = FloorTypes::Type::Bone;
+	else if (floor < 350)
+		floorType = FloorTypes::Type::Liana;
+	else if (floor < 400)
+		floorType = FloorTypes::Type::Mario;
+	else if (floor < 450)
+		floorType = FloorTypes::Type::Cloud;
+	else if (floor < 500)
+		floorType = FloorTypes::Type::Rainbow;
+
+	vect = FloorTypes::getIntRects(floorType);
+
+	startPos = position;
+	endPos = position + vect[0].width + length * vect[1].width + vect[2].width;
+
 	if (floor % 10 == 0)
 	{
-		floorText.setString(std::to_string(floor));
-		floorText.setFont(DefaultFont::getFont());
-		floorText.setCharacterSize(30);
-		floorText.setOrigin(floorText.getLocalBounds().width*0.5, floorText.getLocalBounds().height*0.5);
-		floorText.setScale(0.5, 0.5);
-		floorText.setPosition((endSp.getPosition().x + 14) - ((endSp.getPosition().x + 14) - startSp.getPosition().x) * 0.5f, 
-			middleSp.getPosition().y + 14 + 508);
-		floorText.setOutlineThickness(2);
-		floorText.setOutlineColor(sf::Color::Black);
-		floorText.setFillColor(sf::Color::White);
+		textFloor.setString(std::to_string(floor));
+		textFloor.setFont(DefaultFont::getFont());
+		textFloor.setCharacterSize(const_text_size_small);
+		textFloor.setOutlineThickness(const_text_outline_small);
+		textFloor.setScale(0.75, 0.75);
+		textFloor.setOutlineColor(sf::Color::Black);
+		textFloor.setFillColor(sf::Color::White);
+		textFloor.setOrigin(textFloor.getLocalBounds().width / 2, textFloor.getLocalBounds().height / 2);
+		if (floor % 50 != 0)
+			textFloor.setPosition((startPos + endPos) / 2, spPlatform.getPosition().y + vect[0].height / 2);
+		else textFloor.setPosition(320, spPlatform.getPosition().y + vect[0].height / 2);
 	}
 }
 
@@ -96,15 +119,29 @@ void Platform::reset(int flr)
 	regenerate();
 }
 
+void Platform::init()
+{
+	imgPlatform.loadFromFile("..\\Assets\\floors.bmp");
+	imgPlatform.createMaskFromColor(sf::Color(153, 20, 145, 255));
+	txPlatform.loadFromImage(imgPlatform);
+}
+
 void Platform::render(sf::RenderWindow& window)
 {
-	window.draw(startSp);
+	spPlatform.setTextureRect(vect[0]);
+	window.draw(spPlatform);
+	spPlatform.move(vect[0].width, 0);
+	spPlatform.setTextureRect(vect[1]);
 	for (int i = 0; i < length; i++)
 	{
-		middleSp.setOrigin(i * -16, -508);									// so just repeat it to the right
-		window.draw(middleSp);
+		window.draw(spPlatform);
+		spPlatform.move(vect[1].width, 0);
 	}
-	window.draw(endSp);
-	//if (floorText.getCharacterSize() == 20)
-		window.draw(floorText);
+	//spPlatform.move(vect[1].width, 0);
+	spPlatform.setTextureRect(vect[2]);
+	window.draw(spPlatform);
+	textFloor.setPosition((int)textFloor.getPosition().x, (int)textFloor.getPosition().y);
+	window.draw(textFloor);
+
+	spPlatform.setPosition(startPos, spPlatform.getPosition().y);
 }

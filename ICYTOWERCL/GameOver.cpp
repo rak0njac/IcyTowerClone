@@ -8,52 +8,62 @@
 #include <Game.h>
 
 static bool gameOver;
-static RainbowText rtGameOver("GAME OVER!", DefaultFont::getFont(), 168);
-static RainbowText rtFloor("", DefaultFont::getFont(), 60);
-static RainbowText rtBestCombo("", DefaultFont::getFont(), 60);
-static RainbowText rtPressEnter("PRESS ENTER TO RESTART...", DefaultFont::getFont(), 60);
+static bool boomScreenShaking;
+static bool playerFell;
+static float boomTime;
+static RainbowText rtGameOver("GAME OVER!", DefaultFont::getFont(), const_text_size_large);
+static RainbowText rtFloor("", DefaultFont::getFont(), const_text_size_medium);
+static RainbowText rtBestCombo("", DefaultFont::getFont(), const_text_size_medium);
+static RainbowText rtPressEnter("PRESS ENTER TO RESTART...", DefaultFont::getFont(), const_text_size_medium);
 
 static sf::SoundBuffer sbGameOver;
 static sf::SoundBuffer sbTryAgain;
+static sf::SoundBuffer sbBoom;
 static sf::Sound sound;
 
 static sf::Vector2i values;		//floor and best combo values
 
 static Layer& curLayer = Game::Layers::HUD;
 
+static sf::Clock goClock;
+
 void GameOver::init()
 {
 	gameOver = false;
+	playerFell = false;
+	boomScreenShaking = false;
+	boomTime = 0;
 
 	rtGameOver.init();
-	rtGameOver.setOutlineThickness(7);
-	rtGameOver.setScale(0.5, 0.5);
+	rtGameOver.setOutlineThickness(const_text_outline_large);
+	rtGameOver.setScale(0.6, 0.6);
 	rtGameOver.setOrigin(rtGameOver.getLocalBounds().width / 2, rtGameOver.getLocalBounds().height / 2);
 	rtGameOver.setPosition(320, -140);
 	rtGameOver.setOutlineColor(sf::Color(1, 26, 51, 255));
 	rtGameOver.setLayer(curLayer);
 	
 	rtFloor.init();
-	rtFloor.setOutlineThickness(4);
-	rtFloor.setScale(0.5, 0.5);
+	rtFloor.setOutlineThickness(const_text_outline_medium);
+	//rtFloor.setScale(0.5, 0.5);
 	rtFloor.setPosition(320, 500);
 	rtFloor.setLayer(curLayer);
 	
 	rtBestCombo.init();
-	rtBestCombo.setOutlineThickness(4);
-	rtBestCombo.setScale(0.5, 0.5);
+	rtBestCombo.setOutlineThickness(const_text_outline_medium);
+	//rtBestCombo.setScale(0.5, 0.5);
 	rtBestCombo.setPosition(320, 530);
 	rtBestCombo.setLayer(curLayer);
 	
 	rtPressEnter.init();
-	rtPressEnter.setOutlineThickness(4);
-	rtPressEnter.setScale(0.5, 0.5);
+	rtPressEnter.setOutlineThickness(const_text_outline_medium);
+	//rtPressEnter.setScale(0.5, 0.5);
 	rtPressEnter.setOrigin(rtPressEnter.getLocalBounds().width / 2, rtPressEnter.getLocalBounds().height / 2);
 	rtPressEnter.setPosition(320, 500);
 	rtPressEnter.setLayer(curLayer);
 
 	sbGameOver.loadFromFile("..\\Assets\\Sounds\\gameover.ogg");
 	sbTryAgain.loadFromFile("..\\Assets\\Sounds\\tryagain.ogg");
+	sbBoom.loadFromFile("..\\Assets\\Sounds\\boom.ogg");
 }
 
 bool GameOver::isGameOver() { return gameOver; }
@@ -74,6 +84,12 @@ void GameOver::stopGame()
 	rtBestCombo.setOrigin(rtBestCombo.getLocalBounds().width / 2, rtBestCombo.getLocalBounds().height / 2);
 
 	gameOver = true;
+
+	boomTime = values.x / 10;
+	if (boomTime > 5)
+		boomTime = 5;
+
+	goClock.restart();
 }
 
 void GameOver::restartGame()
@@ -102,10 +118,47 @@ void GameOver::logic()
 	rtFloor.logic();
 	rtBestCombo.logic();
 	rtPressEnter.logic();
+
+	if (!playerFell && goClock.getElapsedTime().asSeconds() > boomTime)
+	{
+		Player::stopScreaming();
+		sound.setBuffer(sbBoom);
+		sound.play();
+		playerFell = true;
+		boomScreenShaking = true;
+	}
+
+	if (boomScreenShaking)
+	{
+		static int step = 0;
+		static int side = -1;
+		if (step < 50)
+		{
+			if (step % 3 == 0)
+				side *= -1;
+
+			if (side == 1)
+				Camera::setCamSpeed(10);
+			else Camera::setCamSpeed(-10);
+			step++;
+		}
+		else
+		{
+			step = 0;
+			side = -1;
+			boomScreenShaking = false;
+			Camera::setCamSpeed(0);
+		}
+	}
 }
 
 void GameOver::render(sf::RenderWindow& window)
 {
+	rtGameOver.setOrigin((int)rtGameOver.getOrigin().x, (int)rtGameOver.getOrigin().y);
+	rtFloor.setOrigin((int)rtFloor.getOrigin().x, (int)rtFloor.getOrigin().y);
+	rtBestCombo.setOrigin((int)rtBestCombo.getOrigin().x, (int)rtBestCombo.getOrigin().y);
+	rtPressEnter.setOrigin((int)rtPressEnter.getOrigin().x, (int)rtPressEnter.getOrigin().y);
+
 	rtGameOver.render(window);
 	rtFloor.render(window);
 	rtBestCombo.render(window);
@@ -118,4 +171,8 @@ void GameOver::reset()
 	rtFloor.setPosition(320, 500);
 	rtBestCombo.setPosition(320, 530);
 	rtPressEnter.setPosition(320, 500);
+
+	playerFell = false;
+	boomScreenShaking = false;
+	boomTime = 0;
 }

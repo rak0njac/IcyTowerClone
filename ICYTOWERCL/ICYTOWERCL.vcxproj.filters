@@ -72,6 +72,9 @@
     <ClCompile Include="PlatformEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FloorTypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h">
@@ -122,6 +125,12 @@
     <ClInclude Include="PlatformEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FloorTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Consts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\Bkg.png">
@@ -149,6 +158,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="..\Assets\ComboMeterBar.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\Assets\floors.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

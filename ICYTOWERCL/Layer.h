@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <Camera.h>
+#include <Consts.h>
 
 //Layers are not used to determine drawing order - that can be done individually in the game loop itself, rather they are used
 //for handling logic of moving the sprites along with the camera by rendering them on a per-object sf::View with each layer

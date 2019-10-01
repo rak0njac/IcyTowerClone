@@ -119,7 +119,7 @@ void Score::init()
 
 	textNumOfFloors.setOutlineThickness(const_text_outline_medium);
 	textNumOfFloors.setOutlineColor(const_color_outline);
-	textNumOfFloors.setPosition(42, 227);
+	textNumOfFloors.setPosition(40, 227);
 
 	rtFloors.init();
 	rtReward.init();
@@ -463,6 +463,12 @@ void Score::logic()
 
 void Score::render(sf::RenderWindow& window)
 {
+	//textScore.setPosition((int)textScore.getPosition().x, (int)textScore.getPosition().y);
+	//textScore.setOrigin((int)textScore.getOrigin().x, (int)textScore.getOrigin().y);
+	textNumOfFloors.setOrigin((int)textNumOfFloors.getOrigin().x, (int)textNumOfFloors.getOrigin().y);
+	rtFloors.setOrigin((int)rtFloors.getOrigin().x, (int)rtFloors.getOrigin().y);
+	rtReward.setOrigin((int)rtReward.getOrigin().x, (int)rtReward.getOrigin().y);
+
 	curLayer.render(window, textScore);
 	curLayer.render(window, spComboMeter);
 	if (comboMode || rewardMode)

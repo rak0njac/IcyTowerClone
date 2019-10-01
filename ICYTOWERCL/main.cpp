@@ -1,11 +1,7 @@
 #include <Game.h>
 
-//platform floor number fix
-//multiple textures in one image
-//add platform variations
-//add boom when player falls
+//TODO: lots of code refactoring and readability improvements
 
-//wherever there is posiiton, cast to int
 //make timer anim as 8
 
 int main()

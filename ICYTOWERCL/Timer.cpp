@@ -196,6 +196,13 @@ void Timer::reset()
 
 void Timer::render(sf::RenderWindow& window, int sprite)
 {
+	spClock.setPosition((int)spClock.getPosition().x, (int)spClock.getPosition().y);
+	spClockHandle.setPosition((int)spClockHandle.getPosition().x, (int)spClockHandle.getPosition().y);
+	spClock.setOrigin((int)spClock.getOrigin().x, (int)spClock.getOrigin().y);
+	spClockHandle.setOrigin((int)spClockHandle.getOrigin().x, (int)spClockHandle.getOrigin().y);
+
+	textHurry.setOrigin((int)textHurry.getOrigin().x, (int)textHurry.getOrigin().y);
+
 	if (sprite == Sprites::Clock)
 	{
 		curLayer->render(window, spClock);

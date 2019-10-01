@@ -1,6 +1,7 @@
 #include <Player.h>
 
 Layer& curLayer = Game::Layers::Platforms;
+PitchedSound Player::cjSound;
 
 void Player::init()
 {
@@ -21,7 +22,9 @@ void Player::init()
 	cjTx.loadFromImage(cjImg);
 	cjSp.setTexture(cjTx);
 	cjSp.setOrigin(14, 35);
-	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
+	internalPosX = const_player_start_pos_x;
+	internalPosY = const_player_start_pos_y;
+	cjSp.setPosition(internalPosX, internalPosY);
 
 	//maybe make these as enum...
 	soundEdge.loadFromFile("..\\Assets\\Sounds\\edge.ogg");
@@ -67,9 +70,9 @@ void Player::init()
 
 int Player::checkBoundaries()
 {
-	if (cjSp.getPosition().x >= const_left_bound && cjSp.getPosition().x <= const_right_bound)
+	if (internalPosX >= const_left_bound && internalPosX <= const_right_bound)
 		return 0;
-	else if (cjSp.getPosition().x < const_left_bound)
+	else if (internalPosX < const_left_bound)
 		return const_left_bound;
 	else return const_right_bound;
 }
@@ -104,19 +107,22 @@ void Player::collide()
 	}
 	else dist = const_dist_between_platforms;
 
-	if (cjSp.getPosition().y > const_dist_between_platforms * -1 * curLevel + const_player_start_pos_y + dist) // -1 is for UP on y axis, const_player_start_pos_y is because player doesn't start on pos 0, and dist is for fine tuning
+	if (internalPosY > const_dist_between_platforms * -1 * curLevel + const_player_start_pos_y + dist) // -1 is for UP on y axis, const_player_start_pos_y is because player doesn't start on pos 0, and dist is for fine tuning
 	{
 		for (Platform& p : PlatformEngine::arrPlatform)
 		{
 			if (p.getFloor() == curLevel &&	
-				cjSp.getPosition().x >= p.startSp.getPosition().x - 12.5f && // rework when tilemap
-				cjSp.getPosition().x <= p.endSp.getPosition().x + 14 + 12.5f) // CONST_END_TILE_WIDTH = 14
+				internalPosX >= p.startPos - cjSp.getTextureRect().width / 2 &&
+				internalPosX <= p.endPos + cjSp.getTextureRect().width / 2)
 			{
 				jumpStrenght = 0;
 				ySpeed = 0;
 				cjSp.setOrigin(14, 35);
 				cjSp.setRotation(0);
-				cjSp.setPosition(cjSp.getPosition().x, const_player_start_pos_y - const_dist_between_platforms * (curLevel - 1)); //collision itself can be a few pixels off on y axis so this sets the player's y position precisely where it needs to be
+				internalPosY = const_player_start_pos_y - const_dist_between_platforms * (curLevel - 1);
+				//std::cout << "Posy is: " << internalPosY << "\n";
+				//cjSp.setPosition(cjSp.getPosition().x, const_player_start_pos_y - const_dist_between_platforms * (curLevel - 1)); //collision itself can be a few pixels off on y axis so this sets the player's y position precisely where it needs to be
+				//std::cout << "cjsp pos is: " << cjSp.getPosition().y << "\n";
 				onGround = true;
 				curPlatform = &p;
 				Score::changeScore((curLevel-1) * 10);
@@ -132,9 +138,10 @@ void Player::collide()
 void Player::checkCollision()	//checks on every frame if the player is still on previously collided platform
 {
 	if  (onGround && 
-		!(cjSp.getPosition().x >= curPlatform->startSp.getPosition().x - 12.5f &&
-		cjSp.getPosition().x <= curPlatform->endSp.getPosition().x + 14 + 12.5f)) 
+		!(internalPosX >= curPlatform->startPos - cjSp.getTextureRect().width / 2 &&
+		internalPosX <= curPlatform->endPos + cjSp.getTextureRect().width / 2)) 
 	{
+		//std::cout << "Player pos is: " << cjSp.getPosition().x << ", endPos is: " << curPlatform->endPos << "\n";
 		jumpStrenght = 0;
 		onGround = false;
 	}
@@ -149,7 +156,12 @@ void Player::animationAndSound()
 	{
 		if (jumpStrenght != 3)
 		{
-			if (xSpeed > 0)
+			if (internalPosX < const_left_bound + 1 || internalPosX > const_right_bound - 1 || xSpeed == 0)
+			{
+				cjSp.setOrigin(14, 43);	//cjAnimJump is 8 pixels higher than regular textures so the y origin is 8 pixels higher too so the player doesn't clip through ground
+				cjSp.setTextureRect(Animation::cjAnimJump);
+			}
+			else
 			{
 				cjSp.setScale(side, 1);
 				if (ySpeed < -1)
@@ -157,11 +169,6 @@ void Player::animationAndSound()
 				else if (ySpeed < 1)
 					cjSp.setTextureRect(Animation::cjAnimJump2);
 				else cjSp.setTextureRect(Animation::cjAnimJump3);
-			}
-			else
-			{
-				cjSp.setOrigin(14, 43);	//cjAnimJump is 8 pixels higher than regular textures so the y origin is 8 pixels higher too so the player doesn't clip through ground
-				cjSp.setTextureRect(Animation::cjAnimJump);
 			}
 		}
 		else
@@ -171,12 +178,12 @@ void Player::animationAndSound()
 			cjSp.setTextureRect(Animation::cjAnimRotate);
 		}
 	}
-	else if (cjSp.getPosition().x < const_left_bound + 1)								//HIT LEFT BOUND
+	else if (internalPosX < const_left_bound + 1)								//HIT LEFT BOUND
 	{
 		cjSp.setScale(1, 1);
 		cjSp.setTextureRect(Animation::cjAnimWalk1);
 	}
-	else if (cjSp.getPosition().x > const_right_bound - 1)								//HIT RIGHT BOUND
+	else if (internalPosX > const_right_bound - 1)								//HIT RIGHT BOUND
 	{
 		cjSp.setScale(-1, 1);
 		cjSp.setTextureRect(Animation::cjAnimWalk1);
@@ -196,8 +203,7 @@ void Player::animationAndSound()
 		else j = 0;
 		j += xSpeed;
 	}
-	else if (cjSp.getPosition().x >= curPlatform->startSp.getPosition().x - 14 &&		//ON LEFT EDGE
-		cjSp.getPosition().x <= curPlatform->startSp.getPosition().x + 12.5f)
+	else if (internalPosX <= curPlatform->startPos + 10)				//ON LEFT EDGE
 	{
 		if (cjSound.getStatus() != sf::Sound::SoundSource::Status::Playing)
 		{
@@ -218,8 +224,7 @@ void Player::animationAndSound()
 		else j = 0;
 		j++;
 	}
-	else if (cjSp.getPosition().x >= curPlatform->endSp.getPosition().x &&					//ON RIGHT EDGE
-		cjSp.getPosition().x <= curPlatform->endSp.getPosition().x + 14*2)
+	else if (internalPosX >= curPlatform->endPos - 10)					//ON RIGHT EDGE
 	{
 		if (cjSound.getStatus() != sf::Sound::SoundSource::Status::Playing)
 		{
@@ -240,7 +245,7 @@ void Player::animationAndSound()
 		else j = 0;
 		j++;
 	}
-	else if (Camera::getCamLevel() > 0 && cjSp.getPosition().y > curLayer.getViewCenter() + const_chock_anim_trigger_bound) //CHOCK
+	else if (Camera::getCamLevel() > 0 && internalPosY > curLayer.getViewCenter() + const_chock_anim_trigger_bound) //CHOCK
 	{
 		cjSp.setTextureRect(Animation::cjAnimChock);
 	}
@@ -273,18 +278,21 @@ void Player::move()
 			xSpeed = 0;
 		}
 		else xSpeed -= deltaSpeed; //slow down
-		cjSp.move(side * xSpeed, 0);
+		internalPosX += side * xSpeed;
+		//cjSp.move(side * xSpeed, 0);
 	}
 	else
 	{
-		cjSp.setPosition(checkBoundaries(), cjSp.getPosition().y);
+		internalPosX = checkBoundaries();
+		//cjSp.setPosition(checkBoundaries(), cjSp.getPosition().y);
 		side *= -1;
 	}
 }
 
 void Player::jump()
 {
-	cjSp.move(0, ySpeed);
+	internalPosY += ySpeed;
+	//cjSp.move(0, ySpeed);
 	if (ySpeed < const_player_yspeed_max)
 		ySpeed += const_player_gravity;
 	if (ySpeed > 0.0f)
@@ -300,7 +308,8 @@ void Player::checkJump()		//WIP
 		{
 			ySpeed = xSpeed * -1.25 - 7.0f;
 			jumpStrenght = 3;
-			cjSp.move(0, -8);	//since the rotation animation texture is 8 pixels higher, immediately move the player up 8 pixels so it doesn't look like
+			internalPosY += -8;
+			//cjSp.move(0, -8);	//since the rotation animation texture is 8 pixels higher, immediately move the player up 8 pixels so it doesn't look like
 								//he is intersecting the ground when the animation kicks in. it couldn't be done by changing the y origin because the rotation
 								//animation depends on origin being 35(standard).
 			cjSound.setBuffer(soundJumpHi);
@@ -325,7 +334,7 @@ void Player::checkJump()		//WIP
 	{
 		jump();
 	}
-	curLevel = (cjSp.getPosition().y - const_player_start_pos_y) / const_dist_between_platforms * -1 + 1; //updated on every frame, brains of collision detection
+	curLevel = (internalPosY - const_player_start_pos_y) / const_dist_between_platforms * -1 + 1; //updated on every frame, brains of collision detection
 }
 
 void Player::checkMove()
@@ -376,13 +385,13 @@ void Player::checkMove()
 
 void Player::checkCam()	//called on every frame
 {
-	if ((cjSp.getPosition().y  < curLayer.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
+	if ((internalPosY  < curLayer.getViewCenter() - const_cam_catchup_top_bound))	//first and topmost section of the camera, used for fast catching up to speeding player
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_top_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_top_delta_speed * ySpeed * -1);
 		else Camera::setCamSpeed(const_cam_catchup_top_max_speed);
 	}
-	else if (cjSp.getPosition().y < curLayer.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning 
+	else if (internalPosY < curLayer.getViewCenter() - const_cam_catchup_bottom_bound && ySpeed < 0) //second, middle section of the camera, used for fine tuning 
 	{
 		if (Camera::getCamSpeed() < const_cam_catchup_bottom_max_speed)
 			Camera::setCamSpeed(Camera::getCamSpeed() + const_cam_catchup_bottom_delta_speed * ySpeed * -1);
@@ -400,7 +409,7 @@ void Player::checkCam()	//called on every frame
 
 void Player::checkGameOver()
 {
-	if (cjSp.getPosition().y > curLayer.getViewCenter() + 240 && !GameOver::isGameOver())
+	if (internalPosY > curLayer.getViewCenter() + 240 && !GameOver::isGameOver())
 	{
 		onGround = false;	//make the player fall down, sometimes the downmost platform is not deleted as soon as off screen
 
@@ -416,14 +425,14 @@ void Player::checkCandy()
 {
 	if (jumpStrenght == 3 && Score::isComboMode()) 
 	{
-		eceCombo.addCandy(cjSp.getPosition().x, cjSp.getPosition().y, 1);
+		eceCombo.addCandy(internalPosX, internalPosY, 1);
 	}
 	eceCombo.logic();
 }
 
 void Player::checkTimer()	//checks if the bound to start the timer is broken by the player
 {
-	if (!Timer::getStarted() && cjSp.getPosition().y < const_timer_start_bound && !GameOver::isGameOver())
+	if (!Timer::getStarted() && internalPosY < const_timer_start_bound && !GameOver::isGameOver())
 		Timer::setStarted(true);
 }
 
@@ -441,10 +450,13 @@ void Player::logic()
 	checkCandy();
 	checkMilestone();
 	animationAndSound();
+
 }
 
 void Player::render(sf::RenderWindow& window)
 {
+	cjSp.setPosition((int)internalPosX, (int)internalPosY);
+
 	curLayer.render(window, cjSp);
 	eceCombo.render(window, false);
 	if(milestoneMode)	//render only if milestone because else the idling stars are visible at the bottom of the screen
@@ -454,6 +466,11 @@ void Player::render(sf::RenderWindow& window)
 sf::Drawable& Player::getDrawable()
 {
 	return cjSp;
+}
+
+void Player::stopScreaming()
+{
+	cjSound.stop();
 }
 
 void Player::reset()
@@ -471,7 +488,9 @@ void Player::reset()
 	side = 0;
 
 	cjSp.setOrigin(14, 35);
-	cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
+	internalPosX = const_player_start_pos_x;
+	internalPosY = const_player_start_pos_y;
+	//cjSp.setPosition(const_player_start_pos_x, const_player_start_pos_y);
 	cjSp.setRotation(0);
 
 	eceCombo.reset();

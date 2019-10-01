@@ -117,7 +117,7 @@
       <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>D:\Work\ICYTOWCL\SFML\lib32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -149,6 +149,7 @@
     <ClCompile Include="EyeCandy.cpp" />
     <ClCompile Include="EyeCandyEngine.cpp" />
     <ClCompile Include="DefaultFont.cpp" />
+    <ClCompile Include="FloorTypes.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Layer.cpp" />
@@ -165,9 +166,11 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Consts.h" />
     <ClInclude Include="EyeCandy.h" />
     <ClInclude Include="EyeCandyEngine.h" />
     <ClInclude Include="DefaultFont.h" />
+    <ClInclude Include="FloorTypes.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Layer.h" />
@@ -185,6 +188,7 @@
     <Image Include="..\Assets\ClockHandle.png" />
     <Image Include="..\Assets\ComboMeter.png" />
     <Image Include="..\Assets\ComboMeterBar.png" />
+    <Image Include="..\Assets\floors.bmp" />
     <Image Include="..\Assets\Ice.png" />
     <Image Include="..\Assets\IceA.png" />
     <Image Include="..\Assets\IceZ.png" />
