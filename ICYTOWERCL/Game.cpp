@@ -1,7 +1,7 @@
 #include <Game.h>
 
 //basic init
-sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML - v1.0", sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML - v1.01", sf::Style::Close);
 sf::Event event;
 
 //object init
