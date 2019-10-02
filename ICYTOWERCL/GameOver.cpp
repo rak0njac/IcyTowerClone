@@ -85,7 +85,7 @@ void GameOver::stopGame()
 
 	gameOver = true;
 
-	boomTime = values.x / 10;
+	boomTime = values.x / 10.0f;
 	if (boomTime > 5)
 		boomTime = 5;
 

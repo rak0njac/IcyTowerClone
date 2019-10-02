@@ -14,9 +14,9 @@ void Background::init()
 
 	txWall.loadFromFile("..\\Assets\\Wallz3.png");
 	spWall.setTexture(txWall);
-	spWall.setOrigin(0, 124);
+	spWall.setOrigin(0, 128);
 
-	//each line of bricks in bkg is 31px high and in wall 62px
+	//each line of bricks in bkg is 32px high and in wall 64px
 }
 
 void Background::render(sf::RenderWindow& window, int sprite)

@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-const int const_cam_start_step = 496;
+const int const_cam_start_step = 512;
 const float const_cam_speed_delta = 0.125f;
 const int const_cam_catchup_top_bound = 200;
 const int const_cam_catchup_bottom_bound = 100;
