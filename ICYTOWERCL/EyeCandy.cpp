@@ -7,7 +7,7 @@ EyeCandy::EyeCandy(const float& posX, const float& posY)	//used for stars coming
 	std::mt19937 rand(rd());
 	std::uniform_int_distribution<> randPos(-10, 10);
 	std::uniform_real_distribution<> randDir(-2, 2);
-	std::uniform_real_distribution<> randGrav(0.05, 0.1);
+	std::uniform_real_distribution<> randGrav(0.075, 0.15);
 	startPosX = posX + randPos(rand);
 	startPosY = posY + randPos(rand); //CHECK
 	startXSpeed = randDir(rand);
@@ -26,7 +26,7 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 	std::mt19937 rand(rd());
 	std::uniform_int_distribution<> randPos(_randPos * -1, _randPos);
 	std::uniform_real_distribution<> randDir(_randDir * -1, _randDir);
-	std::uniform_real_distribution<> randGrav(0.05, 0.1);
+	std::uniform_real_distribution<> randGrav(0.075, 0.15);
 	startPosX = posX + randPos(rand);
 	startPosY = posY;
 	startXSpeed = randDir(rand);
@@ -45,7 +45,7 @@ EyeCandy::EyeCandy(const float& posX, const float& posY, const float& _randPos, 
 	std::mt19937 rand(rd());
 	std::uniform_int_distribution<> randPos(_randPos * -1, _randPos);
 	std::uniform_real_distribution<> randDir(_randDir * -1, _randDir);
-	std::uniform_real_distribution<> randGrav(0.05, 0.1);
+	std::uniform_real_distribution<> randGrav(0.075, 0.15);
 	startPosX = posX + randPos(rand);
 	startPosY = posY;
 	startXSpeed = randDir(rand);
@@ -110,7 +110,7 @@ void EyeCandy::logic()
 	candy.move(xSpeed, ySpeed);
 	//candy.rotate(1);
 
-	if (ySpeed < 6)
+	if (ySpeed < 8)
 		ySpeed += gravity;
 
 	if (xSpeed < -0.5)		//these make sure that the star loses direction and strives for straight down falling

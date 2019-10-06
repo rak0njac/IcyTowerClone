@@ -162,7 +162,7 @@ void Timer::logic()		//todo fix readability
 		}
 		else if (phase == 2)
 		{
-			curLevel = 5;
+			curLevel = 6;
 			berserk = true;
 			shaking = true;
 			spClockHandle.rotate(-3);

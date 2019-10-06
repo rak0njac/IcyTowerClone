@@ -15,7 +15,7 @@ const float const_eyecandy_gravity = 0.075f;
 
 const int const_dist_between_platforms = 80;
 
-const float const_player_gravity = 0.225f;
+const float const_player_gravity = 0.175;//55f;
 const float const_player_start_pos_x = 180;
 const float const_player_start_pos_y = 417;
 const int const_left_bound = 87;
@@ -23,9 +23,9 @@ const int const_right_bound = 553;
 const int const_chock_anim_trigger_bound = 140;
 const float const_player_xspeed_max = 6;
 const float const_player_yspeed_max = 6;
-const float const_player_slowdown_delta = 0.75f;
-const float const_player_accelerate_delta = 0.085f;
-const float const_player_friction_delta = 0.14f;
+const float const_player_slowdown_delta = 0.6;//0.75f;
+const float const_player_accelerate_delta = 0.085f; //deprecated
+const float const_player_friction_delta = 0.14f; //deprecated
 
 const sf::Color const_color_outline(1, 26, 51, 255);
 const int const_text_size_small = 20;

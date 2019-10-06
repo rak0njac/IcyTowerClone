@@ -112,7 +112,7 @@ void GameOver::logic()
 	if (rtBestCombo.getPosition().y > 390)
 		rtBestCombo.move(0, -2);
 	else if (rtPressEnter.getPosition().y > 450)
-		rtPressEnter.move(0, -2);
+		rtPressEnter.move(0, -2);							
 
 	rtGameOver.logic();
 	rtFloor.logic();

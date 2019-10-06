@@ -40,7 +40,7 @@ void Player::init()
 
 	eceCombo.setLayer(curLayer);
 	eceMilestone.setLayer(Game::Layers::HUD);
-	eceMilestone.addCandy(320, 480, 320, 4, -7, 100);
+	eceMilestone.addCandy(320, 480, 320, 4, -9, 100);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();
@@ -266,6 +266,7 @@ void Player::animationAndSound()
 
 void Player::move()
 {
+	//const static float deltaSpeed = 
 	if (!checkBoundaries())
 	{
 		if (accelerating && xSpeed < const_player_xspeed_max) //accelerate
@@ -276,7 +277,7 @@ void Player::move()
 		{
 			xSpeed = 0;
 		}
-		else xSpeed -= deltaSpeed; //slow down
+		else xSpeed -= deltaSpeed;
 		internalPosX += side * xSpeed;
 		//cjSp.move(side * xSpeed, 0);
 	}
@@ -305,7 +306,7 @@ void Player::checkJump()		//WIP
 		onGround = false;
 		if (xSpeed > 5.9f)
 		{
-			ySpeed = xSpeed * -1.25 - 7.0f;
+			ySpeed = xSpeed * -1 - 5.75;
 			jumpStrenght = 3;
 			internalPosY += -8;
 			//cjSp.move(0, -8);	//since the rotation animation texture is 8 pixels higher, immediately move the player up 8 pixels so it doesn't look like
@@ -316,14 +317,14 @@ void Player::checkJump()		//WIP
 		}
 		else if (xSpeed > 3.9f)
 		{
-			ySpeed = xSpeed * -0.55 - 7.0f;
+			ySpeed = xSpeed * -0.5 - 5.75;
 			jumpStrenght = 2;
 			cjSound.setBuffer(soundJumpMid);
 			cjSound.playPitched();
 		}
 		else
 		{
-			ySpeed = -7.0f;
+			ySpeed = - 5.75;
 			jumpStrenght = 1;
 			cjSound.setBuffer(soundJumpLo);
 			cjSound.playPitched();
@@ -350,7 +351,7 @@ void Player::checkMove()
 		{
 			side = -1;
 			accelerating = true;
-			deltaSpeed = const_player_accelerate_delta;
+			deltaSpeed = 0.06f + xSpeed * 0.01f;
 			move();
 		}
 	}
@@ -366,7 +367,7 @@ void Player::checkMove()
 		{
 			side = 1;
 			accelerating = true;
-			deltaSpeed = const_player_accelerate_delta;
+			deltaSpeed = 0.06f + xSpeed * 0.01f;
 			move();
 		}
 	}
@@ -375,7 +376,7 @@ void Player::checkMove()
 		if (xSpeed > 0)
 		{
 			accelerating = false;
-			deltaSpeed = const_player_friction_delta;
+			deltaSpeed = 0.04f + xSpeed * 0.01f;
 			move();
 		}
 		else side = 0;
@@ -493,7 +494,7 @@ void Player::reset()
 
 	eceCombo.reset();
 	eceMilestone.reset();
-	eceMilestone.addCandy(320, 480, 320, 4, -7, 100);
+	eceMilestone.addCandy(320, 480, 320, 4, -9, 100);
 
 	cjSound.setBuffer(soundYo);
 	cjSound.play();

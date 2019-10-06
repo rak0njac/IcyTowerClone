@@ -84,10 +84,9 @@ void Platform::regenerate()
 		floorType = FloorTypes::Type::Mario;
 	else if (floor < 450)
 		floorType = FloorTypes::Type::Cloud;
-	else if (floor < 500)
-		floorType = FloorTypes::Type::Rainbow;
+	else floorType = FloorTypes::Type::Rainbow;
 
-	vect = FloorTypes::getIntRects(floorType);
+ 	vect = FloorTypes::getIntRects(floorType);
 
 	startPos = position;
 	endPos = position + vect[0].width + length * vect[1].width + vect[2].width;

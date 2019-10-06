@@ -1,7 +1,8 @@
 #include <Game.h>
 
 //basic init
-sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML - v1.01", sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(640, 480), "Icy Tower Clone // Written in C++ using SFML - v1.02", sf::Style::Close);
+
 sf::Event event;
 
 //object init
@@ -199,8 +200,8 @@ void Game::logic()
 			window.setFramerateLimit(100);
 			window.setKeyRepeatEnabled(false);
 			window.setIcon(itIcon.width, itIcon.height, itIcon.pixel_data);
-			//sf::Listener s;
-			//s.setGlobalVolume(0);
+			sf::Listener s;
+			s.setGlobalVolume(100);
 
 			music.openFromFile("..\\Assets\\Sounds\\beat.ogg");
 			music.setLoop(true);
