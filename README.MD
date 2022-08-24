@@ -26,27 +26,27 @@ There will be no features which do not exist in the original games as that would
 The game at it's current state does not support stretching or other means of properly displaying variably sized GFX assets. All GFX assets must be pixel-perfect unless noted different below each mentioned asset. 
 The GFX assets must be located in ROOT/assets folder. Make sure to include the following GFX assets:
 
-"Bkg2.png" represents the general background - the farthermost layer to render (blue bricks in original Icy Tower):
-Resolution: 505 (or higher) x 544
+"Bkg2.png" represents the general background - the farthermost layer to render (blue bricks in original Icy Tower):<br />
+Resolution: 505 (or higher) x 544<br />
 Note: Make sure that the picture consists of 17 rows with 32px height. If desired, the rows can alternate between two designs, like in the original Icy Tower.
 
-"Wallz3.png" represents the walls on the left and right side (white bricks in original Icy Tower):
-Resolution: 640 x 768
+"Wallz3.png" represents the walls on the left and right side (white bricks in original Icy Tower):<br />
+Resolution: 640 x 768<br />
 Note: Make sure that the picture consists of 12 rows with 64px height. If desired, the rows can alternate between two designs, like in the original Icy Tower. Make sure that the area between the left and right wall is PNG alpha transparent.
 
-"Clock.png" represents the timer clock background:
+"Clock.png" represents the timer clock background:<br />
 Resolution: 73 x 84
 
-"ClockHandle.png" represents the clock handle:
-Resolution: 73 x 84
+"ClockHandle.png" represents the clock handle:<br />
+Resolution: 73 x 84<br />
 Note: The rotational pivot point of the handle is between the pixels at 36,47 and 37,47
 
-"ComboMeter.png" represents the empty combo meter:
-Resolution: 40 x 131
-Note: The bar will be filled at the following rectangle of this picture: top-left at 11x19, bottom-right at 26x118, both values inclusive
+"ComboMeter.png" represents the empty combo meter:<br />
+Resolution: 40 x 131<br />
+Note: The bar will be filled at the following rectangle of this picture: top-left at 11,19; bottom-right at 26,118; both values inclusive
 
-"ComboMeterBar.png" represents the full bar of the combo meter:
-Resolution: 40 x 131
+"ComboMeterBar.png" represents the full bar of the combo meter:<br />
+Resolution: 40 x 131<br />
 Note: The bar should be at the following rectangle of this picture: top-left at 11,19; bottom-right at 26,118; both values inclusive. In the original game, the bar consists of 100 rows with 1px height and 16px width. It is not required to be this way in IcyTowerClone. You can fill the rectangle with anything as long as you stick to the right dimensions and positions.
 
 "freshmarker.ttf" represents the default font. You can put any TTF font here and just change it's name to "freshmarker.ttf", or, alternatively, you can change the name in DefaultFont.cpp.
