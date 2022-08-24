@@ -5,6 +5,7 @@
 - Build instructions for Windows
 
 ## About
+Demo: https://www.youtube.com/watch?v=Oedn3MMslG8
 
 This is a clone of Icy Tower written in C++ using SFML. 
 
