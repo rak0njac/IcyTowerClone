@@ -35,11 +35,11 @@ Resolution: 640 x 768
 Note: Make sure that the picture consists of 12 rows with 64px height. If desired, the rows can alternate between two designs, like in the original Icy Tower. Make sure that the area between the left and right wall is PNG alpha transparent.
 
 "Clock.png" represents the timer clock background:
-Resolution: 73 x 84 (can be slightly different)
+Resolution: 73 x 84
 
 "ClockHandle.png" represents the clock handle:
-Resolution: 73 x 84 or whatever your "Clock.png" resolution is.
-Note: The center pixel (e.g. 36, 42 in the original example) should be the rotational pivot point of the handle.
+Resolution: 73 x 84
+Note: The rotational pivot point of the handle is between the pixels at 36,47 and 37,47
 
 "ComboMeter.png" represents the empty combo meter:
 Resolution: 40 x 131
@@ -47,7 +47,7 @@ Note: The bar will be filled at the following rectangle of this picture: top-lef
 
 "ComboMeterBar.png" represents the full bar of the combo meter:
 Resolution: 40 x 131
-Note: The bar should be at the following rectangle of this picture: top-left at 11x19, bottom-right at 26x118, both values inclusive. In the original game, the bar consists of 100 rows with 1px height and 16px width. It is not required to be this way in IcyTowerClone. You can fill the rectangle with anything as long as you stick to the right dimensions and positions.
+Note: The bar should be at the following rectangle of this picture: top-left at 11,19; bottom-right at 26,118; both values inclusive. In the original game, the bar consists of 100 rows with 1px height and 16px width. It is not required to be this way in IcyTowerClone. You can fill the rectangle with anything as long as you stick to the right dimensions and positions.
 
 "freshmarker.ttf" represents the default font. You can put any TTF font here and just change it's name to "freshmarker.ttf", or, alternatively, you can change the name in DefaultFont.cpp.
 
