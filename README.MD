@@ -56,22 +56,18 @@ Note: The bar should be at the following rectangle of this picture: top-left at 
 
 "floors.bmp" represents the floor frames.
 
-## Build instructions for Linux (special thanks to Arkanosis)
+## Build instructions for Linux
 
-Using your package manager, install SFML, sed and gcc (g++). Run the following commands in their respective order in your terminal:
-
+Make sure you have CMake (tested with 3.22) and download SFML to a desired directory. In CMakeLists.txt, replace {YOUR SFML DIRECTORY} with the path to where you placed SFML. Navigate your terminal to the root of your cloned IcyTowerClone. Finally, run the following commands:
 ```
-git clone git@github.com:rak0njac/IcyTowerClone.git
-cd IcyTowerClone
-sed -i 's@include <SFML\\@include <SFML/@' *.h
-sed -i 's@static enum@enum@' *.h
-g++ -std=c++11 -I. -I/usr/include *.cpp -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -o icytower
+cmake .
+make
 ```
 
 Starting the game then is as simple as:
 
 ```
-./icytower
+./IcyTowerClone
 ```
 
 The game is still playable without the assets; it's just all white rectangles on a black background. You can provide the assets by following the Assets section having IcyTowerClone as your root folder.

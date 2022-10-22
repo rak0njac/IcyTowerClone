@@ -1,3 +1,0 @@
-/home/rak0njac/CLionProjects/IcyTowerClone/cmake-build-debug/CMakeFiles/IcyTowerClone.dir
-/home/rak0njac/CLionProjects/IcyTowerClone/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/rak0njac/CLionProjects/IcyTowerClone/cmake-build-debug/CMakeFiles/rebuild_cache.dir

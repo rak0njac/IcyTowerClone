@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 3.23)
 project(IcyTowerClone)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(ICYTOWERCL /home/rak0njac/Work/SFML-2.5.1/include)
+include_directories(ICYTOWERCL {YOUR SFML DIRECTORY}/include)
 
-set(SFML_DIR "/home/rak0njac/Work/SFML-2.5.1/lib/cmake/SFML")
+set(SFML_DIR "{YOUR SFML DIRECTORY}/lib/cmake/SFML")
 
 find_package(SFML 2.5 COMPONENTS system window graphics network audio REQUIRED)
 
