@@ -72,7 +72,7 @@ void RainbowText::logic() //this one was hard as hell
 {
 	if (!initialized)
 	{
-		std::cout << "ITC INTERNAL ERROR: RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized. Issues on GitHub.\n";
+		//std::cout << "ITC INTERNAL ERROR: RainbowText " << this->getString() << " was not initialized. Issues on GitHub.\n";
 	}
 	else
 	{
@@ -188,11 +188,7 @@ void RainbowText::logic() //this one was hard as hell
 
 void RainbowText::setLayer(Layer& _layer)
 {
-	if (!initialized)
-	{
-		std::cout << "RainbowText " << static_cast<std::string>(this->getString()) << " was not initialized.";
-	}
-	else layer = &_layer;
+    layer = &_layer;
 }
 
 void RainbowText::render(sf::RenderWindow& window)

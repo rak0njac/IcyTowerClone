@@ -45,7 +45,7 @@ private:
 	static sf::IntRect RainbowZ;
 
 public:
-	static enum Type
+    enum Type
 	{
 		Snow,
 		Ice,

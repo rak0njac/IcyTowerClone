@@ -1,0 +1,5 @@
+/var/lib/snapd/snap/clion/209/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/var/lib/snapd/snap/clion/209/bin/ninja/linux/ninja -G Ninja -S /home/rak0njac/CLionProjects/IcyTowerClone -B /home/rak0njac/CLionProjects/IcyTowerClone/cmake-build-debug
+-- Found SFML 2.5.1 in /home/rak0njac/Work/SFML-2.5.1/lib/cmake/SFML
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/rak0njac/CLionProjects/IcyTowerClone/cmake-build-debug

@@ -1,5 +1,4 @@
 #pragma once
-#include <SFML\Graphics.hpp>
 #include <Layer.h>
 #include <SFML/Graphics.hpp>
 #include <DefaultFont.h>

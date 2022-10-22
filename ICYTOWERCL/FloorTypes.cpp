@@ -91,7 +91,7 @@ std::vector<sf::IntRect> FloorTypes::getIntRects(int type)
 		vec.push_back(CloudY);
 		vec.push_back(CloudZ);
 		return vec;
-	case Rainbow:
+	default:
 		vec.push_back(RainbowX);
 		vec.push_back(RainbowY);
 		vec.push_back(RainbowZ);
